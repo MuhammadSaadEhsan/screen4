@@ -1,0 +1,19 @@
+{
+    "editor.suggest.showStatusBar": true,
+    "emmet.showSuggestionsAsSnippets": true,
+    "emmet.showAbbreviationSuggestions": true,
+    "editor.suggest.showWords": true,
+    "emmet.syntaxProfiles": {
+
+    },
+    "javascript.preferences.organizeImports": {
+
+    },
+
+    "emmet.includeLanguages": {
+    "javascript": "javascriptreact",
+    "javascriptreact": "html"
+},
+"emmet.triggerExpansionOnTab": true
+
+}
