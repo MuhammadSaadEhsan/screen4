@@ -77,14 +77,14 @@ function App() {
 
         <Routes>
 
-          <Route path='/' element={<Index />} />
+          <Route path='/' element={<Patient />} />
           {/* <Route path='/kitack' element={<Ackpage />} /> */}
           {/* <Route path='/shipping' element={<Shippingform />} /> */}
           {/* <Route path='/leads' element={<Leads />} /> */}
     
           {/* <Route path='/eventinfo' element={<Eventinfoform/>} /> */}
           {/* <Route path='/bucket' element={<Bucket />} /> */}
-          <Route path='/dashboard' element={<Desboard />} />
+          <Route path='/dashboard' element={<Patient />} />
           {/* <Route path='/dashboard/analysis' element={<KitAnalysis />} /> */}
           {/* <Route path='/dashboard/webinar' element={<Webinar />} /> */}
           {/* <Route path='/dashboard/webinar/:id' element={<Webinardetails />} /> */}

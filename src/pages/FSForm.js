@@ -28,11 +28,8 @@ function Screen4ChainOfCustodyForm() {
     test2: "",
     test2BaracResult1: "",
     test2BaracResult2: "",
-    test3: "",
-    test3BaracResult1: "",
-    test3BaracResult2: "",
     collectorName: "",
-    remarks: "",
+    collectorRemarks: "",
     collectorSignature: "",
     collectorDate: "",
     donorConcent: "",
@@ -58,8 +55,8 @@ function Screen4ChainOfCustodyForm() {
     adulterationTestPassed: "",
     adulterationRemarks: "",
     
-    alcoholScreen: "",
-    alcoholConfirm: "",
+    AlcoholScreen: "",
+    AlcoholConfirm: "",
     AmphetaminesScreen: "",
     AmphetaminesConfirm: "",
     BenzodiazepinesScreen: "",
@@ -130,17 +127,29 @@ function Screen4ChainOfCustodyForm() {
     });
   };
 
+  // const handleChange = async (e) => {
+  //   const { name, value, type, checked } = e.target;
+  //   console.log(e.target)
+  //   // console.log(checked)
+  //   await setFormData((prevData) => ({
+  //     ...prevData,
+  //     [name]: type === "checkbox" ? checked : value.toString(),
+  //   }));
+  // };
+
   const handleChange = async (e) => {
     const { name, value, type, checked } = e.target;
-    console.log(e.target)
-    console.log(checked)
+
     await setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === "checkbox" ? checked : value.toString(),
+        ...prevData,
+        [name]: type === "checkbox" ? checked : 
+                type === "number" ? Number(value) : 
+                type === "date" ? new Date(value) : value,
     }));
-    console.log(formData.donorSignature)
-    console.log(formData.donorDate)
-  };
+};
+
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -464,7 +473,6 @@ function Screen4ChainOfCustodyForm() {
               </div>
             </div>
           </div>
-
           <hr />
           <div
             class="second-container"
@@ -620,8 +628,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="text"
-                    name="dob"
-                    value={formData.dob}
+                    name="test1"
+                    value={formData.test1}
                     placeholder=""
                     onChange={handleChange}
                     style={{ width: "85px", margin: "0px" }}
@@ -643,8 +651,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="text"
-                    name="dob"
-                    value={formData.dob}
+                    name="test1BaracResult1"
+                    value={formData.test1BaracResult1}
                     onChange={handleChange}
                     style={{ width: "69%" }}
                     required
@@ -665,8 +673,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="text"
-                    name="dob"
-                    value={formData.dob}
+                    name="test1BracResult2"
+                    value={formData.test1BracResult2}
                     onChange={handleChange}
                     style={{ width: "69%" }}
                     required
@@ -697,8 +705,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="text"
-                    name="dob"
-                    value={formData.dob}
+                    name="test2"
+                    value={formData.test2}
                     placeholder=""
                     onChange={handleChange}
                     style={{ width: "85px", margin: "0px" }}
@@ -720,8 +728,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="text"
-                    name="dob"
-                    value={formData.dob}
+                    name="test2BaracResult1"
+                    value={formData.test2BaracResult1}
                     onChange={handleChange}
                     style={{ width: "69%" }}
                     required
@@ -742,8 +750,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="text"
-                    name="dob"
-                    value={formData.dob}
+                    name="test2BaracResult2"
+                    value={formData.test2BaracResult2}
                     onChange={handleChange}
                     style={{ width: "69%" }}
                     required
@@ -769,8 +777,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="text"
-                    name="dob"
-                    value={formData.dob}
+                    name="collectorName"
+                    value={formData.collectorName}
                     placeholder=""
                     onChange={handleChange}
                     style={{ width: "142px", margin: "0px" }}
@@ -793,8 +801,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="text"
-                    name="dob"
-                    value={formData.dob}
+                    name="collectorRemarks"
+                    value={formData.collectorRemarks}
                     onChange={handleChange}
                     style={{ width: "69%" }}
                     required
@@ -819,8 +827,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="text"
-                    name="dob"
-                    value={formData.dob}
+                    name="collectorSignature"
+                    value={formData.collectorSignature}
                     placeholder=""
                     onChange={handleChange}
                     style={{ width: "152px", margin: "0px" }}
@@ -843,8 +851,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="date"
-                    name="dob"
-                    value={formData.dob}
+                    name="collectorDate"
+                    value={formData.collectorDate}
                     onChange={handleChange}
                     style={{ width: "69%" }}
                     required
@@ -888,8 +896,8 @@ function Screen4ChainOfCustodyForm() {
                 <input
                   className="inputstyle"
                   type="text"
-                  name="dob"
-                  value={formData.dob}
+                  name="donorConcent"
+                  value={formData.donorConcent}
                   placeholder=""
                   onChange={handleChange}
                   style={{ margin: "0px", width: "150px" }}
@@ -934,8 +942,8 @@ function Screen4ChainOfCustodyForm() {
                     <input
                       className="inputstyle"
                       type="text"
-                      name="dob"
-                      value={formData.dob}
+                      name="donorDeclaration"
+                      value={formData.donorDeclaration}
                       placeholder=""
                       onChange={handleChange}
                       style={{ width: "152px", margin: "0px", height: "5px" }}
@@ -957,8 +965,8 @@ function Screen4ChainOfCustodyForm() {
                     <input
                       className="inputstyle"
                       type="date"
-                      name="dob"
-                      value={formData.dob}
+                      name="donorDate"
+                      value={formData.donorDate}
                       onChange={handleChange}
                       style={{ width: "69%", height: "5px" }}
                       required
@@ -968,7 +976,6 @@ function Screen4ChainOfCustodyForm() {
               </div>
             </div>
           </div>
-
           <table className="table-one">
             <tr>
               <td colspan="3" className="form-description">
@@ -1139,8 +1146,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="text"
-                    name="dob"
-                    value={formData.dob}
+                    name="collectionTime"
+                    value={formData.collectionTime}
                     placeholder=""
                     onChange={handleChange}
                     style={{ width: "102px", margin: "0px", height: "5px" }}
@@ -1161,8 +1168,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="text"
-                    name="dob"
-                    value={formData.dob}
+                    name="resultReadTime"
+                    value={formData.resultReadTime}
                     placeholder=""
                     onChange={handleChange}
                     style={{ width: "102px", margin: "0px", height: "5px" }}
@@ -1182,13 +1189,11 @@ function Screen4ChainOfCustodyForm() {
                   >
                     Yes
                     <input
-                      type="checkbox"
-                      name="male"
-                      value="M"
-                      checked={formData.reasonForTest.includes(
-                        "Pre-Employment"
-                      )}
-                      onChange={handleCheckboxChange}
+                      type="radio"
+                      name="temperature"
+                      value="Yes"
+                      checked={formData.temperature === 'Yes'}
+                      onChange={handleChange}
                     />
                   </label>
                   <label
@@ -1200,13 +1205,11 @@ function Screen4ChainOfCustodyForm() {
                   >
                     No
                     <input
-                      type="checkbox"
-                      name="male"
-                      value="F"
-                      checked={formData.reasonForTest.includes(
-                        "Pre-Employment"
-                      )}
-                      onChange={handleCheckboxChange}
+                      type="radio"
+                      name="temperature"
+                      value="No"
+                      checked={formData.temperature === 'No'}
+                      onChange={handleChange}
                     />
                   </label>
                 </h5>
@@ -1242,8 +1245,8 @@ function Screen4ChainOfCustodyForm() {
                         <input
                           className="inputstyle"
                           type="number"
-                          name="dob"
-                          value={formData.dob}
+                          name="lotno"
+                          value={formData.lotno}
                           placeholder=""
                           onChange={handleChange}
                           style={{
@@ -1273,8 +1276,8 @@ function Screen4ChainOfCustodyForm() {
                         <input
                           className="inputstyle"
                           type="date"
-                          name="dob"
-                          value={formData.dob}
+                          name="expDate"
+                          value={formData.expDate}
                           placeholder=""
                           onChange={handleChange}
                           style={{
@@ -1301,13 +1304,11 @@ function Screen4ChainOfCustodyForm() {
                     >
                       Yes
                       <input
-                        type="checkbox"
-                        name="male"
-                        value="M"
-                        checked={formData.reasonForTest.includes(
-                          "Pre-Employment"
-                        )}
-                        onChange={handleCheckboxChange}
+                        type="radio"
+                        name="adulterationTestPassed"
+                        value="Yes"
+                        checked={formData.adulterationTestPassed === 'Yes'}
+                        onChange={handleChange}
                       />
                     </label>
                     <label
@@ -1319,13 +1320,11 @@ function Screen4ChainOfCustodyForm() {
                     >
                       No
                       <input
-                        type="checkbox"
-                        name="male"
-                        value="F"
-                        checked={formData.reasonForTest.includes(
-                          "Pre-Employment"
-                        )}
-                        onChange={handleCheckboxChange}
+                        type="radio"
+                        name="adulterationTestPassed"
+                        value="No"
+                        checked={formData.adulterationTestPassed === 'No'}
+                        onChange={handleChange}
                       />
                     </label>
                   </h5>
@@ -1362,8 +1361,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="text"
-                    name="dob"
-                    value={formData.dob}
+                    name="adulterationRemarks"
+                    value={formData.adulterationRemarks}
                     placeholder=""
                     onChange={handleChange}
                     style={{ width: "192px", margin: "0px", height: "5px" }}
@@ -1432,8 +1431,8 @@ function Screen4ChainOfCustodyForm() {
                       {a}
                       {index !== 0 && (<input
                               type="checkbox"
-                              name={`screen_${leftTest}`}
-                              checked={formData[`screen_${leftTest}`] || false}
+                              name={`${leftTest.split(" ")[0]}Screen`}
+                              checked={formData[`${leftTest.split(" ")[0]}Screen`] || false}
                               onChange={handleChange}
                               />)}
                     </td>
@@ -1441,8 +1440,8 @@ function Screen4ChainOfCustodyForm() {
                       {b}
                       {index !== 0 && (<input
                               type="checkbox"
-                              name={`screen_${leftTest}`}
-                              checked={formData[`screen_${leftTest}`] || false}
+                              name={`${leftTest.split(" ")[0]}Confirm`}
+                              checked={formData[`${leftTest.split(" ")[0]}Confirm`] || false}
                               onChange={handleChange}
                               />)}
                     </td>
@@ -1453,8 +1452,8 @@ function Screen4ChainOfCustodyForm() {
                       {a}
                       {index !== 0 &&index !== 7 && (<input
                               type="checkbox"
-                              name={`screen_${leftTest}`}
-                              checked={formData[`screen_${leftTest}`] || false}
+                              name={`${rightTest.split(" ")[0]}Screen`}
+                              checked={formData[`${rightTest.split(" ")[0]}Screen`] || false}
                               onChange={handleChange}
                               />)}
                     </td>
@@ -1462,8 +1461,8 @@ function Screen4ChainOfCustodyForm() {
                       {b}
                       {index !== 0 && index !== 7 &&(<input
                               type="checkbox"
-                              name={`screen_${leftTest}`}
-                              checked={formData[`screen_${leftTest}`] || false}
+                              name={`${rightTest.split(" ")[0]}Confirm`}
+                              checked={formData[`${rightTest.split(" ")[0]}Confirm`] || false}
                               onChange={handleChange}
                               />)}
                     </td>
@@ -1474,16 +1473,16 @@ function Screen4ChainOfCustodyForm() {
                       style={{ border: "1px solid black", padding: "8px" }}
                     >{<input
                       type="checkbox"
-                      name={`screen_${leftTest}`}
-                      checked={formData[`screen_${leftTest}`] || false}
+                      name={`${c.split(" ")[0]}Screen`}
+                      checked={formData[`${c.split(" ")[0]}Screen`] || false}
                       onChange={handleChange}
                       />}</td>
                     <td
                       style={{ border: "1px solid black", padding: "8px" }}
                     >{<input
                       type="checkbox"
-                      name={`screen_${leftTest}`}
-                      checked={formData[`screen_${leftTest}`] || false}
+                      name={`${c.split(" ")[0]}Confirm`}
+                      checked={formData[`${c.split(" ")[0]}Confirm`] || false}
                       onChange={handleChange}
                       />}</td>
                   </tr>
@@ -1531,8 +1530,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="text"
-                    name="dob"
-                    value={formData.dob}
+                    name="donorCertificationName"
+                    value={formData.donorCertificationName}
                     placeholder=""
                     onChange={handleChange}
                     style={{ margin: "0px", width: "150px" }}
@@ -1553,8 +1552,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="text"
-                    name="dob"
-                    value={formData.dob}
+                    name="donorCertificationSignature"
+                    value={formData.donorCertificationSignature}
                     placeholder=""
                     onChange={handleChange}
                     style={{ width: "152px", margin: "0px" }}
@@ -1576,8 +1575,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="date"
-                    name="dob"
-                    value={formData.dob}
+                    name="donorCertificationDate"
+                    value={formData.donorCertificationDate}
                     onChange={handleChange}
                     style={{ width: "69%" }}
                     required
@@ -1621,8 +1620,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="text"
-                    name="dob"
-                    value={formData.dob}
+                    name="collectorCertificationName"
+                    value={formData.collectorCertificationName}
                     placeholder=""
                     onChange={handleChange}
                     style={{ margin: "0px", width: "150px" }}
@@ -1643,8 +1642,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="text"
-                    name="dob"
-                    value={formData.dob}
+                    name="collectorCertificationSignature"
+                    value={formData.collectorCertificationSignature}
                     placeholder=""
                     onChange={handleChange}
                     style={{ width: "152px", margin: "0px" }}
@@ -1666,8 +1665,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="date"
-                    name="dob"
-                    value={formData.dob}
+                    name="collectorCertificationDate"
+                    value={formData.collectorCertificationDate}
                     onChange={handleChange}
                     style={{ width: "69%" }}
                     required
@@ -1693,8 +1692,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="text"
-                    name="dob"
-                    value={formData.dob}
+                    name="recieveInitial"
+                    value={formData.recieveInitial}
                     placeholder=""
                     onChange={handleChange}
                     style={{ width: "102px", margin: "0px", height: "5px" }}
@@ -1715,8 +1714,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="text"
-                    name="dob"
-                    value={formData.dob}
+                    name="recieveName"
+                    value={formData.recieveName}
                     placeholder=""
                     onChange={handleChange}
                     style={{ width: "102px", margin: "0px", height: "5px" }}
@@ -1736,9 +1735,9 @@ function Screen4ChainOfCustodyForm() {
                   </label>
                   <input
                     className="inputstyle"
-                    type="text"
-                    name="dob"
-                    value={formData.dob}
+                    type="date"
+                    name="recieveDate"
+                    value={formData.recieveDate}
                     placeholder=""
                     onChange={handleChange}
                     style={{ width: "102px", margin: "0px", height: "5px" }}
@@ -1764,11 +1763,11 @@ function Screen4ChainOfCustodyForm() {
                 >
                   Yes
                   <input
-                    type="checkbox"
-                    name="male"
-                    value="M"
-                    checked={formData.reasonForTest.includes("Pre-Employment")}
-                    onChange={handleCheckboxChange}
+                    type="radio"
+                    name="specimenBottle"
+                    value="Yes"
+                    checked={formData.specimenBottle === 'Yes'}
+                    onChange={handleChange}
                   />
                 </label>
                 <label
@@ -1780,11 +1779,11 @@ function Screen4ChainOfCustodyForm() {
                 >
                   No
                   <input
-                    type="checkbox"
-                    name="male"
-                    value="F"
-                    checked={formData.reasonForTest.includes("Pre-Employment")}
-                    onChange={handleCheckboxChange}
+                    type="radio"
+                    name="specimenBottle"
+                    value="No"
+                    checked={formData.specimenBottle === 'No'}
+                    onChange={handleChange}
                   />
                 </label>
                 <span
@@ -1815,11 +1814,11 @@ function Screen4ChainOfCustodyForm() {
                 >
                   Yes
                   <input
-                    type="checkbox"
-                    name="male"
-                    value="M"
-                    checked={formData.reasonForTest.includes("Pre-Employment")}
-                    onChange={handleCheckboxChange}
+                    type="radio"
+                    name="fatalFlaws"
+                    value="Yes"
+                    checked={formData.fatalFlaws === 'Yes'}
+                    onChange={handleChange}
                   />
                 </label>
                 <label
@@ -1831,11 +1830,11 @@ function Screen4ChainOfCustodyForm() {
                 >
                   No
                   <input
-                    type="checkbox"
-                    name="male"
-                    value="F"
-                    checked={formData.reasonForTest.includes("Pre-Employment")}
-                    onChange={handleCheckboxChange}
+                    type="radio"
+                    name="fatalFlaws"
+                    value="No"
+                    checked={formData.fatalFlaws === 'No'}
+                    onChange={handleChange}
                   />
                 </label>
                 <span
