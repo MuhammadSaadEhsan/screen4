@@ -2,10 +2,12 @@ import "../css/profile.css";
 import React, { useState } from "react";
 import Navbar from "../components/navbar";
 import { message } from "antd";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
-function Screen4ChainOfCustodyForm() {
-
-
+function Screen4Details() {
+    const [error, setError] = useState(null);
+    const { id } = useParams();
   const [formData, setFormData] = useState({
     donorName: "",
     gcalicno:"",
@@ -104,6 +106,59 @@ function Screen4ChainOfCustodyForm() {
     specimenBottle:"",
     fatalFlaws:"",
   });
+//  useEffect(() => {
+//     const fetchScreen4Data = async () => {
+//       try {
+//         const response = await fetch(`http://localhost:1337/getscreen4data`);
+//         if (!response.ok) {
+//           throw new Error("Failed to fetch client data");
+//         }
+//         const data = await response.json();
+//         setFormData(data.data || []); // Update the state with the fetched data
+//       } catch (error) {
+//         // setError(error.message); // Set the error state if something goes wrong
+//         console.log(error.message)
+//       } finally {
+//         // setLoading(false); // Set loading to false once the data is fetched or error occurred
+//       }
+//     };
+
+//     fetchScreen4Data();
+//   }, []); // Empty dependency array ensures this runs once when the component mounts
+
+
+useEffect(() => {
+    const fetchScreen4Data = async () => {
+      try {
+        const response = await fetch(`http://localhost:1337/getscreen4data`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch client data");
+        }
+        const data = await response.json();
+
+        // Find the object with the matching id
+        const clientData = data.data.find((item) => item._id === id);
+        if (clientData) {
+          setFormData(clientData); // Set the form data with the found object
+        } else {
+          throw new Error("Client not found");
+        }
+      } catch (error) {
+        setError(error.message); // Handle error if something goes wrong
+        console.log(error.message);
+      }
+    };
+
+    fetchScreen4Data();
+  }, [id]); // Dependency on id ensures the effect runs when the id changes
+
+  if (!formData && !error) {
+    return <div>Loading...</div>; // Display a loading message
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>; // Display an error message
+  }  
 
   const handleCheckboxChange = (e) => {
     const { value, checked } = e.target;
@@ -217,7 +272,7 @@ function Screen4ChainOfCustodyForm() {
         <form
           onSubmit={handleSubmit}
           style={{
-            marginTop: "1810px",
+            marginTop: "1750px",
             background: "#ffffff",
             padding: "60px",
             paddingTop: "15px",
@@ -1860,7 +1915,7 @@ function Screen4ChainOfCustodyForm() {
           </div>
 
           {/* Submit Button */}
-          <button
+          {/* <button
             type="submit"
             style={{
               width: "100%",
@@ -1874,11 +1929,11 @@ function Screen4ChainOfCustodyForm() {
             }}
           >
             Submit
-          </button>
+          </button> */}
         </form>
       </div>
     </>
   );
 }
 
-export default Screen4ChainOfCustodyForm;
+export default Screen4Details;

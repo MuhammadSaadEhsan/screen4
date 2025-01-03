@@ -1,5 +1,6 @@
 .Practitionermainbody {
-    width: 72%;
+    /* width: 72%; */
+    width: 100%;
     /* background-color: rgb(250, 161, 60); */
     height: fit-content;
     min-height: 500px;
@@ -175,4 +176,19 @@
         /* flex-direction: column; */
     }
 
+}
+
+
+
+
+.mybold{
+    font-size: 17px;
+    font-weight: bold;
+    /* color: #f3ffdf; */
+    color: #80c20a;
+}
+.key{
+    font-size: 17px;
+    font-weight: 900;
+    color: rgb(75, 75, 75);
 }

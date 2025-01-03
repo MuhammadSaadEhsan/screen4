@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom'
 import Fskits from './pages/fskits';
 import Fsprec from './pages/fsprec';
 import Screen4TestForm from './pages/FSForm';
+import Screen4Details from './pages/clientDetails';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -105,9 +106,9 @@ function App() {
         <Routes>
 
           {/* fs/  */}
-          <Route path='/dashboard/fs/kit' element={<Fskits />} />
-          <Route path='/dashboard/fs/report' element={<Adminreport />} />
-          <Route path='/dashboard/fs/practitioner' element={<Fsprec />} />
+          {/* <Route path='/dashboard/fs/kit' element={<Fskits />} /> */}
+          {/* <Route path='/dashboard/fs/report' element={<Adminreport />} /> */}
+          {/* <Route path='/dashboard/fs/practitioner' element={<Fsprec />} /> */}
 
           {/* micro/     */}
           {/* <Route path='/dashboard/micro/kit' element={<Microkit />} />
@@ -130,9 +131,9 @@ function App() {
 
 
 
-          <Route path='/dashboard/kit' element={<Adminkit />} />
-          <Route path='/dashboard/practitioner' element={<Practitioner />} />
-          <Route path='/dashboard/patient' element={<Patient />} />
+          {/* <Route path='/dashboard/kit' element={<Adminkit />} /> */}
+          {/* <Route path='/dashboard/practitioner' element={<Practitioner />} /> */}
+          {/* <Route path='/dashboard/patient' element={<Patient />} /> */}
           {/* <Route path='/dashboard/practitionerstates' element={<Pracstate />} /> */}
           {/* <Route path='/dashboard/orders' element={<Orderlables />} /> */}
           {/* <Route path='/dashboard/shippingdata' element={<Shipping />} /> */}
@@ -140,6 +141,7 @@ function App() {
 
           <Route path='/dashboard/profile' element={<Profile />} />
           <Route path='/screen4testform' element={<Screen4TestForm />} />
+          <Route path="/deshboard/:id" element={<Screen4Details />} />
 
 
 

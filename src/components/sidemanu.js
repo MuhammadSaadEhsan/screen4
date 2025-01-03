@@ -30,17 +30,17 @@ function Sidemanu() {
 
 
             {/* <h3 onClick={() => navigate("/dashboard/kit")}><MdMedicalInformation style={{ width: '21px', height: '21px' }} />All Kits</h3> */}
-            <h3 onClick={() => navigate("/dashboard/fs/kit")}><MdMedicalInformation style={{ width: '21px', height: '21px' }} />All Kits</h3>
+            {/* <h3 onClick={() => navigate("/dashboard/fs/kit")}><MdMedicalInformation style={{ width: '21px', height: '21px' }} />All Kits</h3> */}
 
-            {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" && <>   <h3 onClick={() => navigate("/dashboard/practitioner")}><HiOutlineUsers style={{ width: '21px', height: '21px' }} />All Practitioners</h3></>}
-            {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" && <>   <h3 onClick={() => navigate("/dashboard/patient")}><HiOutlineUsers style={{ width: '21px', height: '21px' }} />All Patients</h3></>}
-            <h3 onClick={() =>{ setmanukonssa("1"); navigate("/dashboard/fs/report");}}><HiOutlineDocumentReport style={{ width: '15px', height: '15px' }} />Reports</h3>
-            {manukonssa === "1" && <>   <ul>
+            {/* {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" && <>   <h3 onClick={() => navigate("/dashboard/practitioner")}><HiOutlineUsers style={{ width: '21px', height: '21px' }} />All Practitioners</h3></>}
+            {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" && <>   <h3 onClick={() => navigate("/dashboard/patient")}><HiOutlineUsers style={{ width: '21px', height: '21px' }} />All Patients</h3></>} */}
+            {/* <h3 onClick={() =>{ setmanukonssa("1"); navigate("/dashboard/fs/report");}}><HiOutlineDocumentReport style={{ width: '15px', height: '15px' }} />Reports</h3> */}
+            {/* {manukonssa === "1" && <>   <ul> */}
                 {/* <li onClick={() => navigate("/dashboard/fs/kit")}><FaKitMedical style={{ width: '15px', height: '15px' }} />Kit </li>
                 {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" && <>   <li onClick={() => navigate("/dashboard/fs/practitioner")}><HiUserGroup style={{ width: '15px', height: '15px' }} />Practitioners </li></>} */}
                 {/* <li onClick={() => }>Reports </li> */}
-            </ul>
-            </>}
+            {/* </ul> */}
+            {/* </>} */}
             <h3 onClick={() => navigate("/dashboard/profile")}><CgProfile style={{ width: '21px', height: '21px' }} />Profile</h3>
 
         </div >
