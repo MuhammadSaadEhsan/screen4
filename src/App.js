@@ -14,6 +14,7 @@ import Fskits from './pages/fskits';
 import Fsprec from './pages/fsprec';
 import Screen4TestForm from './pages/FSForm';
 import Screen4Details from './pages/clientDetails';
+import Analytics from './pages/newdashboard';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -78,27 +79,9 @@ function App() {
 
         <Routes>
 
-          <Route path='/' element={<Patient />} />
-          {/* <Route path='/kitack' element={<Ackpage />} /> */}
-          {/* <Route path='/shipping' element={<Shippingform />} /> */}
-          {/* <Route path='/leads' element={<Leads />} /> */}
-    
-          {/* <Route path='/eventinfo' element={<Eventinfoform/>} /> */}
-          {/* <Route path='/bucket' element={<Bucket />} /> */}
-          <Route path='/dashboard' element={<Patient />} />
-          {/* <Route path='/dashboard/analysis' element={<KitAnalysis />} /> */}
-          {/* <Route path='/dashboard/webinar' element={<Webinar />} /> */}
-          {/* <Route path='/dashboard/webinar/:id' element={<Webinardetails />} /> */}
-          {/* <Route path='/dashboard/webinar/meeting/:id' element={<Meeting />} /> */}
-          {/* <Route path='/dashboard/helpcenter' element={<Helpcenter />} /> */}
-          {/* <Route path='/dashboard/tickets' element={<Tickets />} /> */}
-          {/* <Route path='/dashboard/order-states' element={<Orderstates />} /> */}
-          {/* <Route path='/dashboard/map' element={<Maps />} /> */}
-          {/* <Route path='/dashboard/tickets/:id' element={<Ticketsid />} /> */}
-          {/* <Route path='/dashboard/kitregistration' element={<Kitregistration />} /> */}
-          {/* <Route path='/dashboard/para-report/:id' element={<Pararesults />} /> */}
-          {/* <Route path='/dashboard/view-report/:id' element={<Viewreport />} /> */}
-          {/* <Route path='/dashboard/view-report100/:id' element={<Viewreport2 />} /> */}
+          <Route path='/' element={<Index />} />
+
+          <Route path='/data' element={<Patient />} />
 
 
         </Routes>
@@ -142,6 +125,7 @@ function App() {
           <Route path='/dashboard/profile' element={<Profile />} />
           <Route path='/screen4testform' element={<Screen4TestForm />} />
           <Route path="/deshboard/:id" element={<Screen4Details />} />
+          <Route path="/dashboard" element={<Analytics />} />
 
 
 

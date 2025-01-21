@@ -257,6 +257,7 @@
     .deshboardmain {
         flex-direction: column;
         padding: 120px 5px;
+        background: #80c209;
     }
 
     .mainbody {

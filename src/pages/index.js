@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import "../css/index.css"
 import { message } from 'antd';
 import Cookies from 'js-cookie';
-// import { loadStripe } from '@stripe/stripe-js';
 import { TiArrowBack } from "react-icons/ti";
 
 
@@ -23,43 +22,6 @@ function Index() {
     const [forgetpasswordemail, setforgetpasswordemail] = useState("")
     const [forgetpasswordotp, setforgetpasswordotp] = useState("")
     const [forgetpasswordnewpassword, setforgetpasswordnewpassword] = useState("")
-
-    // const addcard = async (item) => {
-
-    //     const hide = message.loading("Action in progress", 0)
-    //     // console.log(item)
-    //     const stripe = await loadStripe("pk_live_51MsenqJSzdsymN5jGOTIP3q4qBmD4PDra9chWFQYDC6RCchx2jLlIgdDRrUnhI24QhZeNeAqEo9tc6l3oiR4SWc3000yjqG8qW");
-
-    //     var myHeaders = new Headers();
-    //     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-
-    //     var urlencoded = new URLSearchParams();
-    //     urlencoded.append("CID", item[0].customerId);
-    //     urlencoded.append("PID", item[0].Id);
-
-    //     var requestOptions = {
-    //         method: 'POST',
-    //         headers: myHeaders,
-    //         body: urlencoded,
-    //         redirect: 'follow'
-    //     };
-    //     const response = await fetch(`${process.env.REACT_APP_API_URL}/addcar-session`, requestOptions);
-
-    //     const session = await response.json();
-
-    //     const result = stripe.redirectToCheckout({
-    //         sessionId: session.id
-    //     });
-
-    //     if (result.error) {
-    //         console.log(result.error);
-    //     }
-    //     await setTimeout(() => {
-    //         hide(); // Call hide to stop the loading message
-    //         message.success("Action completed successfully");
-    //     }, 2000);
-
-    // }
 
     const formsub = async (e) => {
 
@@ -259,11 +221,20 @@ function Index() {
     }
 
 
+    // useEffect(() => {
+    //     if (token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" || token === "sdrfg&78967daghf#wedhjgasj(dlsh6kjsdg") {
+    //         navigate("/dashboard")
+    //     }
+    // }, [])
     useEffect(() => {
-        if (token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" || token === "sdrfg&78967daghf#wedhjgasj(dlsh6kjsdg") {
-            navigate("/dashboard")
+        // Check if the token exists and is valid
+        if (token && 
+            (token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" || 
+             token === "sdrfg&78967daghf#wedhjgasj(dlsh6kjsdg")) {
+            navigate("/dashboard");
         }
-    }, [])
+    }, [token, navigate]); // Ensure dependencies are included
+    
 
 
 
@@ -276,19 +247,19 @@ function Index() {
             <div className='loginbox'>
 
 
-                <div className='logoinbox'>
-                    <img alt='' src="/logo192.png" width={"100%"} />
+                <div className='logoinbox' style={{width: "100%",display:"flex",justifyContent:"center"}}>
+                    <img alt='' src="/Screen4.png" width={"60%"} />
 
                 </div>
                 {forgetpassword === "1" && <>
                     <form onSubmit={formsub}>
-                        <h5 style={{ margin: '10px', color: '#4180b7 ' }}>Welcome to practitioner login page</h5>
+                        <h5 style={{ margin: '10px', color: '#80c209 ' }}>Welcome to login page</h5>
                         <input value={email} onChange={(e) => setemail(e.target.value)} placeholder='Email' required type='email' name='email' />
                         <input value={password} onChange={(e) => setpassword(e.target.value)} placeholder='Password' required type='password' name='password' />
 
-                        <button  >Login</button>
+                        <button style={{background:"#80c209"}} >Login</button>
 
-                        <h5 className='hovar' style={{ margin: '10px', color: '#4180b7 ' }} onClick={() => setforgetpassword("2")}>Forgot your password?</h5>
+                        <h5 className='hovar' style={{ margin: '10px', color: '#80c209 ' }} onClick={() => setforgetpassword("2")}>Forgot your password?</h5>
                     </form>
 
                 </>}

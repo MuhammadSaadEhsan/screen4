@@ -130,7 +130,7 @@ function Screen4Details() {
 useEffect(() => {
     const fetchScreen4Data = async () => {
       try {
-        const response = await fetch(`http://localhost:1337/getscreen4data`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/getscreen4data`);
         if (!response.ok) {
           throw new Error("Failed to fetch client data");
         }
@@ -221,7 +221,7 @@ useEffect(() => {
     try {
       const response = await fetch(
         // `${process.env.REACT_APP_API_URL}/addscreen4data`,
-        `http://localhost:1337/addscreen4data`,
+        `${process.env.REACT_APP_API_URL}/addscreen4data`,
         {
           method: "POST",
           headers: {
@@ -266,13 +266,14 @@ useEffect(() => {
           justifyContent: "center",
           padding: "20px",
           alignItems: "center",
-          height: "100vh",
+          height:"fitContent",
+          background:"#80c209",
         }}
       >
         <form
           onSubmit={handleSubmit}
           style={{
-            marginTop: "1750px",
+            // marginTop: "1750px",
             background: "#ffffff",
             padding: "60px",
             paddingTop: "15px",
@@ -625,10 +626,19 @@ useEffect(() => {
                   className="inputstyle"
                   type="text"
                   name="donorSignature"
-                  value={formData.donorSignature}
+                  value=''
                   placeholder=""
                   onChange={handleChange}
-                  style={{ margin: "0px" }}
+                  style={{
+                    width: "156px",
+                   margin: "0px",
+                   cursor: "pointer",
+                   backgroundImage: `url(${formData.donorSignature})`,
+                   backgroundSize: "contain",
+                   backgroundRepeat: "no-repeat",
+                   backgroundPosition: "center",
+                   height: "30px", // Adjust height to fit the signature image
+                 }}
                   required
                 />
               </div>
@@ -893,10 +903,19 @@ useEffect(() => {
                     className="inputstyle"
                     type="text"
                     name="collectorSignature"
-                    value={formData.collectorSignature}
+                    value=""
                     placeholder=""
                     onChange={handleChange}
-                    style={{ width: "152px", margin: "0px" }}
+                    style={{
+                      width: "156px",
+                     margin: "0px",
+                     cursor: "pointer",
+                     backgroundImage: `url(${formData.collectorSignature})`,
+                     backgroundSize: "contain",
+                     backgroundRepeat: "no-repeat",
+                     backgroundPosition: "center",
+                     height: "30px", // Adjust height to fit the signature image
+                   }}
                     required
                   />
                 </div>
@@ -1618,10 +1637,19 @@ useEffect(() => {
                     className="inputstyle"
                     type="text"
                     name="donorCertificationSignature"
-                    value={formData.donorCertificationSignature}
+                    value=''
                     placeholder=""
                     onChange={handleChange}
-                    style={{ width: "152px", margin: "0px" }}
+                    style={{
+                      width: "156px",
+                     margin: "0px",
+                     cursor: "pointer",
+                     backgroundImage: `url(${formData.donorCertificationSignature})`,
+                     backgroundSize: "contain",
+                     backgroundRepeat: "no-repeat",
+                     backgroundPosition: "center",
+                     height: "30px", // Adjust height to fit the signature image
+                   }}
                     required
                   />
                 </div>
@@ -1708,10 +1736,19 @@ useEffect(() => {
                     className="inputstyle"
                     type="text"
                     name="collectorCertificationSignature"
-                    value={formData.collectorCertificationSignature}
+                    value=""
                     placeholder=""
                     onChange={handleChange}
-                    style={{ width: "152px", margin: "0px" }}
+                    style={{
+                      width: "156px",
+                     margin: "0px",
+                     cursor: "pointer",
+                     backgroundImage: `url(${formData.collectorCertificationSignature})`,
+                     backgroundSize: "contain",
+                     backgroundRepeat: "no-repeat",
+                     backgroundPosition: "center",
+                     height: "30px", // Adjust height to fit the signature image
+                   }}
                     required
                   />
                 </div>

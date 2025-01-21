@@ -2,8 +2,169 @@ import "../css/profile.css";
 import React, { useState } from "react";
 import Navbar from "../components/navbar";
 import { message } from "antd";
+import { useRef } from "react";
 
 function Screen4ChainOfCustodyForm() {
+  const canvasRef = useRef(null);
+  const contextRef = useRef(null);
+  const [isDrawing, setIsDrawing] = useState(false);
+  // const [formData, setFormData] = useState({ donorSignature: "" });
+  const [isSignaturePadOpen, setIsSignaturePadOpen] = useState(false);
+  const [donorOpen, setIsDonorOpen] = useState(false);
+  const [donorConcentOpen, setIsDonorConcentOpen] = useState(false);
+  const [collectorOpen, setIsCollectorOpen] = useState(false);
+  const [collectorCertificationOpen, setIsCollectorCerificationOpen] = useState(false);
+
+
+  const pad = (data) =>{
+    return   <div
+    style={{
+      position: "fixed",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      zIndex: 1000,
+      backgroundColor: "white",
+      border: "1px solid #ccc",
+      padding: "20px",
+      boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+    }}
+  >
+    <canvas
+      ref={canvasRef}
+      style={{
+        width: "400px",
+        height: "200px",
+        border: "1px solid #ccc",
+        cursor: "crosshair",
+      }}
+      onMouseDown={startDrawing}
+      onMouseMove={draw}
+      onMouseUp={finishDrawing}
+      onMouseLeave={finishDrawing}
+    />
+    <div style={{ marginTop: "10px" }}>
+      <button
+        type="button"
+        onClick={clearCanvas}
+        style={{
+          marginRight: "10px",
+          padding: "5px 10px",
+          backgroundColor: "#f44336",
+          color: "white",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+        }}
+      >
+        Clear
+      </button>
+      <button
+        type="button"
+        onClick={closeSignaturePadWithoutSave}
+        style={{
+          marginRight: "10px",
+          padding: "5px 10px",
+          backgroundColor: "#f44336",
+          color: "white",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+        }}
+      >
+        Close
+      </button>
+      <button
+        type="button"
+        onClick={()=>{closeSignaturePad(data)}}
+        style={{
+          padding: "5px 10px",
+          backgroundColor: "#4caf50",
+          color: "white",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+        }}
+      >
+        Save & Close
+      </button>
+    </div>
+  </div>
+  }
+
+
+  const openSignaturePad = () => {
+    setIsSignaturePadOpen(true);
+    setTimeout(initializeCanvas, 0); // Initialize canvas after it renders
+  };
+
+  const closeSignaturePad = (mydata) => {
+    setIsSignaturePadOpen(false);
+
+    // Save canvas content as a data URL
+    const canvas = canvasRef.current;
+    const signatureData = canvas.toDataURL();
+    console.log(mydata)
+    setFormData((prevData) => ({ ...prevData, [mydata]: signatureData }));
+    setIsDonorOpen(false)
+    setIsCollectorOpen(false)
+    setIsDonorConcentOpen(false)
+    setIsCollectorCerificationOpen(false)
+  };
+  const closeSignaturePadWithoutSave = () => {
+    setIsSignaturePadOpen(false);
+
+    // Save canvas content as a data URL
+    const canvas = canvasRef.current;
+    // const signatureData = canvas.toDataURL();
+    // setFormData((prevData) => ({ ...prevData, donorSignature: signatureData }));
+  };
+
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    const context = contextRef.current;
+    context.clearRect(0, 0, canvas.width, canvas.height); // Clears the entire canvas
+  };
+
+  const initializeCanvas = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    canvas.width = canvas.offsetWidth * 2;
+    canvas.height = canvas.offsetHeight * 2;
+    canvas.style.width = `${canvas.offsetWidth}px`;
+    canvas.style.height = `${canvas.offsetHeight}px`;
+
+    const context = canvas.getContext("2d");
+    context.scale(2, 2);
+    context.lineCap = "round";
+    context.strokeStyle = "black";
+    context.lineWidth = 2;
+    contextRef.current = context;
+
+    // Clear canvas
+    context.clearRect(0, 0, canvas.width, canvas.height);
+  };
+
+  const startDrawing = ({ nativeEvent }) => {
+    const { offsetX, offsetY } = nativeEvent;
+    contextRef.current.beginPath();
+    contextRef.current.moveTo(offsetX, offsetY);
+    setIsDrawing(true);
+  };
+
+  const draw = ({ nativeEvent }) => {
+    if (!isDrawing) return;
+
+    const { offsetX, offsetY } = nativeEvent;
+    contextRef.current.lineTo(offsetX, offsetY);
+    contextRef.current.stroke();
+  };
+
+  const finishDrawing = () => {
+    contextRef.current.closePath();
+    setIsDrawing(false);
+  };
 
 
   const [formData, setFormData] = useState({
@@ -166,7 +327,7 @@ function Screen4ChainOfCustodyForm() {
     try {
       const response = await fetch(
         // `${process.env.REACT_APP_API_URL}/addscreen4data`,
-        `http://localhost:1337/addscreen4data`,
+        `${process.env.REACT_APP_API_URL}/addscreen4data`,
         {
           method: "POST",
           headers: {
@@ -187,14 +348,101 @@ function Screen4ChainOfCustodyForm() {
       // Reset form
       setFormData({
         donorName: "",
+        gcalicno:"",
         dob: "",
         companyName: "",
-        reasonForTest: "Pre-Employment",
+        reasonForTest: "", // Default reason
         location: "",
-        sampleDate: "",
-        adulterationCheck: false,
-        drugTests: [],
-        consent: false,
+        flight: "",
+        idsource: "",
+        gender: "",
+        barcodeno: "",
+        refno: "",
+        dateoftest: "",
+        alcohoDeclaration: "",
+        donorSignature: "",
+        donorDate: "",
+        test1: "",
+        test1BaracResult1: "",
+        test1BaracResult2: "",
+        test2: "",
+        test2BaracResult1: "",
+        test2BaracResult2: "",
+        collectorName: "",
+        collectorRemarks: "",
+        collectorSignature: "",
+        collectorDate: "",
+        donorConcent: "",
+        donorDeclaration: "",
+        donorDate: "",
+        medicationDate1: "",
+        medicationDate2: "",
+        medicationDate3: "",
+        medicationDate4: "",
+        medicationType1: "",
+        medicationType2: "",
+        medicationType3: "",
+        medicationType4: "",
+        medicationDosage1: "",
+        medicationDosage2: "",
+        medicationDosage3: "",
+        medicationDosage4: "",
+        collectionTime: "",
+        resultReadTime: "",
+        temperature: "",
+        lotno: "",
+        expDate: "",
+        adulterationTestPassed: "",
+        adulterationRemarks: "",
+        
+        AlcoholScreen: "",
+        AlcoholConfirm: "",
+        AmphetaminesScreen: "",
+        AmphetaminesConfirm: "",
+        BenzodiazepinesScreen: "",
+        BenzodiazepinesConfirm: "",
+        BuprenorphineScreen: "",
+        BuprenorphineConfirm: "",
+        BloodScreen: "",
+        BloodConfirm: "",
+        OtherScreen: "",
+        OtherConfirm: "",
+        CocaineScreen: "",
+        CocaineConfirm: "",
+        KetamineScreen: "",
+        KetamineConfirm: "",
+        MaritimeScreen: "",
+        MaritimeConfirm: "",
+        MDMAScreen: "",
+        MDMAConfirm: "",
+        MethadoneScreen: "",
+        MethadoneConfirm: "",
+        MethamphetamineScreen: "",
+        MethamphetamineConfirm: "",
+        MorphineScreen: "",
+        MorphineConfirm: "",
+        NetworkScreen: "",
+        NetworkConfirm: "",
+        OpiatesScreen: "",
+        OpiatesConfirm: "",
+        SSRIScreen: "",
+        SSRIConfirm: "",
+        TCAScreen: "",
+        TCAConfirm: "",
+        THCScreen: "",
+        THCConfirm: "",
+    
+        donorCertificationName:"",
+        donorCertificationSignature:"", 
+        donorCertificationDate:"",
+        collectorCertificationName:"",
+        collectorCertificationSignature:"", 
+        collectorCertificationDate:"",
+        recieveInitial:"",
+        recieveName:"",
+        recieveDate:"",
+        specimenBottle:"",
+        fatalFlaws:"",
       });
     } catch (error) {
       console.error("Error: ", error);
@@ -207,17 +455,21 @@ function Screen4ChainOfCustodyForm() {
       {/* <Navbar /> */}
       <div
         style={{
-          display: "flex",
-          justifyContent: "center",
+          // display: "flex",
+          // justifyContent: "center",
           padding: "20px",
-          alignItems: "center",
-          height: "100vh",
+          display:"grid",
+          placeItems:"center",
+          // alignItems: "center",
+          // height: "100vh",
+          height: "100%",
+          background:"#80c209"
         }}
       >
         <form
           onSubmit={handleSubmit}
           style={{
-            marginTop: "1810px",
+            // marginTop: "1110px",
             background: "#ffffff",
             padding: "60px",
             paddingTop: "15px",
@@ -229,7 +481,7 @@ function Screen4ChainOfCustodyForm() {
           <h2
             style={{
               textAlign: "center",
-              color: "#19b0e6",
+              color: "#80c209",
               padding: "10px",
             }}
           >
@@ -562,8 +814,7 @@ function Screen4ChainOfCustodyForm() {
               </p>
               {/* <div className="2nd-row" style={{ display: "flex",justifyContent:"space-between" }}> */}
               <div className="donor">
-                {/* GCAA LIC No */}
-                <label style={{ fontSize: "11px", fontWeight: "bold" }}>
+                {/* <label style={{ fontSize: "11px", fontWeight: "bold" }}>
                   Donor's Signature{" "}
                 </label>
                 <input
@@ -575,8 +826,34 @@ function Screen4ChainOfCustodyForm() {
                   onChange={handleChange}
                   style={{ margin: "0px" }}
                   required
-                />
+                /> */}
+                <label style={{ fontSize: "11px", fontWeight: "bold" }}>
+          Donor's Signature
+        </label>
+        <input
+          className="inputstyle"
+          type="text"
+          name="donorSignature"
+          value=""
+          placeholder=""
+          onClick={()=>{openSignaturePad(); setIsDonorOpen(true)}}
+          style={{
+             width: "156px",
+            margin: "0px",
+            cursor: "pointer",
+            backgroundImage: `url(${formData.donorSignature})`,
+            backgroundSize: "contain",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+            height: "30px", // Adjust height to fit the signature image
+          }}
+          readOnly
+
+        />
               </div>
+              {isSignaturePadOpen && donorOpen && (
+      pad("donorSignature")
+      )}
               <div className="donor">
                 {/* Date of Birth */}
                 <label
@@ -837,14 +1114,22 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="text"
+                    onClick={()=>{openSignaturePad(); setIsCollectorOpen(true)}}
                     name="collectorSignature"
-                    value={formData.collectorSignature}
+                    value=""
                     placeholder=""
                     onChange={handleChange}
-                    style={{ width: "152px", margin: "0px" }}
-                    required
+                    style={{ width: "152px", margin: "0px",cursor: "pointer",
+                      backgroundImage: `url(${formData.collectorSignature})`,
+                      backgroundSize: "contain",
+                      backgroundRepeat: "no-repeat",
+                      backgroundPosition: "center",height:"30px"}}
+        
                   />
                 </div>
+                {isSignaturePadOpen && collectorOpen&&(
+      pad("collectorSignature")
+      )}
                 <div className="donor">
                   {/* Date of Birth */}
                   <label
@@ -1563,13 +1848,21 @@ function Screen4ChainOfCustodyForm() {
                     className="inputstyle"
                     type="text"
                     name="donorCertificationSignature"
-                    value={formData.donorCertificationSignature}
+                    value=""//{formData.donorCertificationSignature}
                     placeholder=""
                     onChange={handleChange}
-                    style={{ width: "152px", margin: "0px" }}
-                    required
+                    onClick={()=>{openSignaturePad(); setIsDonorConcentOpen(true)}}
+                    style={{ width: "152px", margin: "0px",cursor: "pointer",
+                      backgroundImage: `url(${formData.donorCertificationSignature})`,
+                      backgroundSize: "contain",
+                      backgroundRepeat: "no-repeat",
+                      backgroundPosition: "center",height:"30px"}}
+              
                   />
                 </div>
+                {isSignaturePadOpen&& donorConcentOpen && (
+      pad("donorCertificationSignature")
+      )}
                 <div className="donor" style={{ marginLeft: "30px" }}>
                   <label
                     style={{
@@ -1653,13 +1946,21 @@ function Screen4ChainOfCustodyForm() {
                     className="inputstyle"
                     type="text"
                     name="collectorCertificationSignature"
-                    value={formData.collectorCertificationSignature}
+                    value=""//{formData.collectorCertificationSignature}
                     placeholder=""
+                    onClick={()=>{openSignaturePad(); setIsCollectorCerificationOpen(true)}}
                     onChange={handleChange}
-                    style={{ width: "152px", margin: "0px" }}
-                    required
+                    style={{ width: "152px", margin: "0px",cursor: "pointer",
+                      backgroundImage: `url(${formData.collectorCertificationSignature})`,
+                      backgroundSize: "contain",
+                      backgroundRepeat: "no-repeat",
+                      backgroundPosition: "center",height:"30px" }}
+         
                   />
                 </div>
+                {isSignaturePadOpen && collectorCertificationOpen && (
+      pad("collectorCertificationSignature")
+      )}
                 <div className="donor" style={{ marginLeft: "30px" }}>
                   <label
                     style={{
@@ -1866,6 +2167,7 @@ function Screen4ChainOfCustodyForm() {
               width: "100%",
               padding: "10px",
               background: "#19b0e6",
+              background: "#80c209",
               color: "#fff",
               border: "none",
               borderRadius: "5px",
@@ -1882,3 +2184,176 @@ function Screen4ChainOfCustodyForm() {
 }
 
 export default Screen4ChainOfCustodyForm;
+
+
+
+// import React, { useRef, useState } from "react";
+
+// const SignatureForm = () => {
+//   const canvasRef = useRef(null);
+//   const contextRef = useRef(null);
+//   const [isDrawing, setIsDrawing] = useState(false);
+//   const [formData, setFormData] = useState({ donorSignature: "" });
+//   const [isSignaturePadOpen, setIsSignaturePadOpen] = useState(false);
+
+//   const openSignaturePad = () => {
+//     setIsSignaturePadOpen(true);
+//     setTimeout(initializeCanvas, 0); // Initialize canvas after it renders
+//   };
+
+//   const closeSignaturePad = () => {
+//     setIsSignaturePadOpen(false);
+
+//     // Save canvas content as a data URL
+//     const canvas = canvasRef.current;
+//     const signatureData = canvas.toDataURL();
+//     setFormData((prevData) => ({ ...prevData, donorSignature: signatureData }));
+//   };
+
+//   const clearCanvas = () => {
+//     const canvas = canvasRef.current;
+//     const context = contextRef.current;
+//     context.clearRect(0, 0, canvas.width, canvas.height); // Clears the entire canvas
+//   };
+
+//   const initializeCanvas = () => {
+//     const canvas = canvasRef.current;
+//     if (!canvas) return;
+
+//     canvas.width = canvas.offsetWidth * 2;
+//     canvas.height = canvas.offsetHeight * 2;
+//     canvas.style.width = `${canvas.offsetWidth}px`;
+//     canvas.style.height = `${canvas.offsetHeight}px`;
+
+//     const context = canvas.getContext("2d");
+//     context.scale(2, 2);
+//     context.lineCap = "round";
+//     context.strokeStyle = "black";
+//     context.lineWidth = 2;
+//     contextRef.current = context;
+
+//     // Clear canvas
+//     context.clearRect(0, 0, canvas.width, canvas.height);
+//   };
+
+//   const startDrawing = ({ nativeEvent }) => {
+//     const { offsetX, offsetY } = nativeEvent;
+//     contextRef.current.beginPath();
+//     contextRef.current.moveTo(offsetX, offsetY);
+//     setIsDrawing(true);
+//   };
+
+//   const draw = ({ nativeEvent }) => {
+//     if (!isDrawing) return;
+
+//     const { offsetX, offsetY } = nativeEvent;
+//     contextRef.current.lineTo(offsetX, offsetY);
+//     contextRef.current.stroke();
+//   };
+
+//   const finishDrawing = () => {
+//     contextRef.current.closePath();
+//     setIsDrawing(false);
+//   };
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     console.log("Form submitted:", formData);
+//   };
+
+//   return (
+//     <form onSubmit={handleSubmit}>
+//       <div className="donor">
+//         <label style={{ fontSize: "11px", fontWeight: "bold" }}>
+//           Donor's Signature
+//         </label>
+//         <input
+//           className="inputstyle"
+//           type="text"
+//           name="donorSignature"
+//           value=""
+//           placeholder=""
+//           onClick={openSignaturePad}
+//           style={{
+//             margin: "0px",
+//             cursor: "pointer",
+//             backgroundImage: `url(${formData.donorSignature})`,
+//             backgroundSize: "contain",
+//             backgroundRepeat: "no-repeat",
+//             backgroundPosition: "center",
+//             height: "50px", // Adjust height to fit the signature image
+//           }}
+//           readOnly
+//           required
+//         />
+//       </div>
+
+//       {isSignaturePadOpen && (
+//         <div
+//           style={{
+//             position: "fixed",
+//             top: "50%",
+//             left: "50%",
+//             transform: "translate(-50%, -50%)",
+//             zIndex: 1000,
+//             backgroundColor: "white",
+//             border: "1px solid #ccc",
+//             padding: "20px",
+//             boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+//           }}
+//         >
+//           <canvas
+//             ref={canvasRef}
+//             style={{
+//               width: "400px",
+//               height: "200px",
+//               border: "1px solid #ccc",
+//               cursor: "crosshair",
+//             }}
+//             onMouseDown={startDrawing}
+//             onMouseMove={draw}
+//             onMouseUp={finishDrawing}
+//             onMouseLeave={finishDrawing}
+//           />
+//           <div style={{ marginTop: "10px" }}>
+//             <button
+//               type="button"
+//               onClick={clearCanvas}
+//               style={{
+//                 marginRight: "10px",
+//                 padding: "5px 10px",
+//                 backgroundColor: "#f44336",
+//                 color: "white",
+//                 border: "none",
+//                 borderRadius: "4px",
+//                 cursor: "pointer",
+//               }}
+//             >
+//               Clear
+//             </button>
+//             <button
+//               type="button"
+//               onClick={closeSignaturePad}
+//               style={{
+//                 padding: "5px 10px",
+//                 backgroundColor: "#4caf50",
+//                 color: "white",
+//                 border: "none",
+//                 borderRadius: "4px",
+//                 cursor: "pointer",
+//               }}
+//             >
+//               Save & Close
+//             </button>
+//           </div>
+//         </div>
+//       )}
+
+//       <button type="submit" style={{ marginTop: "10px" }}>
+//         Submit
+//       </button>
+//     </form>
+//   );
+// };
+
+// export default SignatureForm;
