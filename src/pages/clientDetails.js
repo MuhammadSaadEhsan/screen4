@@ -126,7 +126,12 @@ function Screen4Details() {
 //     fetchScreen4Data();
 //   }, []); // Empty dependency array ensures this runs once when the component mounts
 
-
+const handleAddComment = (field) => {
+  const comment = prompt("Enter your comment:");
+  if (comment) {
+    setFormData((prev) => ({ ...prev, [field]: comment })); // Save the comment for the field
+  }
+};
 useEffect(() => {
     const fetchScreen4Data = async () => {
       try {
@@ -1889,15 +1894,33 @@ useEffect(() => {
                   />
                 </label>
                 <span
-                  style={{
-                    // marginLeft: "auto",
-                    width: "104px",
-                    fontSize: "14px",
-                  }}
-                >
-                  ,add comment
-                </span>
-              </div></div>
+            style={{
+              marginLeft: "auto",
+              width: "110px",
+              marginLeft:"0px",
+              fontSize: "14px",
+              cursor: "pointer",
+              color: "green", // Add color to indicate clickable text
+            }}
+            onClick={() => handleAddComment("specimenBottleComment")} // Handle add comment
+            title={formData.specimenBottleComment} // Display the comment on hover
+          >
+            {formData.specimenBottleComment ? "update comment" : "add comment"}
+          </span>
+              </div>
+              {/* Display comment below, if available */}
+        {formData.specimenBottleComment && (
+          <div
+            style={{
+              fontSize: "12px",
+              color: "gray",
+              marginTop: "5px",
+              paddingLeft: "10px",
+            }}
+          >
+            Comment: {formData.specimenBottleComment}
+          </div>
+        )}</div>
             <div class="part3" style={{width: "30%",border:"1px solid black",height:"150px",marginBottom:"20px"}}><h5 style={{ fontWeight: "bold",padding:"7px",paddingLeft:"12px", fontSize: "15px" }}>
             Fatal Flaws
                 </h5><div
@@ -1940,16 +1963,35 @@ useEffect(() => {
                   />
                 </label>
                 <span
-                  style={{
-                    // marginLeft: "auto",
-                    width: "104px",
-                    fontSize: "14px",
-                  }}
-                >
-                  ,add comment
-                </span>
-              </div></div>
+            style={{
+              marginLeft: "auto",
+              width: "110px",
+              marginLeft:"0px",
+              fontSize: "14px",
+              cursor: "pointer",
+              color: "green", // Add color to indicate clickable text
+            }}
+            onClick={() => handleAddComment("fatalFlaws")} // Handle add comment
+            title={formData.fatalFlawsComment} // Display the comment on hover
+          >
+            {formData.fatalFlawsComment ? "update comment" : "add comment"}
+          </span>
+              </div>
+              {/* Display comment below, if available */}
+        {formData.fatalFlaws && (
+          <div
+            style={{
+              fontSize: "12px",
+              color: "gray",
+              marginTop: "5px",
+              paddingLeft: "10px",
+            }}
+          >
+            Comment: {formData.fatalFlawsComment}
           </div>
+        )}</div>
+          </div>
+          
 
           {/* Submit Button */}
           {/* <button

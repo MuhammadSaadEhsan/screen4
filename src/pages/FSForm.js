@@ -8,13 +8,24 @@ function Screen4ChainOfCustodyForm() {
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
+  const [isError, setIsError] = useState(false);
   // const [formData, setFormData] = useState({ donorSignature: "" });
   const [isSignaturePadOpen, setIsSignaturePadOpen] = useState(false);
   const [donorOpen, setIsDonorOpen] = useState(false);
   const [donorConcentOpen, setIsDonorConcentOpen] = useState(false);
   const [collectorOpen, setIsCollectorOpen] = useState(false);
   const [collectorCertificationOpen, setIsCollectorCerificationOpen] = useState(false);
+  
+  // const [comments, setComments] = useState({
+    
+  // }); // Track comments
 
+  const handleAddComment = (field) => {
+    const comment = prompt("Enter your comment:");
+    if (comment) {
+      setFormData((prev) => ({ ...prev, [field]: comment })); // Save the comment for the field
+    }
+  };
 
   const pad = (data) =>{
     return   <div
@@ -264,6 +275,8 @@ function Screen4ChainOfCustodyForm() {
     recieveDate:"",
     specimenBottle:"",
     fatalFlaws:"",
+    specimenBottleComment: "",
+    fatalFlawsComment: "",
   });
 
   const handleCheckboxChange = (e) => {
@@ -299,11 +312,11 @@ function Screen4ChainOfCustodyForm() {
   // };
   const handleChange = async (e) => {
     const { name, value, type, checked } = e.target;
-    console.log(e.target)
-    // console.log(checked)
+    console.log(formData.donorSignature)
+    // console.log(checked )
     await setFormData((prevData) => ({
       ...prevData,
-      [name]: value.toString(),
+      [name]: type === "checkbox" ? checked : value.toString(),
     }));
   };
 
@@ -323,130 +336,159 @@ function Screen4ChainOfCustodyForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form Data Submitted: ", formData);
-    try {
-      const response = await fetch(
-        // `${process.env.REACT_APP_API_URL}/addscreen4data`,
-        `${process.env.REACT_APP_API_URL}/addscreen4data`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      const result = await response.json();
-
-      if (response.ok) {
-        message.success("Form submitted successfully!");
-      } else {
-        message.error(result.message || "Failed to submit form.");
-      }
-
-      // Reset form
-      setFormData({
-        donorName: "",
-        gcalicno:"",
-        dob: "",
-        companyName: "",
-        reasonForTest: "", // Default reason
-        location: "",
-        flight: "",
-        idsource: "",
-        gender: "",
-        barcodeno: "",
-        refno: "",
-        dateoftest: "",
-        alcohoDeclaration: "",
-        donorSignature: "",
-        donorDate: "",
-        test1: "",
-        test1BaracResult1: "",
-        test1BaracResult2: "",
-        test2: "",
-        test2BaracResult1: "",
-        test2BaracResult2: "",
-        collectorName: "",
-        collectorRemarks: "",
-        collectorSignature: "",
-        collectorDate: "",
-        donorConcent: "",
-        donorDeclaration: "",
-        donorDate: "",
-        medicationDate1: "",
-        medicationDate2: "",
-        medicationDate3: "",
-        medicationDate4: "",
-        medicationType1: "",
-        medicationType2: "",
-        medicationType3: "",
-        medicationType4: "",
-        medicationDosage1: "",
-        medicationDosage2: "",
-        medicationDosage3: "",
-        medicationDosage4: "",
-        collectionTime: "",
-        resultReadTime: "",
-        temperature: "",
-        lotno: "",
-        expDate: "",
-        adulterationTestPassed: "",
-        adulterationRemarks: "",
-        
-        AlcoholScreen: "",
-        AlcoholConfirm: "",
-        AmphetaminesScreen: "",
-        AmphetaminesConfirm: "",
-        BenzodiazepinesScreen: "",
-        BenzodiazepinesConfirm: "",
-        BuprenorphineScreen: "",
-        BuprenorphineConfirm: "",
-        BloodScreen: "",
-        BloodConfirm: "",
-        OtherScreen: "",
-        OtherConfirm: "",
-        CocaineScreen: "",
-        CocaineConfirm: "",
-        KetamineScreen: "",
-        KetamineConfirm: "",
-        MaritimeScreen: "",
-        MaritimeConfirm: "",
-        MDMAScreen: "",
-        MDMAConfirm: "",
-        MethadoneScreen: "",
-        MethadoneConfirm: "",
-        MethamphetamineScreen: "",
-        MethamphetamineConfirm: "",
-        MorphineScreen: "",
-        MorphineConfirm: "",
-        NetworkScreen: "",
-        NetworkConfirm: "",
-        OpiatesScreen: "",
-        OpiatesConfirm: "",
-        SSRIScreen: "",
-        SSRIConfirm: "",
-        TCAScreen: "",
-        TCAConfirm: "",
-        THCScreen: "",
-        THCConfirm: "",
     
-        donorCertificationName:"",
-        donorCertificationSignature:"", 
-        donorCertificationDate:"",
-        collectorCertificationName:"",
-        collectorCertificationSignature:"", 
-        collectorCertificationDate:"",
-        recieveInitial:"",
-        recieveName:"",
-        recieveDate:"",
-        specimenBottle:"",
-        fatalFlaws:"",
-      });
-    } catch (error) {
-      console.error("Error: ", error);
-      message.error("Submission failed due to server error.");
+    // console.log("Form Data Submitted: ", formData);
+    if (!formData.reasonForTest) {
+      setIsError("reasonForTest");
+      message.warning("Please select a reason for the test");
+    } 
+    else if (!formData.gender) {
+      setIsError("gender");
+      message.warning("Please select gender");
+    } 
+    else if (!formData.alcohoDeclaration) {
+      setIsError("alcohoDeclaration");
+      message.warning("Please answer RESIDUAL MOUTH ALCOHOL DECLARATION");
+    } 
+    else if (!formData.donorSignature) {
+      setIsError("donorSignature");
+      message.warning("Please fill donor signature");
+    } 
+    else if (!formData.collectorSignature) {
+      setIsError("collectorSignature");
+      message.warning("Please fill collector signature");
+    } 
+    else if (!formData.collectorCertificationSignature) {
+      setIsError("collectorCertificationSignature");
+      message.warning("Please fill collector certification signature");
+    } 
+    
+    
+    else {
+      try {
+        const response = await fetch(
+          // `${process.env.REACT_APP_API_URL}/addscreen4data`,
+          `${process.env.REACT_APP_API_URL}/addscreen4data`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }
+        );
+  
+        const result = await response.json();
+  
+        if (response.ok) {
+          message.success("Form submitted successfully!");
+        } else {
+          message.error(result.message || "Failed to submit form.");
+        }
+  
+        // Reset form
+        setFormData({
+          donorName: "",
+          gcalicno:"",
+          dob: "",
+          companyName: "",
+          reasonForTest: "", // Default reason
+          location: "",
+          flight: "",
+          idsource: "",
+          gender: "",
+          barcodeno: "",
+          refno: "",
+          dateoftest: "",
+          alcohoDeclaration: "",
+          donorSignature: "",
+          donorDate: "",
+          test1: "",
+          test1BaracResult1: "",
+          test1BaracResult2: "",
+          test2: "",
+          test2BaracResult1: "",
+          test2BaracResult2: "",
+          collectorName: "",
+          collectorRemarks: "",
+          collectorSignature: "",
+          collectorDate: "",
+          donorConcent: "",
+          donorDeclaration: "",
+          donorDate: "",
+          medicationDate1: "",
+          medicationDate2: "",
+          medicationDate3: "",
+          medicationDate4: "",
+          medicationType1: "",
+          medicationType2: "",
+          medicationType3: "",
+          medicationType4: "",
+          medicationDosage1: "",
+          medicationDosage2: "",
+          medicationDosage3: "",
+          medicationDosage4: "",
+          collectionTime: "",
+          resultReadTime: "",
+          temperature: "",
+          lotno: "",
+          expDate: "",
+          adulterationTestPassed: "",
+          adulterationRemarks: "",
+          
+          AlcoholScreen: "",
+          AlcoholConfirm: "",
+          AmphetaminesScreen: "",
+          AmphetaminesConfirm: "",
+          BenzodiazepinesScreen: "",
+          BenzodiazepinesConfirm: "",
+          BuprenorphineScreen: "",
+          BuprenorphineConfirm: "",
+          BloodScreen: "",
+          BloodConfirm: "",
+          OtherScreen: "",
+          OtherConfirm: "",
+          CocaineScreen: "",
+          CocaineConfirm: "",
+          KetamineScreen: "",
+          KetamineConfirm: "",
+          MaritimeScreen: "",
+          MaritimeConfirm: "",
+          MDMAScreen: "",
+          MDMAConfirm: "",
+          MethadoneScreen: "",
+          MethadoneConfirm: "",
+          MethamphetamineScreen: "",
+          MethamphetamineConfirm: "",
+          MorphineScreen: "",
+          MorphineConfirm: "",
+          NetworkScreen: "",
+          NetworkConfirm: "",
+          OpiatesScreen: "",
+          OpiatesConfirm: "",
+          SSRIScreen: "",
+          SSRIConfirm: "",
+          TCAScreen: "",
+          TCAConfirm: "",
+          THCScreen: "",
+          THCConfirm: "",
+      
+          donorCertificationName:"",
+          donorCertificationSignature:"", 
+          donorCertificationDate:"",
+          collectorCertificationName:"",
+          collectorCertificationSignature:"", 
+          collectorCertificationDate:"",
+          recieveInitial:"",
+          recieveName:"",
+          recieveDate:"",
+          specimenBottle:"",
+          fatalFlaws:"",
+        });
+      } catch (error) {
+        console.error("Error: ", error);
+        message.error("Submission failed due to server error.");
+      }
     }
   };
 
@@ -490,7 +532,8 @@ function Screen4ChainOfCustodyForm() {
           <hr />
           <div className="donor">
             {/* Donor's Name */}
-            <label>Donor's Name</label>
+            <label>Donor's Name<span style={{color: "red"}}>*</span>
+            </label>
             <input
               className="inputstyle"
               type="text"
@@ -524,7 +567,7 @@ function Screen4ChainOfCustodyForm() {
             </div>
             <div className="donor">
               {/* Date of Birth */}
-              <label>Date of Birth</label>
+              <label>Date of Birth<span style={{ color: "red" }}>*</span></label>
               <input
                 className="inputstyle"
                 type="date"
@@ -544,7 +587,7 @@ function Screen4ChainOfCustodyForm() {
             <div className="inner1" style={{}}>
               <div className="donor">
                 {/* Company Name */}
-                <label style={{ width: "137px" }}>Company Name</label>
+                <label style={{ width: "137px" }}>Company Name<span style={{ color: "red" }}>*</span></label>
                 <input
                   className="inputstyle"
                   style={{ marginLeft: "15px", width: "190px" }}
@@ -553,13 +596,14 @@ function Screen4ChainOfCustodyForm() {
                   value={formData.companyName}
                   onChange={handleChange}
                   placeholder="Enter Company Name"
+                  required
                 />
               </div>
 
               <div className="donor">
                 {/* Location */}
 
-                <label>Location</label>
+                <label>Location<span style={{ color: "red" }}>*</span></label>
                 <input
                   className="inputstyle"
                   type="text"
@@ -567,11 +611,12 @@ function Screen4ChainOfCustodyForm() {
                   value={formData.location}
                   onChange={handleChange}
                   placeholder="Enter Location"
+                  required
                 />
               </div>
               <div className="donor">
                 {/* Flight/Vessel */}
-                <label>Flight/Vessel</label>
+                <label>Flight/Vessel<span style={{ color: "red" }}>*</span></label>
                 <input
                   className="inputstyle"
                   type="text"
@@ -579,12 +624,13 @@ function Screen4ChainOfCustodyForm() {
                   value={formData.flight}
                   onChange={handleChange}
                   placeholder="Enter Flight / Vessel"
+                  required
                 />
               </div>
               {/* <span style={{ fontSize: "6px" }}>Check donor identity and record ID source here, e.g. passport (with number) OR supervisor’s signature and PRINTED name.</span> */}
               <div className="donor">
                 {/* ID Source */}
-                <label>ID Source</label>
+                <label>ID Source<span style={{ color: "red" }}>*</span></label>
                 <input
                   className="inputstyle"
                   type="text"
@@ -592,6 +638,7 @@ function Screen4ChainOfCustodyForm() {
                   value={formData.idsource}
                   onChange={handleChange}
                   placeholder="Enter ID Source"
+                  required
                 />
               </div>
               {/* <label style={{ marginLeft: "0px" }}>
@@ -634,11 +681,17 @@ function Screen4ChainOfCustodyForm() {
     />
     F
   </label>
+  {isError && isError==='gender' && (
+          <p style={{ color: "red", fontSize: "12px", marginTop: "5px" }}>
+            Please select gender
+          </p>
+        )}
             </div>
             <div className="inner2" style={{ marginLeft: "45px" }}>
               {/* Reason for Test */}
               <label style={{ marginBottom: "20px", display: "block" }}>
                 Reason for Test
+                <span style={{ color: "red" }}>*</span>
               </label>
               <div
                 style={{
@@ -689,12 +742,17 @@ function Screen4ChainOfCustodyForm() {
     />
     Follow-up
   </label>
+  {isError && isError==='reasonForTest' && (
+          <p style={{ color: "red", fontSize: "12px", marginTop: "5px" }}>
+            Please select a reason for the test.
+          </p>
+        )}
               </div>
             </div>
             <div className="inner3">
               <div className="donor">
                 {/* BAR CODE NUMBER */}
-                <label>BAR CODE NUMBER</label>
+                <label>BAR CODE NUMBER<span style={{ color: "red" }}>*</span></label>
                 <input
                   style={{ width: "35%", marginLeft: "0px" }}
                   className="inputstyle"
@@ -708,7 +766,7 @@ function Screen4ChainOfCustodyForm() {
               <hr></hr>
               <div className="donor">
                 {/* REF NO/JOB NO:*/}
-                <label>REF NO/JOB NO:</label>
+                <label>REF NO/JOB NO<span style={{ color: "red" }}>*</span></label>
                 <input
                   className="inputstyle"
                   style={{ width: "35%", marginLeft: "0px" }}
@@ -722,7 +780,7 @@ function Screen4ChainOfCustodyForm() {
               <hr></hr>
               <div className="donor">
                 {/* DATE OF TEST: */}
-                <label style={{ width: "180px" }}>DATE OF TEST:</label>
+                <label style={{ width: "180px" }}>DATE OF TEST<span style={{ color: "red" }}>*</span></label>
                 <input
                   className="inputstyle"
                   style={{ width: "36%", marginLeft: "0px" }}
@@ -736,6 +794,122 @@ function Screen4ChainOfCustodyForm() {
             </div>
           </div>
           <hr />
+          <div class="third-row" style={{ marginBottom: "10px" }}>
+            <p style={{ fontSize: "12px" }}>
+              {" "}
+              <span style={{ fontWeight: "bold", fontSize: "15px" }}>
+                DONOR CONSENT TO TEST AND SPECIFIC DECLARATION
+              </span>{" "}
+              I hereby consent to providing a sample of breath, saliva, urine
+              hair or blood to the collector and if required for it to be
+              screened in my presence, if necessary, and if required by my
+              employer / potential future employer, for the analysis to be
+              performed at an off site laboratory. I also consent to the results
+              of the analysis being communicated in writing to my employer /
+              potential future employer and for them to use this information for
+              any purpose connected to my employment / application for
+              employment{" "}
+              <span style={{ fontWeight: "bold", fontSize: "13px" }}>
+                I declare that I have read and understood the Donor Information
+                Sheet relating to the test.
+              </span>
+            </p>
+            <div class="" style={{ display: "flex" }}>
+              <div className="donor">
+                {/* GCAA LIC No */}
+                <label
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    width: "120px",
+                  }}
+                >
+                  Donor Consent<span style={{ color: "red" }}>*</span>{" "}
+                </label>
+                <input
+                  className="inputstyle"
+                  type="text"
+                  name="donorConcent"
+                  value={formData.donorConcent}
+                  placeholder=""
+                  onChange={handleChange}
+                  style={{ margin: "0px", width: "150px" }}
+                  
+                />
+              </div>
+              <div
+                class="box"
+                style={{
+                  border: "1px solid black",
+                  marginLeft: "15px",
+                  padding: "3px",
+                  width: "90%",
+                }}
+              >
+                <p
+                  style={{
+                    fontSize: "11px",
+                    fontWeight: "bold",
+                    margin: "0px",
+                    paddingLeft: "10px",
+                  }}
+                >
+                  I am satisfied that the test has been completed in line with
+                  stated process.
+                </p>
+                <div
+                  className="2nd-row"
+                  style={{ display: "flex", justifyContent: "space-around" }}
+                >
+                  <div className="donor">
+                    {/* GCAA LIC No */}
+                    <label
+                      style={{
+                        width: "130px",
+                        fontSize: "11px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Donor Declaration<span style={{ color: "red" }}>*</span>{" "}
+                    </label>
+                    <input
+                      className="inputstyle"
+                      type="text"
+                      name="donorDeclaration"
+                      value={formData.donorDeclaration}
+                      placeholder=""
+                      onChange={handleChange}
+                      style={{ width: "152px", margin: "0px", height: "5px" }}
+                      
+                    />
+                  </div>
+                  <div className="donor">
+                    <label
+                      style={{
+                        width: "25px",
+                        fontSize: "12px",
+                        fontWeight: "bold",
+                        marginLeft: "10px",
+                        marginRight: "10px",
+                      }}
+                    >
+                      Date<span style={{ color: "red" }}>*</span>
+                    </label>
+                    <input
+                      className="inputstyle"
+                      type="date"
+                      name="donorDate"
+                      value={formData.donorDate}
+                      onChange={handleChange}
+                      style={{ width: "69%", height: "5px" }}
+                      
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr style={{marginTop:"20px",marginBottom:"20px"}}/>
           <div
             class="second-container"
             style={{
@@ -797,6 +971,11 @@ function Screen4ChainOfCustodyForm() {
                     onChange={handleChange}
                   />
                 </label>
+                {isError && isError==='alcohoDeclaration' && (
+          <p style={{ color: "red", fontSize: "12px", marginTop: "5px" }}>
+            Please answer RESIDUAL MOUTH ALCOHOL DECLARATION
+          </p>
+        )}
                 <span
                   style={{
                     marginLeft: "auto",
@@ -828,7 +1007,7 @@ function Screen4ChainOfCustodyForm() {
                   required
                 /> */}
                 <label style={{ fontSize: "11px", fontWeight: "bold" }}>
-          Donor's Signature
+          Donor's Signature<span style={{ color: "red" }}>*</span>
         </label>
         <input
           className="inputstyle"
@@ -848,8 +1027,14 @@ function Screen4ChainOfCustodyForm() {
             height: "30px", // Adjust height to fit the signature image
           }}
           readOnly
-
         />
+        {isError && isError==='donorSignature' && (
+          <p style={{ color: "red", padding:"5px",fontSize: "12px", marginTop: "5px" }}>
+            Please fill donor signature
+          </p>
+        )}
+        
+
               </div>
               {isSignaturePadOpen && donorOpen && (
       pad("donorSignature")
@@ -865,7 +1050,7 @@ function Screen4ChainOfCustodyForm() {
                     margin: "0px",
                   }}
                 >
-                  Date
+                  Date<span style={{ color: "red" }}>*</span>
                 </label>
                 <input
                   className="inputstyle"
@@ -904,7 +1089,7 @@ function Screen4ChainOfCustodyForm() {
                     marginTop: "18px",
                   }}
                 >
-                  Local Time
+                  Local Time<span style={{ color: "red" }}>*</span>
                 </p>
                 <div className="donor">
                   <label
@@ -981,7 +1166,7 @@ function Screen4ChainOfCustodyForm() {
                     marginTop: "18px",
                   }}
                 >
-                  Local Time
+                  Local Time<span style={{ color: "red" }}>*</span>
                 </p>
                 <div className="donor">
                   <label
@@ -1059,7 +1244,7 @@ function Screen4ChainOfCustodyForm() {
                       fontWeight: "bold",
                     }}
                   >
-                    Collector Name:{" "}
+                    Collector Name<span style={{ color: "red" }}>*</span>
                   </label>
                   <input
                     className="inputstyle"
@@ -1083,7 +1268,7 @@ function Screen4ChainOfCustodyForm() {
                       marginRight: "10px",
                     }}
                   >
-                    Remarks
+                    Remarks<span style={{ color: "red" }}>*</span>
                   </label>
                   <input
                     className="inputstyle"
@@ -1109,8 +1294,9 @@ function Screen4ChainOfCustodyForm() {
                       fontWeight: "bold",
                     }}
                   >
-                    Collector Signature:{" "}
+                    Collector Signature<span style={{ color: "red" }}>*</span>
                   </label>
+                  
                   <input
                     className="inputstyle"
                     type="text"
@@ -1127,6 +1313,7 @@ function Screen4ChainOfCustodyForm() {
         
                   />
                 </div>
+               
                 {isSignaturePadOpen && collectorOpen&&(
       pad("collectorSignature")
       )}
@@ -1141,7 +1328,7 @@ function Screen4ChainOfCustodyForm() {
                       marginRight: "10px",
                     }}
                   >
-                    Date
+                    Date<span style={{ color: "red" }}>*</span>
                   </label>
                   <input
                     className="inputstyle"
@@ -1153,124 +1340,16 @@ function Screen4ChainOfCustodyForm() {
                     required
                   />
                 </div>
+                
               </div>
+               {isError && isError==='collectorSignature' && (
+          <p style={{ color: "red", padding:"5px",paddingRight:"0px",fontSize: "12px", marginTop: "5px" }}>
+            Please fill collector signature
+          </p>
+        )}
             </div>
           </div>
-          <div class="third-row" style={{ marginBottom: "10px" }}>
-            <p style={{ fontSize: "12px" }}>
-              {" "}
-              <span style={{ fontWeight: "bold", fontSize: "15px" }}>
-                DONOR CONSENT TO TEST AND SPECIFIC DECLARATION
-              </span>{" "}
-              I hereby consent to providing a sample of breath, saliva, urine
-              hair or blood to the collector and if required for it to be
-              screened in my presence, if necessary, and if required by my
-              employer / potential future employer, for the analysis to be
-              performed at an off site laboratory. I also consent to the results
-              of the analysis being communicated in writing to my employer /
-              potential future employer and for them to use this information for
-              any purpose connected to my employment / application for
-              employment{" "}
-              <span style={{ fontWeight: "bold", fontSize: "13px" }}>
-                I declare that I have read and understood the Donor Information
-                Sheet relating to the test.
-              </span>
-            </p>
-            <div class="" style={{ display: "flex" }}>
-              <div className="donor">
-                {/* GCAA LIC No */}
-                <label
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "bold",
-                    width: "120px",
-                  }}
-                >
-                  Donor Concent{" "}
-                </label>
-                <input
-                  className="inputstyle"
-                  type="text"
-                  name="donorConcent"
-                  value={formData.donorConcent}
-                  placeholder=""
-                  onChange={handleChange}
-                  style={{ margin: "0px", width: "150px" }}
-                  required
-                />
-              </div>
-              <div
-                class="box"
-                style={{
-                  border: "1px solid black",
-                  marginLeft: "15px",
-                  padding: "3px",
-                  width: "90%",
-                }}
-              >
-                <p
-                  style={{
-                    fontSize: "11px",
-                    fontWeight: "bold",
-                    margin: "0px",
-                    paddingLeft: "10px",
-                  }}
-                >
-                  I am satisfied that the test has been completed in line with
-                  stated process.
-                </p>
-                <div
-                  className="2nd-row"
-                  style={{ display: "flex", justifyContent: "space-around" }}
-                >
-                  <div className="donor">
-                    {/* GCAA LIC No */}
-                    <label
-                      style={{
-                        width: "130px",
-                        fontSize: "11px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Donor Declaration:{" "}
-                    </label>
-                    <input
-                      className="inputstyle"
-                      type="text"
-                      name="donorDeclaration"
-                      value={formData.donorDeclaration}
-                      placeholder=""
-                      onChange={handleChange}
-                      style={{ width: "152px", margin: "0px", height: "5px" }}
-                      required
-                    />
-                  </div>
-                  <div className="donor">
-                    <label
-                      style={{
-                        width: "25px",
-                        fontSize: "12px",
-                        fontWeight: "bold",
-                        marginLeft: "10px",
-                        marginRight: "10px",
-                      }}
-                    >
-                      Date
-                    </label>
-                    <input
-                      className="inputstyle"
-                      type="date"
-                      name="donorDate"
-                      value={formData.donorDate}
-                      onChange={handleChange}
-                      style={{ width: "69%", height: "5px" }}
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          
           <table className="table-one">
             <tr>
               <td colspan="3" className="form-description">
@@ -1918,7 +1997,7 @@ function Screen4ChainOfCustodyForm() {
                       width: "60px",
                     }}
                   >
-                    Name{" "}
+                    Name<span style={{ color: "red" }}>*</span>
                   </label>
                   <input
                     className="inputstyle"
@@ -1940,8 +2019,9 @@ function Screen4ChainOfCustodyForm() {
                       fontWeight: "bold",
                     }}
                   >
-                    Signature{" "}
+                    Signature<span style={{ color: "red" }}>*</span>
                   </label>
+                  
                   <input
                     className="inputstyle"
                     type="text"
@@ -1971,7 +2051,7 @@ function Screen4ChainOfCustodyForm() {
                       marginRight: "10px",
                     }}
                   >
-                    Date
+                    Date<span style={{ color: "red" }}>*</span>
                   </label>
                   <input
                     className="inputstyle"
@@ -1984,6 +2064,11 @@ function Screen4ChainOfCustodyForm() {
                   />
                 </div>
               </div>
+               {isError && isError==='collectorCertificationSignature' && (
+          <p style={{ color: "red", padding:"5px",paddingRight:"0px",fontSize: "12px", marginTop: "5px" }}>
+            Please fill collector certification signature
+          </p>
+        )}
             </div>
           </div>
           <div class="last-row" style={{display:"flex",width: "100%"}}>
@@ -2008,7 +2093,7 @@ function Screen4ChainOfCustodyForm() {
                     placeholder=""
                     onChange={handleChange}
                     style={{ width: "102px", margin: "0px", height: "5px" }}
-                    required
+                    
                   />
                 </div>
                 <div className="donor" style={{ marginLeft: "5px" }}>
@@ -2030,7 +2115,7 @@ function Screen4ChainOfCustodyForm() {
                     placeholder=""
                     onChange={handleChange}
                     style={{ width: "102px", margin: "0px", height: "5px" }}
-                    required
+                    
                   />
                 </div>
                 <div className="donor" style={{ marginLeft: "5px" }}>
@@ -2052,7 +2137,7 @@ function Screen4ChainOfCustodyForm() {
                     placeholder=""
                     onChange={handleChange}
                     style={{ width: "102px", margin: "0px", height: "5px" }}
-                    required
+                    
                   />
                 </div>
                 </div>
@@ -2097,16 +2182,45 @@ function Screen4ChainOfCustodyForm() {
                     onChange={handleChange}
                   />
                 </label>
-                <span
+                {/* <span
+                onClick={()=>{prompt("enter comments")}}
                   style={{
                     // marginLeft: "auto",
                     width: "104px",
                     fontSize: "14px",
+                    cursor:"pointer"
                   }}
                 >
                   ,add comment
-                </span>
-              </div></div>
+                </span> */}
+                <span
+            style={{
+              marginLeft: "auto",
+              width: "110px",
+              marginLeft:"0px",
+              fontSize: "14px",
+              cursor: "pointer",
+              color: "green", // Add color to indicate clickable text
+            }}
+            onClick={() => handleAddComment("specimenBottleComment")} // Handle add comment
+            title={formData.specimenBottleComment} // Display the comment on hover
+          >
+            {formData.specimenBottleComment ? "update comment" : "add comment"}
+          </span>
+              </div>
+              {/* Display comment below, if available */}
+        {formData.specimenBottleComment && (
+          <div
+            style={{
+              fontSize: "12px",
+              color: "gray",
+              marginTop: "5px",
+              paddingLeft: "10px",
+            }}
+          >
+            Comment: {formData.specimenBottleComment}
+          </div>
+        )}</div>
             <div class="part3" style={{width: "30%",border:"1px solid black",height:"150px",marginBottom:"20px"}}><h5 style={{ fontWeight: "bold",padding:"7px",paddingLeft:"12px", fontSize: "15px" }}>
             Fatal Flaws
                 </h5><div
@@ -2148,7 +2262,7 @@ function Screen4ChainOfCustodyForm() {
                     onChange={handleChange}
                   />
                 </label>
-                <span
+                {/* <span
                   style={{
                     // marginLeft: "auto",
                     width: "104px",
@@ -2156,8 +2270,49 @@ function Screen4ChainOfCustodyForm() {
                   }}
                 >
                   ,add comment
-                </span>
-              </div></div>
+                </span> */}
+                {/* <span
+            style={{
+              marginLeft: "auto",
+              width: "104px",
+              marginLeft:"0px",
+              fontSize: "14px",
+              cursor: "pointer",
+              color: "green", // Add color to indicate clickable text
+            }}
+            onClick={() => handleAddComment("fatalFlaws")} // Handle add comment
+            title={comments.fatalFlaws} // Display the comment on hover
+          >
+            ,add comment
+          </span> */}
+          <span
+            style={{
+              marginLeft: "auto",
+              width: "110px",
+              marginLeft:"0px",
+              fontSize: "14px",
+              cursor: "pointer",
+              color: "green", // Add color to indicate clickable text
+            }}
+            onClick={() => handleAddComment("fatalFlawsComment")} // Handle add comment
+            title={formData.fatalFlawsComment} // Display the comment on hover
+          >
+            {formData.fatalFlawsComment ? "update comment" : "add comment"}
+          </span>
+              </div>
+              {/* Display comment below, if available */}
+        {formData.fatalFlaws && (
+          <div
+            style={{
+              fontSize: "12px",
+              color: "gray",
+              marginTop: "5px",
+              paddingLeft: "10px",
+            }}
+          >
+            Comment: {formData.fatalFlawsComment}
+          </div>
+        )}</div>
           </div>
 
           {/* Submit Button */}
@@ -2185,175 +2340,3 @@ function Screen4ChainOfCustodyForm() {
 
 export default Screen4ChainOfCustodyForm;
 
-
-
-// import React, { useRef, useState } from "react";
-
-// const SignatureForm = () => {
-//   const canvasRef = useRef(null);
-//   const contextRef = useRef(null);
-//   const [isDrawing, setIsDrawing] = useState(false);
-//   const [formData, setFormData] = useState({ donorSignature: "" });
-//   const [isSignaturePadOpen, setIsSignaturePadOpen] = useState(false);
-
-//   const openSignaturePad = () => {
-//     setIsSignaturePadOpen(true);
-//     setTimeout(initializeCanvas, 0); // Initialize canvas after it renders
-//   };
-
-//   const closeSignaturePad = () => {
-//     setIsSignaturePadOpen(false);
-
-//     // Save canvas content as a data URL
-//     const canvas = canvasRef.current;
-//     const signatureData = canvas.toDataURL();
-//     setFormData((prevData) => ({ ...prevData, donorSignature: signatureData }));
-//   };
-
-//   const clearCanvas = () => {
-//     const canvas = canvasRef.current;
-//     const context = contextRef.current;
-//     context.clearRect(0, 0, canvas.width, canvas.height); // Clears the entire canvas
-//   };
-
-//   const initializeCanvas = () => {
-//     const canvas = canvasRef.current;
-//     if (!canvas) return;
-
-//     canvas.width = canvas.offsetWidth * 2;
-//     canvas.height = canvas.offsetHeight * 2;
-//     canvas.style.width = `${canvas.offsetWidth}px`;
-//     canvas.style.height = `${canvas.offsetHeight}px`;
-
-//     const context = canvas.getContext("2d");
-//     context.scale(2, 2);
-//     context.lineCap = "round";
-//     context.strokeStyle = "black";
-//     context.lineWidth = 2;
-//     contextRef.current = context;
-
-//     // Clear canvas
-//     context.clearRect(0, 0, canvas.width, canvas.height);
-//   };
-
-//   const startDrawing = ({ nativeEvent }) => {
-//     const { offsetX, offsetY } = nativeEvent;
-//     contextRef.current.beginPath();
-//     contextRef.current.moveTo(offsetX, offsetY);
-//     setIsDrawing(true);
-//   };
-
-//   const draw = ({ nativeEvent }) => {
-//     if (!isDrawing) return;
-
-//     const { offsetX, offsetY } = nativeEvent;
-//     contextRef.current.lineTo(offsetX, offsetY);
-//     contextRef.current.stroke();
-//   };
-
-//   const finishDrawing = () => {
-//     contextRef.current.closePath();
-//     setIsDrawing(false);
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     console.log("Form submitted:", formData);
-//   };
-
-//   return (
-//     <form onSubmit={handleSubmit}>
-//       <div className="donor">
-//         <label style={{ fontSize: "11px", fontWeight: "bold" }}>
-//           Donor's Signature
-//         </label>
-//         <input
-//           className="inputstyle"
-//           type="text"
-//           name="donorSignature"
-//           value=""
-//           placeholder=""
-//           onClick={openSignaturePad}
-//           style={{
-//             margin: "0px",
-//             cursor: "pointer",
-//             backgroundImage: `url(${formData.donorSignature})`,
-//             backgroundSize: "contain",
-//             backgroundRepeat: "no-repeat",
-//             backgroundPosition: "center",
-//             height: "50px", // Adjust height to fit the signature image
-//           }}
-//           readOnly
-//           required
-//         />
-//       </div>
-
-//       {isSignaturePadOpen && (
-//         <div
-//           style={{
-//             position: "fixed",
-//             top: "50%",
-//             left: "50%",
-//             transform: "translate(-50%, -50%)",
-//             zIndex: 1000,
-//             backgroundColor: "white",
-//             border: "1px solid #ccc",
-//             padding: "20px",
-//             boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-//           }}
-//         >
-//           <canvas
-//             ref={canvasRef}
-//             style={{
-//               width: "400px",
-//               height: "200px",
-//               border: "1px solid #ccc",
-//               cursor: "crosshair",
-//             }}
-//             onMouseDown={startDrawing}
-//             onMouseMove={draw}
-//             onMouseUp={finishDrawing}
-//             onMouseLeave={finishDrawing}
-//           />
-//           <div style={{ marginTop: "10px" }}>
-//             <button
-//               type="button"
-//               onClick={clearCanvas}
-//               style={{
-//                 marginRight: "10px",
-//                 padding: "5px 10px",
-//                 backgroundColor: "#f44336",
-//                 color: "white",
-//                 border: "none",
-//                 borderRadius: "4px",
-//                 cursor: "pointer",
-//               }}
-//             >
-//               Clear
-//             </button>
-//             <button
-//               type="button"
-//               onClick={closeSignaturePad}
-//               style={{
-//                 padding: "5px 10px",
-//                 backgroundColor: "#4caf50",
-//                 color: "white",
-//                 border: "none",
-//                 borderRadius: "4px",
-//                 cursor: "pointer",
-//               }}
-//             >
-//               Save & Close
-//             </button>
-//           </div>
-//         </div>
-//       )}
-
-//       <button type="submit" style={{ marginTop: "10px" }}>
-//         Submit
-//       </button>
-//     </form>
-//   );
-// };
-
-// export default SignatureForm;
