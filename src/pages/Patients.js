@@ -224,7 +224,7 @@ const Patients = () => {
           </div>
 
           {/* Search Input */}
-          <input
+          {/* <input
             type="text"
             placeholder="🔍 | Search by name, company, or location..."
             value={searchQuery}
@@ -240,7 +240,37 @@ const Patients = () => {
               borderRadius:"20px",
               fontSize: "16px",
             }}
-          />
+          /> */}
+          <div style={{ position: "relative", width: "61.5%", marginBottom: "20px" }}>
+  <span
+    style={{
+      position: "absolute",
+      top: "50%",
+      left: "10px",
+      transform: "translateY(-50%)",
+      fontSize: "16px",
+      color: "#ccc",
+      pointerEvents: "none", // Prevent interaction with the icon
+    }}
+  >
+    🔍
+  </span>
+  <input
+    type="text"
+    placeholder="Search by name, company, or location..."
+    value={searchQuery}
+    onChange={handleSearchChange}
+    style={{
+      width: "100%",
+      padding: "10px",
+      paddingLeft: "35px", // Add padding to accommodate the icon
+      borderRadius: "20px",
+      border: "1px solid #ccc",
+      fontSize: "16px",
+    }}
+  />
+</div>
+
 
           <div
             style={{

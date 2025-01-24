@@ -103,7 +103,12 @@ function Screen4ChainOfCustodyForm() {
   </div>
   }
 
-
+  const specificFields = [
+    "DrugsandAlcoholUrineTest",
+    "DrugsandAlcoholOralTest",
+    "BreathAlcoholOnlyTest",
+    "DrugsOnlyTest",
+  ];
   const openSignaturePad = () => {
     setIsSignaturePadOpen(true);
     setTimeout(initializeCanvas, 0); // Initialize canvas after it renders
@@ -277,6 +282,10 @@ function Screen4ChainOfCustodyForm() {
     fatalFlaws:"",
     specimenBottleComment: "",
     fatalFlawsComment: "",
+    DrugsandAlcoholUrineTest:"",
+    DrugsandAlcoholOralTest:"",
+    BreathAlcoholOnlyTest:"",
+    DrugsOnlyTest:"",
   });
 
   const handleCheckboxChange = (e) => {
@@ -318,6 +327,9 @@ function Screen4ChainOfCustodyForm() {
       ...prevData,
       [name]: type === "checkbox" ? checked : value.toString(),
     }));
+
+    // console.log(formData.DrugsandAlcoholOralTest)
+    console.log(formData.AlcoholScreen)
   };
 
 //   const handleChange = async (e) => {
@@ -484,6 +496,12 @@ function Screen4ChainOfCustodyForm() {
           recieveDate:"",
           specimenBottle:"",
           fatalFlaws:"",
+          specimenBottleComment: "",
+          fatalFlawsComment: "",
+          DrugsandAlcoholUrineTest:"",
+          DrugsandAlcoholOralTest:"",
+          BreathAlcoholOnlyTest:"",
+          DrugsOnlyTest:"",
         });
       } catch (error) {
         console.error("Error: ", error);
@@ -1349,9 +1367,35 @@ function Screen4ChainOfCustodyForm() {
         )}
             </div>
           </div>
-          
-          <table className="table-one">
+          <hr style={{marginTop:"25px"}}/>
+          <table className="table-one" style={{marginTop:"0px"}}>
             <tr>
+            <table style={{ borderCollapse: "collapse", width: "100%" }}>
+      <thead>
+          <h4>What test type is required?</h4>
+        <tr>
+          <th>Test Name</th>
+          <th>Include</th>
+        </tr>
+      </thead>
+      <tbody>
+        {specificFields.map((field, index) => (
+          <tr key={index}>
+            <td style={{ border: "1px solid black", padding: "8px" }}>{field==='DrugsandAlcoholUrineTest' ? ' Drugs and Alcohol (Urine & Breath)':field==='DrugsandAlcoholOralTest' ? 'Drugs and Alcohol (Oral Fl & Breath)' : field==='BreathAlcoholOnlyTest' ? 'Breath Alcohol Only' : field==='DrugsOnlyTest' ? 'Drugs Only ' : field}</td>
+            <td style={{ border: "1px solid black", padding: "8px" }}>
+              <input
+                type="checkbox"
+                name={field}
+                checked={formData[field] === true}
+                onChange={handleChange}
+              />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    </tr>
+    <tr>
               <td colspan="3" className="form-description">
                 <caption>Medication</caption>
                 Give details of any medication, nutritional or fitness
@@ -1360,9 +1404,28 @@ function Screen4ChainOfCustodyForm() {
               </td>
             </tr>
             <tr>
-              <th>Date Taken</th>
-              <th>Type/Description</th>
-              <th>Dosage</th>
+              {/* <th>Date Taken{formData.DrugsandAlcoholUrineTest === "true" || formData.DrugsandAlcoholOralTest !== "true" ?<span style={{ color: "red" }}>*</span> : null }</th>
+              <th>Type/Description{formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== "" ?<span style={{ color: "red" }}>*</span> : null }</th>
+              <th>Dosage{formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== "" ?<span style={{ color: "red" }}>*</span> : null }</th> */}
+            <th>
+  Date Taken
+  {formData.DrugsandAlcoholUrineTest === true || formData.DrugsandAlcoholOralTest === true ? (
+    <span style={{ color: "red" }}>*</span>
+  ) : null}
+</th>
+<th>
+  Type/Description
+  {formData.DrugsandAlcoholUrineTest === true || formData.DrugsandAlcoholOralTest === true ? (
+    <span style={{ color: "red" }}>*</span>
+  ) : null}
+</th>
+<th>
+  Dosage
+  {formData.DrugsandAlcoholUrineTest === true || formData.DrugsandAlcoholOralTest === true ? (
+    <span style={{ color: "red" }}>*</span>
+  ) : null}
+</th>
+
             </tr>
             <tr>
               <td>
@@ -1372,6 +1435,7 @@ function Screen4ChainOfCustodyForm() {
                   name="medicationDate1"
                   value={formData.medicationDate1}
                   onChange={handleChange}
+                  required={formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== ""}
                 />
               </td>
               <td>
@@ -1381,7 +1445,7 @@ function Screen4ChainOfCustodyForm() {
                   name="medicationType1"
                   value={formData.medicationType1}
                   onChange={handleChange}
-                />
+                  required={formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== ""}/>
               </td>
               <td>
                 <input
@@ -1390,6 +1454,7 @@ function Screen4ChainOfCustodyForm() {
                   name="medicationDosage1"
                   value={formData.medicationDosage1}
                   onChange={handleChange}
+                  required={formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== ""}
                 />
               </td>
             </tr>
@@ -1401,7 +1466,7 @@ function Screen4ChainOfCustodyForm() {
                   name="medicationDate2"
                   value={formData.medicationDate2}
                   onChange={handleChange}
-                />
+                  />
               </td>
               <td>
                 <input
@@ -1525,7 +1590,7 @@ function Screen4ChainOfCustodyForm() {
                     placeholder=""
                     onChange={handleChange}
                     style={{ width: "102px", margin: "0px", height: "5px" }}
-                    required
+                    // required
                   />
                 </div>
                 <div className="donor" style={{ marginLeft: "5px" }}>
@@ -1547,7 +1612,7 @@ function Screen4ChainOfCustodyForm() {
                     placeholder=""
                     onChange={handleChange}
                     style={{ width: "102px", margin: "0px", height: "5px" }}
-                    required
+                    // required
                   />
                 </div>
                 <div class="row"></div>
@@ -1628,7 +1693,7 @@ function Screen4ChainOfCustodyForm() {
                             margin: "0px",
                             height: "5px",
                           }}
-                          required
+                          // required
                         />
                       </div>
                     </div>
@@ -1659,7 +1724,7 @@ function Screen4ChainOfCustodyForm() {
                             margin: "0px",
                             height: "5px",
                           }}
-                          required
+                          // required
                         />
                       </div>
                     </div>
@@ -1740,7 +1805,7 @@ function Screen4ChainOfCustodyForm() {
                     placeholder=""
                     onChange={handleChange}
                     style={{ width: "192px", margin: "0px", height: "5px" }}
-                    required
+                    // required
                   />
                 </div>
               </div>
@@ -1909,7 +1974,7 @@ function Screen4ChainOfCustodyForm() {
                     placeholder=""
                     onChange={handleChange}
                     style={{ margin: "0px", width: "150px" }}
-                    required
+                    
                   />
                 </div>
                 <div className="donor" style={{ marginLeft: "30px" }}>
@@ -1961,7 +2026,7 @@ function Screen4ChainOfCustodyForm() {
                     value={formData.donorCertificationDate}
                     onChange={handleChange}
                     style={{ width: "69%" }}
-                    required
+                    
                   />
                 </div>
               </div>
@@ -2301,7 +2366,7 @@ function Screen4ChainOfCustodyForm() {
           </span>
               </div>
               {/* Display comment below, if available */}
-        {formData.fatalFlaws && (
+        {formData.fatalFlawsComment && (
           <div
             style={{
               fontSize: "12px",

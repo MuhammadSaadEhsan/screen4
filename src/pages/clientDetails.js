@@ -8,6 +8,130 @@ import { useParams } from "react-router-dom";
 function Screen4Details() {
     const [error, setError] = useState(null);
     const { id } = useParams();
+    
+  const specificFields = [
+    "DrugsandAlcoholUrineTest",
+    "DrugsandAlcoholOralTest",
+    "BreathAlcoholOnlyTest",
+    "DrugsOnlyTest",
+  ];
+  // const [formData, setFormData] = useState({
+  //   donorName: "",
+  //   gcalicno:"",
+  //   dob: "",
+  //   companyName: "",
+  //   reasonForTest: "", // Default reason
+  //   location: "",
+  //   flight: "",
+  //   idsource: "",
+  //   gender: "",
+  //   barcodeno: "",
+  //   refno: "",
+  //   dateoftest: "",
+  //   alcohoDeclaration: "",
+  //   donorSignature: "",
+  //   donorDate: "",
+  //   test1: "",
+  //   test1BaracResult1: "",
+  //   test1BaracResult2: "",
+  //   test2: "",
+  //   test2BaracResult1: "",
+  //   test2BaracResult2: "",
+  //   collectorName: "",
+  //   collectorRemarks: "",
+  //   collectorSignature: "",
+  //   collectorDate: "",
+  //   donorConcent: "",
+  //   donorDeclaration: "",
+  //   donorDate: "",
+  //   medicationDate1: "",
+  //   medicationDate2: "",
+  //   medicationDate3: "",
+  //   medicationDate4: "",
+  //   medicationType1: "",
+  //   medicationType2: "",
+  //   medicationType3: "",
+  //   medicationType4: "",
+  //   medicationDosage1: "",
+  //   medicationDosage2: "",
+  //   medicationDosage3: "",
+  //   medicationDosage4: "",
+  //   collectionTime: "",
+  //   resultReadTime: "",
+  //   temperature: "",
+  //   lotno: "",
+  //   expDate: "",
+  //   adulterationTestPassed: "",
+  //   adulterationRemarks: "",
+    
+  //   AlcoholScreen: "",
+  //   AlcoholConfirm: "",
+  //   AmphetaminesScreen: "",
+  //   AmphetaminesConfirm: "",
+  //   BenzodiazepinesScreen: "",
+  //   BenzodiazepinesConfirm: "",
+  //   BuprenorphineScreen: "",
+  //   BuprenorphineConfirm: "",
+  //   BloodScreen: "",
+  //   BloodConfirm: "",
+  //   OtherScreen: "",
+  //   OtherConfirm: "",
+  //   CocaineScreen: "",
+  //   CocaineConfirm: "",
+  //   KetamineScreen: "",
+  //   KetamineConfirm: "",
+  //   MaritimeScreen: "",
+  //   MaritimeConfirm: "",
+  //   MDMAScreen: "",
+  //   MDMAConfirm: "",
+  //   MethadoneScreen: "",
+  //   MethadoneConfirm: "",
+  //   MethamphetamineScreen: "",
+  //   MethamphetamineConfirm: "",
+  //   MorphineScreen: "",
+  //   MorphineConfirm: "",
+  //   NetworkScreen: "",
+  //   NetworkConfirm: "",
+  //   OpiatesScreen: "",
+  //   OpiatesConfirm: "",
+  //   SSRIScreen: "",
+  //   SSRIConfirm: "",
+  //   TCAScreen: "",
+  //   TCAConfirm: "",
+  //   THCScreen: "",
+  //   THCConfirm: "",
+
+  //   donorCertificationName:"",
+  //   donorCertificationSignature:"", 
+  //   donorCertificationDate:"",
+  //   collectorCertificationName:"",
+  //   collectorCertificationSignature:"", 
+  //   collectorCertificationDate:"",
+  //   recieveInitial:"",
+  //   recieveName:"",
+  //   recieveDate:"",
+  //   specimenBottle:"",
+  //   fatalFlaws:"",
+  // });
+//  useEffect(() => {
+//     const fetchScreen4Data = async () => {
+//       try {
+//         const response = await fetch(`http://localhost:1337/getscreen4data`);
+//         if (!response.ok) {
+//           throw new Error("Failed to fetch client data");
+//         }
+//         const data = await response.json();
+//         setFormData(data.data || []); // Update the state with the fetched data
+//       } catch (error) {
+//         // setError(error.message); // Set the error state if something goes wrong
+//         console.log(error.message)
+//       } finally {
+//         // setLoading(false); // Set loading to false once the data is fetched or error occurred
+//       }
+//     };
+
+//     fetchScreen4Data();
+//   }, []); // Empty dependency array ensures this runs once when the component mounts
   const [formData, setFormData] = useState({
     donorName: "",
     gcalicno:"",
@@ -105,27 +229,13 @@ function Screen4Details() {
     recieveDate:"",
     specimenBottle:"",
     fatalFlaws:"",
+    specimenBottleComment: "",
+    fatalFlawsComment: "",
+    DrugsandAlcoholUrineTest:"",
+    DrugsandAlcoholOralTest:"",
+    BreathAlcoholOnlyTest:"",
+    DrugsOnlyTest:"",
   });
-//  useEffect(() => {
-//     const fetchScreen4Data = async () => {
-//       try {
-//         const response = await fetch(`http://localhost:1337/getscreen4data`);
-//         if (!response.ok) {
-//           throw new Error("Failed to fetch client data");
-//         }
-//         const data = await response.json();
-//         setFormData(data.data || []); // Update the state with the fetched data
-//       } catch (error) {
-//         // setError(error.message); // Set the error state if something goes wrong
-//         console.log(error.message)
-//       } finally {
-//         // setLoading(false); // Set loading to false once the data is fetched or error occurred
-//       }
-//     };
-
-//     fetchScreen4Data();
-//   }, []); // Empty dependency array ensures this runs once when the component mounts
-
 const handleAddComment = (field) => {
   const comment = prompt("Enter your comment:");
   if (comment) {
@@ -1067,6 +1177,185 @@ useEffect(() => {
           </div>
           <table className="table-one">
             <tr>
+            <hr style={{marginTop:"25px"}}/>
+          <table className="table-one" style={{marginTop:"0px"}}>
+            <tr>
+            <table style={{ borderCollapse: "collapse", width: "100%" }}>
+      <thead>
+          <h4>What test type is required?</h4>
+        <tr>
+          <th>Test Name</th>
+          <th>Include</th>
+        </tr>
+      </thead>
+      <tbody>
+        {specificFields.map((field, index) => (
+          <tr key={index}>
+            <td style={{ border: "1px solid black", padding: "8px" }}>{field==='DrugsandAlcoholUrineTest' ? ' Drugs and Alcohol (Urine & Breath)':field==='DrugsandAlcoholOralTest' ? 'Drugs and Alcohol (Oral Fl & Breath)' : field==='BreathAlcoholOnlyTest' ? 'Breath Alcohol Only' : field==='DrugsOnlyTest' ? 'Drugs Only ' : field}</td>
+            <td style={{ border: "1px solid black", padding: "8px" }}>
+              <input
+                type="checkbox"
+                name={field}
+                checked={formData[field] === true}
+                onChange={handleChange}
+              />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    </tr>
+    <tr>
+              <td colspan="3" className="form-description">
+                <caption>Medication</caption>
+                Give details of any medication, nutritional or fitness
+                supplements taken within the last 14 days. If none, write
+                'NONE'.
+              </td>
+            </tr>
+            <tr>
+              {/* <th>Date Taken{formData.DrugsandAlcoholUrineTest === "true" || formData.DrugsandAlcoholOralTest !== "true" ?<span style={{ color: "red" }}>*</span> : null }</th>
+              <th>Type/Description{formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== "" ?<span style={{ color: "red" }}>*</span> : null }</th>
+              <th>Dosage{formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== "" ?<span style={{ color: "red" }}>*</span> : null }</th> */}
+            <th>
+  Date Taken
+  {formData.DrugsandAlcoholUrineTest === true || formData.DrugsandAlcoholOralTest === true ? (
+    <span style={{ color: "red" }}>*</span>
+  ) : null}
+</th>
+<th>
+  Type/Description
+  {formData.DrugsandAlcoholUrineTest === true || formData.DrugsandAlcoholOralTest === true ? (
+    <span style={{ color: "red" }}>*</span>
+  ) : null}
+</th>
+<th>
+  Dosage
+  {formData.DrugsandAlcoholUrineTest === true || formData.DrugsandAlcoholOralTest === true ? (
+    <span style={{ color: "red" }}>*</span>
+  ) : null}
+</th>
+
+            </tr>
+            <tr>
+              <td>
+                <input
+                  className="noborder"
+                  type="date"
+                  name="medicationDate1"
+                  value={formData.medicationDate1}
+                  onChange={handleChange}
+                  required={formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== ""}
+                />
+              </td>
+              <td>
+                <input
+                  className="noborder"
+                  type="text"
+                  name="medicationType1"
+                  value={formData.medicationType1}
+                  onChange={handleChange}
+                  required={formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== ""}/>
+              </td>
+              <td>
+                <input
+                  className="noborder"
+                  type="text"
+                  name="medicationDosage1"
+                  value={formData.medicationDosage1}
+                  onChange={handleChange}
+                  required={formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== ""}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input
+                  className="noborder"
+                  type="date"
+                  name="medicationDate2"
+                  value={formData.medicationDate2}
+                  onChange={handleChange}
+                  />
+              </td>
+              <td>
+                <input
+                  className="noborder"
+                  type="text"
+                  name="medicationType2"
+                  value={formData.medicationType2}
+                  onChange={handleChange}
+                />
+              </td>
+              <td>
+                <input
+                  className="noborder"
+                  type="text"
+                  name="medicationDosage2"
+                  value={formData.medicationDosage2}
+                  onChange={handleChange}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input
+                  className="noborder"
+                  type="date"
+                  name="medicationDate3"
+                  value={formData.medicationDate3}
+                  onChange={handleChange}
+                />
+              </td>
+              <td>
+                <input
+                  className="noborder"
+                  type="text"
+                  name="medicationType3"
+                  value={formData.medicationType3}
+                  onChange={handleChange}
+                />
+              </td>
+              <td>
+                <input
+                  className="noborder"
+                  type="text"
+                  name="medicationDosage3"
+                  value={formData.medicationDosage3}
+                  onChange={handleChange}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input
+                  className="noborder"
+                  type="date"
+                  name="medicationDate4"
+                  value={formData.medicationDate4}
+                  onChange={handleChange}
+                />
+              </td>
+              <td>
+                <input
+                  className="noborder"
+                  type="text"
+                  name="medicationType4"
+                  value={formData.medicationType4}
+                  onChange={handleChange}
+                />
+              </td>
+              <td>
+                <input
+                  className="noborder"
+                  type="text"
+                  name="medicationDosage4"
+                  value={formData.medicationDosage4}
+                  onChange={handleChange}
+                />
+              </td>
+            </tr>
+          </table>
               <td colspan="3" className="form-description">
                 <caption>Medication</caption>
                 Give details of any medication, nutritional or fitness
