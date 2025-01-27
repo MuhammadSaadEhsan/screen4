@@ -4,14 +4,10 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import Index from './pages';
 import Desboard from './pages/desboard';
-import Adminkit from './pages/adminkit';
-import Adminreport from './pages/adminreport';
 import Practitioner from './pages/Practitioner';
 import Patient from './pages/Patients';
 import Profile from './pages/Profile';
 import { useNavigate } from 'react-router-dom'
-import Fskits from './pages/fskits';
-import Fsprec from './pages/fsprec';
 import Screen4TestForm from './pages/FSForm';
 import Screen4Details from './pages/clientDetails';
 import Analytics from './pages/newdashboard';
@@ -88,43 +84,10 @@ function App() {
 
         <Routes>
 
-          {/* fs/  */}
-          {/* <Route path='/dashboard/fs/kit' element={<Fskits />} /> */}
-          {/* <Route path='/dashboard/fs/report' element={<Adminreport />} /> */}
-          {/* <Route path='/dashboard/fs/practitioner' element={<Fsprec />} /> */}
-
-          {/* micro/     */}
-          {/* <Route path='/dashboard/micro/kit' element={<Microkit />} />
-          <Route path='/dashboard/micro/report' element={<Mircoreport />} />
-          <Route path='/dashboard/micro/practitioner' element={<Micropre />} /> */}
-
-
-
-          {/* dna/     */}
-          {/* <Route path='/dashboard/dna/kit' element={<DNAkit />} />
-          <Route path='/dnamap-form' element={<Dnamapform />} />
-          <Route path='/Parasitology-Test-Form' element={<Praform />} />
-          <Route path='/dashboard/dna/report' element={<DNAreport />} />
-          <Route path='/dashboard/dna/practitioner' element={<DNAprec />} /> */}
-
-          {/* Parasitology */}
-          {/* <Route path='/dashboard/Parasitology/kit' element={<Parasitologykit />} />
-          <Route path='/dashboard/Parasitology/report' element={<Parasitologyreport />} />
-          <Route path='/dashboard/Parasitology/practitioner' element={<Parasitologyprec />} /> */}
-
-
-
-          {/* <Route path='/dashboard/kit' element={<Adminkit />} /> */}
-          {/* <Route path='/dashboard/practitioner' element={<Practitioner />} /> */}
-          {/* <Route path='/dashboard/patient' element={<Patient />} /> */}
-          {/* <Route path='/dashboard/practitionerstates' element={<Pracstate />} /> */}
-          {/* <Route path='/dashboard/orders' element={<Orderlables />} /> */}
-          {/* <Route path='/dashboard/shippingdata' element={<Shipping />} /> */}
-          {/* <Route path='/dashboard/eventinfogdata' element={<Eventinfo />} /> */}
 
           <Route path='/dashboard/profile' element={<Profile />} />
           <Route path='/screen4testform' element={<Screen4TestForm />} />
-          <Route path="/deshboard/:id" element={<Screen4Details />} />
+          <Route path="/dashboard/:id" element={<Screen4Details />} />
           <Route path="/dashboard" element={<Analytics />} />
 
 

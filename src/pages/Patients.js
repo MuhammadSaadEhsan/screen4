@@ -171,7 +171,7 @@ const Patients = () => {
   }, []); // Empty dependency array ensures this runs once when the component mounts
 
   const handleClientClick = (id) => {
-    navigate(`/deshboard/${id}`); // Navigate to the desired route
+    navigate(`/dashboard/${id}`); // Navigate to the desired route
   };
 
   useEffect(() => {
