@@ -1,15 +1,18 @@
 // import React, { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+// import { useNavigate } from "react-router-dom";
 // import Navbar from "../components/navbar";
-// import Sidemanu from "../components/sidemanu";
-// import Cookies from 'js-cookie';
+// import Cookies from "js-cookie";
 
 // const Patients = () => {
 //   const [client, setClient] = useState([]);
+//   const [filteredClients, setFilteredClients] = useState([]);
+//   const [searchQuery, setSearchQuery] = useState("");
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState(null);
-//   const navigate = useNavigate(); // Initialize navigate function
+//   const [selectedTab, setSelectedTab] = useState("All");
+//   const navigate = useNavigate();
 
+//   // Fetch client data
 //   useEffect(() => {
 //     const fetchScreen4Data = async () => {
 //       try {
@@ -18,39 +21,99 @@
 //           throw new Error("Failed to fetch client data");
 //         }
 //         const data = await response.json();
-//         setClient(data.data || []); // Update the state with the fetched data
-//       } catch (error) {
-//         setError(error.message); // Set the error state if something goes wrong
+//         setClient(data.data || []);
+//         setFilteredClients(data.data || []);
+//       } catch (err) {
+//         setError(err.message);
 //       } finally {
-//         setLoading(false); // Set loading to false once the data is fetched or error occurred
+//         setLoading(false);
 //       }
 //     };
 
 //     fetchScreen4Data();
-//   }, []); // Empty dependency array ensures this runs once when the component mounts
+//   }, []);
 
-//   const handleClientClick = (id) => {
-//     navigate(`/deshboard/${id}`); // Navigate to the desired route
-//   };
-
-
+//   // Authentication check
 //   useEffect(() => {
-//     const token = Cookies.get("Token")
-//     // Check token validity
+//     const token = Cookies.get("Token");
 //     if (
 //       !token ||
 //       (token !== "dskgfsdgfkgsdfkjg35464154845674987dsf@53" &&
 //         token !== "sdrfg&78967daghf#wedhjgasj(dlsh6kjsdg")
 //     ) {
-//       navigate("/"); // Redirect to Index.js page
+//       navigate("/");
 //       return;
-//     }})
+//     }
+//   }, [navigate]);
+
+//   // Filter clients based on tab and search query
+//   const filterClients = (tab, query) => {
+//     let filtered = client;
+
+//     // Filter by tab
+//     if (tab === "Pending") {
+//       filtered = client.filter((c) => !c.isUpdated); // Check for `isUpdated` field
+//     } else if (tab === "Completed") {
+//       filtered = client.filter((c) => c.isUpdated); // Check for `isUpdated` field
+//     }
+
+//     // Filter by search query
+//     if (query) {
+//       filtered = filtered.filter(
+//         (c) =>
+//           c.donorName?.toLowerCase().includes(query) ||
+//           c.companyName?.toLowerCase().includes(query) ||
+//           c.location?.toLowerCase().includes(query)
+//       );
+//     }
+
+//     setFilteredClients(filtered);
+//   };
+
+//   // Handle search input
+//   const handleSearchChange = (event) => {
+//     const query = event.target.value.toLowerCase();
+//     setSearchQuery(query);
+//     filterClients(selectedTab, query);
+//   };
+
+//   // Handle tab change
+//   const handleTabChange = (tab) => {
+//     setSelectedTab(tab);
+//     filterClients(tab, searchQuery);
+//   };
+
+//   const handleClientClick = (id) => {
+//     navigate(`/dashboard/${id}`);
+//   };
+
+//   const handleSendEmail = async (client) => {
+//     if (client.isEmailed) return;
+
+//     try {
+//       const response = await fetch(`${process.env.REACT_APP_API_URL}/sendscreenemailtodonor/${client._id}`, {
+//         method: "POST",
+//       });
+
+//       if (!response.ok) {
+//         throw new Error("Failed to send email");
+//       }
+
+//       // Update the client's isEmailed status
+//       setFilteredClients((prevClients) =>
+//         prevClients.map((c) =>
+//           c._id === client._id ? { ...c, isEmailed: true } : c
+//         )
+//       );
+//     } catch (err) {
+//       console.error(err.message);
+//     }
+//   };
 
 //   return (
 //     <div>
 //       <Navbar />
-//       <div className="deshboardmain" style={{background:"#80c209"}}>
-//         {/* <Sidemanu /> */}
+//       <div className="deshboardmain" style={{ background: "#80c209" }}>
 //         <div
 //           className="Practitionermainbody"
 //           style={{
@@ -59,73 +122,143 @@
 //             display: "flex",
 //             flexDirection: "column",
 //             alignItems: "center",
-//             paddingBottom:"100px"
+//             paddingBottom: "100px",
 //           }}
 //         >
-//           <div className="key" style={{fontSize: "20px", marginBottom: "10px" }}>
+//           <div className="key" style={{ fontSize: "20px", marginBottom: "10px" }}>
 //             All Clients
 //           </div>
-//           <div style={{width:"100%",display:"flex",flexDirection:"column",alignItems:"center"}}>
-//             {client.map((client, index) => (
-//               <div
-//                 key={index}
+
+//           {/* Tabs */}
+//           <div style={{ marginBottom: "25px", marginTop: "5px", display: "flex", gap: "10px" }}>
+//             {["All", "Pending", "Completed"].map((tab) => (
+//               <button
+//                 key={tab}
+//                 onClick={() => handleTabChange(tab)}
 //                 style={{
-//                   padding: "20px",
-//                   marginBottom: "20px",
-//                   width: "60%",
-//                   height: "130px",
-//                   borderRadius: "13px",
-//                   background: "#f3ffdf",
-//                   border: "1px solid #80c20a",
-//                   cursor: "pointer", // Indicate clickable area
+//                   padding: "10px 20px",
+//                   borderRadius: "20px",
+//                   border: selectedTab === tab ? "none" : "1px solid #7fc109",
+//                   backgroundColor: selectedTab === tab ? "#7fc109" : "#f3ffdf",
+//                   color: selectedTab === tab ? "#fff" : "#000",
+//                   cursor: "pointer",
 //                 }}
-//                 onClick={() => handleClientClick(client._id)} // Handle click
 //               >
+//                 {tab}
+//               </button>
+//             ))}
+//           </div>
+
+//           {/* Search */}
+//           <div style={{ position: "relative", width: "61.5%", marginBottom: "20px" }}>
+//             <span
+//               style={{
+//                 position: "absolute",
+//                 top: "50%",
+//                 left: "10px",
+//                 transform: "translateY(-50%)",
+//                 fontSize: "16px",
+//                 color: "#ccc",
+//                 pointerEvents: "none",
+//               }}
+//             >
+//               🔍
+//             </span>
+//             <input
+//               type="text"
+//               placeholder="Search by name, company, or location..."
+//               value={searchQuery}
+//               onChange={handleSearchChange}
+//               style={{
+//                 width: "100%",
+//                 padding: "10px",
+//                 paddingLeft: "35px",
+//                 borderRadius: "20px",
+//                 border: "1px solid #ccc",
+//                 fontSize: "16px",
+//               }}
+//             />
+//           </div>
+
+//           {/* Client List */}
+//           <div
+//             style={{
+//               width: "100%",
+//               display: "flex",
+//               flexDirection: "column",
+//               alignItems: "center",
+//             }}
+//           >
+//             {loading ? (
+//               <div style={{ marginTop: "20px", fontSize: "18px", color: "#80c20a" }}>
+//                 Loading clients...
+//               </div>
+//             ) : error ? (
+//               <div style={{ marginTop: "20px", fontSize: "18px", color: "red" }}>
+//                 {error}
+//               </div>
+//             ) : filteredClients.length > 0 ? (
+//               filteredClients.map((client, index) => (
 //                 <div
+//                   key={index}
 //                   style={{
-//                     display: "flex",
-//                     justifyContent: "space-around",
-//                     alignItems: "flex-start",
+//                     padding: "20px",
+//                     marginBottom: "20px",
+//                     width: "60%",
+//                     height: "130px",
+//                     borderRadius: "13px",
+//                     background: "#f3ffdf",
+//                     border: "1px solid #80c20a",
+//                     cursor: "pointer",
 //                   }}
+//                   onClick={() => handleClientClick(client._id)}
 //                 >
-//                   <div>
-//                     <div className="key">
-//                       Donor's Name: <span className="mybold">{client.donorName}</span>
+//                   <div
+//                     style={{
+//                       display: "flex",
+//                       justifyContent: "space-around",
+//                       alignItems: "flex-start",
+//                     }}
+//                   >
+//                     <div>
+//                       <div className="key">Donor's Name: <span className="mybold">{client.donorName}</span></div>
+//                       <div className="key">Date of Birth: <span className="mybold">{client.dob}</span></div>
+//                       <div className="key">Company Name: <span className="mybold">{client.companyName}</span></div>
+//                       <div className="key">Location: <span className="mybold">{client.location}</span></div>
+//                       <div className="key">ID Source: <span className="mybold">{client.idsource}</span></div>
 //                     </div>
-//                     <div className="key">
-//                       Date of Birth: <span className="mybold">{client.dob}</span>
+//                     <div>
+//                       <div className="key">Bar Code Number: <span className="mybold">{client.barcodeno}</span></div>
+//                       <div className="key">Ref Number: <span className="mybold">{client.refno}</span></div>
+//                       <div className="key">Date of Test: <span className="mybold">{client.dateoftest}</span></div>
+//                       <div className="key">Reason For Test: <span className="mybold">{client.reasonForTest}</span></div>
+//                       <div className="key">Flight/Vessel: <span className="mybold">{client.flight}</span></div>
 //                     </div>
-//                     <div className="key">
-//                       Company Name: <span className="mybold">{client.companyName}</span>
-//                     </div>
-//                     <div className="key">
-//                       Location: <span className="mybold">{client.location}</span>
-//                     </div>
-//                     <div className="key">
-//                       ID Source: <span className="mybold">{client.idsource}</span>
-//                     </div>
-//                   </div>
-//                   <div>
-//                     <div className="key">
-//                       Bar Code Number: <span className="mybold">{client.barcodeno}</span>
-//                     </div>
-//                     <div className="key">
-//                       Ref Number: <span className="mybold">{client.refno}</span>
-//                     </div>
-//                     <div className="key">
-//                       Date of Test: <span className="mybold">{client.dateoftest}</span>
-//                     </div>
-//                     <div className="key">
-//                       Reason For Test:{" "}
-//                       <span className="mybold">{client.reasonForTest}</span>
-//                     </div>
-//                     <div className="key">
-//                       Flight/Vessel: <span className="mybold">{client.flight}</span>
-//                     </div>
+//                     {selectedTab === "Completed" && (
+//                     <button
+//                       onClick={() => handleSendEmail(client)}
+//                       disabled={client.isEmailed}
+//                       style={{
+//                         marginTop: "0px",
+//                         padding: "10px 30px",
+//                         borderRadius: "20px",
+//                         border: client.isEmailed ? "1px solid #80c20a" : "none",
+//                         backgroundColor: client.isEmailed ? "#f3ffdf" : "#80c20a",
+//                         color: client.isEmailed ? "#80c20a" : "white",
+//                         cursor: client.isEmailed ? "not-allowed" : "pointer",
+//                       }}
+//                     >
+//                       {client.isEmailed ? "Email Sent" : "Send Email To Donor"}
+//                     </button>
+//                   )}
 //                   </div>
 //                 </div>
+//               ))
+//             ) : (
+//               <div style={{ marginTop: "20px", fontSize: "18px", color: "#80c20a" }}>
+//                 No clients found matching your search.
 //               </div>
-//             ))}
+//             )}
 //           </div>
 //         </div>
 //       </div>
@@ -137,18 +270,18 @@
 
 
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/navbar";
-import Sidemanu from "../components/sidemanu";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
 const Patients = () => {
   const [client, setClient] = useState([]);
-  const [filteredClients, setFilteredClients] = useState([]); // State for filtered clients
-  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [filteredClients, setFilteredClients] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Initialize navigate function
+  const [selectedTab, setSelectedTab] = useState("All");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchScreen4Data = async () => {
@@ -158,56 +291,94 @@ const Patients = () => {
           throw new Error("Failed to fetch client data");
         }
         const data = await response.json();
-        setClient(data.data || []); // Update the state with the fetched data
-        setFilteredClients(data.data || []); // Initialize filtered list with all data
-      } catch (error) {
-        setError(error.message); // Set the error state if something goes wrong
+        setClient(data.data || []);
+        setFilteredClients(data.data || []);
+      } catch (err) {
+        setError(err.message);
       } finally {
-        setLoading(false); // Set loading to false once the data is fetched or error occurred
+        setLoading(false);
       }
     };
 
     fetchScreen4Data();
-  }, []); // Empty dependency array ensures this runs once when the component mounts
-
-  const handleClientClick = (id) => {
-    navigate(`/dashboard/${id}`); // Navigate to the desired route
-  };
+  }, []);
 
   useEffect(() => {
-    const token = Cookies.get("Token")
-    // Check token validity
+    const token = Cookies.get("Token");
     if (
       !token ||
       (token !== "dskgfsdgfkgsdfkjg35464154845674987dsf@53" &&
         token !== "sdrfg&78967daghf#wedhjgasj(dlsh6kjsdg")
     ) {
-      navigate("/"); // Redirect to Index.js page
+      navigate("/");
       return;
     }
   }, [navigate]);
 
-  // Handle search input change
+  const filterClients = (tab, query) => {
+    let filtered = client;
+
+    if (tab === "Pending") {
+      filtered = client.filter((c) => !c.isUpdated);
+    } else if (tab === "Completed") {
+      filtered = client.filter((c) => c.isUpdated);
+    }
+
+    if (query) {
+      filtered = filtered.filter(
+        (c) =>
+          c.donorName?.toLowerCase().includes(query) ||
+          c.companyName?.toLowerCase().includes(query) ||
+          c.location?.toLowerCase().includes(query)
+      );
+    }
+
+    setFilteredClients(filtered);
+  };
+
   const handleSearchChange = (event) => {
-    const query = event.target.value.toLowerCase(); // Convert search query to lowercase
+    const query = event.target.value.toLowerCase();
     setSearchQuery(query);
+    filterClients(selectedTab, query);
+  };
 
-    // Filter clients based on donorName, companyName, or any other field
-    const filtered = client.filter(
-      (c) =>
-        c.donorName.toLowerCase().includes(query) ||
-        c.companyName.toLowerCase().includes(query) ||
-        c.location.toLowerCase().includes(query)
-    );
+  const handleTabChange = (tab) => {
+    setSelectedTab(tab);
+    filterClients(tab, searchQuery);
+  };
 
-    setFilteredClients(filtered); // Update filtered clients
+  const handleClientClick = (id) => {
+    navigate(`/dashboard/${id}`);
+  };
+
+  const handleSendEmail = async (client, event) => {
+    event.stopPropagation(); // Stop propagation to prevent card click
+
+    if (client.isEmailed) return;
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/sendscreenemailtodonor/${client._id}`, {
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send email");
+      }
+
+      setFilteredClients((prevClients) =>
+        prevClients.map((c) =>
+          c._id === client._id ? { ...c, isEmailed: true } : c
+        )
+      );
+    } catch (err) {
+      console.error(err.message);
+    }
   };
 
   return (
     <div>
       <Navbar />
       <div className="deshboardmain" style={{ background: "#80c209" }}>
-        {/* <Sidemanu /> */}
         <div
           className="Practitionermainbody"
           style={{
@@ -219,59 +390,63 @@ const Patients = () => {
             paddingBottom: "100px",
           }}
         >
-          <div className="key" style={{ fontSize: "20px", marginBottom: "10px" }}>
+          <div className="key" style={{ fontSize: "24px", marginBottom: "10px",marginTop:"10px" }}>
             All Clients
           </div>
 
-          {/* Search Input */}
-          {/* <input
-            type="text"
-            placeholder="🔍 | Search by name, company, or location..."
-            value={searchQuery}
-            
-            onChange={handleSearchChange}
-            style={{
-              marginBottom: "20px",
-              padding: "10px",
-              paddingLeft:"20px",
-              borderRadius: "5px",
-              border: "1px solid #ccc",
-              width: "61.5%",
-              borderRadius:"20px",
-              fontSize: "16px",
-            }}
-          /> */}
+          {/* Tabs */}
+          <div style={{ marginBottom: "25px", marginTop: "5px", display: "flex", gap: "10px" }}>
+            {["All", "Pending", "Completed"].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => handleTabChange(tab)}
+                style={{
+                  padding: "10px 20px",
+                  borderRadius: "20px",
+                  border: selectedTab === tab ? "none" : "1px solid #7fc109",
+                  backgroundColor: selectedTab === tab ? "#7fc109" : "#f3ffdf",
+                  color: selectedTab === tab ? "#fff" : "#000",
+                  cursor: "pointer",
+                  width: "100px"
+                }}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+
+          {/* Search */}
           <div style={{ position: "relative", width: "61.5%", marginBottom: "20px" }}>
-  <span
-    style={{
-      position: "absolute",
-      top: "50%",
-      left: "10px",
-      transform: "translateY(-50%)",
-      fontSize: "16px",
-      color: "#ccc",
-      pointerEvents: "none", // Prevent interaction with the icon
-    }}
-  >
-    🔍
-  </span>
-  <input
-    type="text"
-    placeholder="Search by name, company, or location..."
-    value={searchQuery}
-    onChange={handleSearchChange}
-    style={{
-      width: "100%",
-      padding: "10px",
-      paddingLeft: "35px", // Add padding to accommodate the icon
-      borderRadius: "20px",
-      border: "1px solid #ccc",
-      fontSize: "16px",
-    }}
-  />
-</div>
+            <span
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "10px",
+                transform: "translateY(-50%)",
+                fontSize: "16px",
+                color: "#ccc",
+                pointerEvents: "none",
+              }}
+            >
+              🔍
+            </span>
+            <input
+              type="text"
+              placeholder="Search by name, company, or location..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+              style={{
+                width: "100%",
+                padding: "10px",
+                paddingLeft: "35px",
+                borderRadius: "20px",
+                border: "1px solid #ccc",
+                fontSize: "16px",
+              }}
+            />
+          </div>
 
-
+          {/* Client List */}
           <div
             style={{
               width: "100%",
@@ -280,71 +455,74 @@ const Patients = () => {
               alignItems: "center",
             }}
           >
-            {filteredClients.map((client, index) => (
-              <div
-                key={index}
-                style={{
-                  padding: "20px",
-                  marginBottom: "20px",
-                  width: "60%",
-                  height: "130px",
-                  borderRadius: "13px",
-                  background: "#f3ffdf",
-                  border: "1px solid #80c20a",
-                  cursor: "pointer", // Indicate clickable area
-                }}
-                onClick={() => handleClientClick(client._id)} // Handle click
-              >
+            {loading ? (
+              <div style={{ marginTop: "20px", fontSize: "18px", color: "#80c20a" }}>
+                Loading clients...
+              </div>
+            ) : error ? (
+              <div style={{ marginTop: "20px", fontSize: "18px", color: "red" }}>
+                {error}
+              </div>
+            ) : filteredClients.length > 0 ? (
+              filteredClients.map((client, index) => (
                 <div
+                  key={index}
                   style={{
-                    display: "flex",
-                    justifyContent: "space-around",
-                    alignItems: "flex-start",
+                    padding: "20px",
+                    marginBottom: "20px",
+                    width: "60%",
+                    height: "130px",
+                    borderRadius: "13px",
+                    background: "#f3ffdf",
+                    border: "1px solid #80c20a",
+                    cursor: "pointer",
                   }}
+                  onClick={() => handleClientClick(client._id)}
                 >
-                  <div>
-                    <div className="key">
-                      Donor's Name: <span className="mybold">{client.donorName}</span>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-around",
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    <div>
+                      <div className="key">Donor's Name: <span className="mybold">{client.donorName}</span></div>
+                      <div className="key">Date of Birth: <span className="mybold">{client.dob}</span></div>
+                      <div className="key">Company Name: <span className="mybold">{client.companyName}</span></div>
+                      <div className="key">Location: <span className="mybold">{client.location}</span></div>
+                      <div className="key">ID Source: <span className="mybold">{client.idsource}</span></div>
                     </div>
-                    <div className="key">
-                      Date of Birth: <span className="mybold">{client.dob}</span>
+                    <div>
+                      <div className="key">Bar Code Number: <span className="mybold">{client.barcodeno}</span></div>
+                      <div className="key">Ref Number: <span className="mybold">{client.refno}</span></div>
+                      <div className="key">Date of Test: <span className="mybold">{client.dateoftest}</span></div>
+                      <div className="key">Reason For Test: <span className="mybold">{client.reasonForTest}</span></div>
+                      <div className="key">Flight/Vessel: <span className="mybold">{client.flight}</span></div>
                     </div>
-                    <div className="key">
-                      Company Name: <span className="mybold">{client.companyName}</span>
-                    </div>
-                    <div className="key">
-                      Location: <span className="mybold">{client.location}</span>
-                    </div>
-                    <div className="key">
-                      ID Source: <span className="mybold">{client.idsource}</span>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="key">
-                      Bar Code Number: <span className="mybold">{client.barcodeno}</span>
-                    </div>
-                    <div className="key">
-                      Ref Number: <span className="mybold">{client.refno}</span>
-                    </div>
-                    <div className="key">
-                      Date of Test: <span className="mybold">{client.dateoftest}</span>
-                    </div>
-                    <div className="key">
-                      Reason For Test:{" "}
-                      <span className="mybold">{client.reasonForTest}</span>
-                    </div>
-                    <div className="key">
-                      Flight/Vessel: <span className="mybold">{client.flight}</span>
-                    </div>
+                    {selectedTab === "Completed" && (
+                      <button
+                        onClick={(event) => handleSendEmail(client, event)}
+                        disabled={client.isEmailed}
+                        style={{
+                          marginTop: "0px",
+                          padding: "10px 30px",
+                          borderRadius: "20px",
+                          border: client.isEmailed ? "1px solid #80c20a" : "none",
+                          backgroundColor: client.isEmailed ? "#f3ffdf" : "#80c20a",
+                          color: client.isEmailed ? "#80c20a" : "white",
+                          cursor: client.isEmailed ? "not-allowed" : "pointer",
+                        }}
+                      >
+                        {client.isEmailed ? "Email Sent" : "Send Email To Donor"}
+                      </button>
+                    )}
                   </div>
                 </div>
-              </div>
-            ))}
-
-            {/* Show message if no results found */}
-            {filteredClients.length === 0 && (
-              <div style={{ marginTop: "20px", fontSize: "18px", color: " #80c20a" }}>
-                { searchQuery==='' ? "Loading Clients 🔃":"No clients found matching your search."}
+              ))
+            ) : (
+              <div style={{ marginTop: "20px", fontSize: "18px", color: "#80c20a" }}>
+                No clients found matching your search.
               </div>
             )}
           </div>

@@ -4,6 +4,7 @@ import Navbar from "../components/navbar";
 import { message } from "antd";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import '../css/Practitioner.css'
 
 function Screen4Details() {
     const [error, setError] = useState(null);
@@ -15,8 +16,29 @@ function Screen4Details() {
     "BreathAlcoholOnlyTest",
     "DrugsOnlyTest",
   ];
+  function formatDate(dateInput) {
+    if (!dateInput) {
+        return null; // Handle null or undefined inputs
+    }
+
+    // Convert the input to a Date object
+    const date = new Date(dateInput);
+
+    // Check if the conversion is valid
+    if (isNaN(date.getTime())) {
+        return null; // Return null for invalid dates
+    }
+
+    // Format the date as YYYY-MM-DD
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Add leading zero if needed
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+}
  const [formData, setFormData] = useState({
     donorName: "",
+    donorEmail: "",
     gcalicno:"",
     dob: "",
     companyName: "",
@@ -43,7 +65,7 @@ function Screen4Details() {
     collectorDate: "",
     donorConcent: "",
     donorDeclaration: "",
-    donorDate: "",
+    donorConcentDate: "",
     medicationDate1: "",
     medicationDate2: "",
     medicationDate3: "",
@@ -189,15 +211,24 @@ useEffect(() => {
   //     [name]: type === "checkbox" ? checked : value.toString(),
   //   }));
   // };
+  // const handleChange = async (e) => {
+  //   const { name, value, type, checked } = e.target;
+  //   console.log(e.target)
+  //   // console.log(checked)
+  //   await setFormData((prevData) => ({
+  //     ...prevData,
+  //     [name]: value.toString(),
+  //   }));
+  // };
+
   const handleChange = async (e) => {
     const { name, value, type, checked } = e.target;
-    console.log(e.target)
-    // console.log(checked)
-    await setFormData((prevData) => ({
-      ...prevData,
-      [name]: value.toString(),
+    setFormData((prevData) => ({
+        ...prevData,
+        [name]: type === "checkbox" ? checked : value.toString(),
     }));
-  };
+    console.log(formData.scree)
+};
 
 //   const handleChange = async (e) => {
 //     const { name, value, type, checked } = e.target;
@@ -213,59 +244,112 @@ useEffect(() => {
 
 
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   console.log("Form Data Submitted: ", formData);
+  //   try {
+  //     const response = await fetch(
+  //       // `${process.env.REACT_APP_API_URL}/addscreen4data`,
+  //       `${process.env.REACT_APP_API_URL}/addscreen4data`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify(formData),
+  //       }
+  //     );
+
+  //     const result = await response.json();
+
+  //     if (response.ok) {
+  //       message.success("Form submitted successfully!");
+  //     } else {
+  //       message.error(result.message || "Failed to submit form.");
+  //     }
+
+  //     // Reset form
+  //     setFormData({
+  //       donorName: "",
+  //       dob: "",
+  //       companyName: "",
+  //       reasonForTest: "Pre-Employment",
+  //       location: "",
+  //       sampleDate: "",
+  //       adulterationCheck: false,
+  //       drugTests: [],
+  //       consent: false,
+  //     });
+  //   } catch (error) {
+  //     console.error("Error: ", error);
+  //     message.error("Submission failed due to server error.");
+  //   }
+  // };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form Data Submitted: ", formData);
+  
+    const apiUrl = formData._id
+      ? `${process.env.REACT_APP_API_URL}/updatescreen4data/${formData._id}` // Update endpoint
+      : `${process.env.REACT_APP_API_URL}/addscreen4data`; // Add endpoint
+  
     try {
-      const response = await fetch(
-        // `${process.env.REACT_APP_API_URL}/addscreen4data`,
-        `${process.env.REACT_APP_API_URL}/addscreen4data`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      const result = await response.json();
-
-      if (response.ok) {
-        message.success("Form submitted successfully!");
-      } else {
-        message.error(result.message || "Failed to submit form.");
-      }
-
-      // Reset form
-      setFormData({
-        donorName: "",
-        dob: "",
-        companyName: "",
-        reasonForTest: "Pre-Employment",
-        location: "",
-        sampleDate: "",
-        adulterationCheck: false,
-        drugTests: [],
-        consent: false,
+      const response = await fetch(apiUrl, {
+        method: formData._id ? "PUT" : "POST", // PUT for update, POST for add
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
+  
+      const result = await response.json();
+  
+      if (response.ok) {
+        message.success(
+          formData._id ? "Form updated successfully!" : "Form submitted successfully!"
+        );
+      } else {
+        message.error(result.message || "Failed to process form.");
+      }
+  
+      // Reset form if adding new data
+      if (!formData._id) {
+        setFormData({
+          donorName: "",
+          dob: "",
+          companyName: "",
+          reasonForTest: "Pre-Employment",
+          location: "",
+          sampleDate: "",
+          adulterationCheck: false,
+          drugTests: [],
+          consent: false,
+        });
+      }
     } catch (error) {
       console.error("Error: ", error);
       message.error("Submission failed due to server error.");
     }
   };
-
+  
+  // Example of populating form data for update
+  const handleEdit = (dataToEdit) => {
+    setFormData(dataToEdit);
+  };
+  
   return (
     <>
       {/* <Navbar /> */}
-      <div
+      <div className="container"
         style={{
-          display: "flex",
-          justifyContent: "center",
-          padding: "20px",
-          alignItems: "center",
-          height:"fitContent",
-          background:"#80c209",
+          // display: "flex",
+          // justifyContent: "center",
+          // padding: "20px",
+          // alignItems: "center",
+          // height:"fitContent",
+          // background:"#80c209",
         }}
       >
         <form
@@ -300,6 +384,20 @@ useEffect(() => {
               value={formData.donorName}
               onChange={handleChange}
               placeholder="Enter Donor's Name"
+              required
+            />
+          </div> <hr />
+          <div className="donor">
+            {/* Donor's Name */}
+            <label>Donor's Email<span style={{color: "red"}}>*</span>
+            </label>
+            <input
+              className="inputstyle"
+              type="email"
+              name="donorEmail"
+              value={formData.donorEmail}
+              onChange={handleChange}
+              placeholder="Enter Donor's Email"
               required
             />
           </div>
@@ -622,7 +720,7 @@ useEffect(() => {
                 </label>
                 <input
                   className="inputstyle"
-                  type="text"
+                  type="image"
                   name="donorSignature"
                   value=''
                   placeholder=""
@@ -657,7 +755,7 @@ useEffect(() => {
                   className="inputstyle"
                   type="date"
                   name="donorDate"
-                  value={formData.donorDate}
+                  value={formatDate(formData.donorDate)}
                   onChange={handleChange}
                   // style={{ width: "39%" }}
                   required
@@ -746,8 +844,8 @@ useEffect(() => {
                   <input
                     className="inputstyle"
                     type="text"
-                    name="test1BracResult2"
-                    value={formData.test1BracResult2}
+                    name="test1BaracResult2"
+                    value={formData.test1BaracResult2}
                     onChange={handleChange}
                     style={{ width: "69%" }}
                     required
@@ -899,7 +997,7 @@ useEffect(() => {
                   </label>
                   <input
                     className="inputstyle"
-                    type="text"
+                    type="image"
                     name="collectorSignature"
                     value=""
                     placeholder=""
@@ -973,7 +1071,7 @@ useEffect(() => {
                     width: "120px",
                   }}
                 >
-                  Donor Concent{" "}
+                  Donor Consent{" "}
                 </label>
                 <input
                   className="inputstyle"
@@ -1047,8 +1145,8 @@ useEffect(() => {
                     <input
                       className="inputstyle"
                       type="date"
-                      name="donorDate"
-                      value={formData.donorDate}
+                      name="donorConcentDate"
+                      value={formData.donorConcentDate}
                       onChange={handleChange}
                       style={{ width: "69%", height: "5px" }}
                       required
@@ -1076,10 +1174,11 @@ useEffect(() => {
           <tr key={index}>
             <td style={{ border: "1px solid black", padding: "8px" }}>{field==='DrugsandAlcoholUrineTest' ? ' Drugs and Alcohol (Urine & Breath)':field==='DrugsandAlcoholOralTest' ? 'Drugs and Alcohol (Oral Fl & Breath)' : field==='BreathAlcoholOnlyTest' ? 'Breath Alcohol Only' : field==='DrugsOnlyTest' ? 'Drugs Only ' : field}</td>
             <td style={{ border: "1px solid black", padding: "8px" }}>
+
               <input
                 type="checkbox"
                 name={field}
-                checked={formData[field] === true}
+                checked={formData[field]}
                 onChange={handleChange}
               />
             </td>
@@ -1102,21 +1201,28 @@ useEffect(() => {
               <th>Dosage{formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== "" ?<span style={{ color: "red" }}>*</span> : null }</th> */}
             <th>
   Date Taken
-  {formData.DrugsandAlcoholUrineTest === true || formData.DrugsandAlcoholOralTest === true ? (
-    <span style={{ color: "red" }}>*</span>
-  ) : null}
+  {formData.DrugsandAlcoholUrineTest === true || formData.DrugsandAlcoholOralTest === true
+  // ? (
+  //   <span style={{ color: "red" }}>*</span>
+  // ) : null
+  }
 </th>
 <th>
   Type/Description
-  {formData.DrugsandAlcoholUrineTest === true || formData.DrugsandAlcoholOralTest === true ? (
-    <span style={{ color: "red" }}>*</span>
-  ) : null}
+  {
+  formData.DrugsandAlcoholUrineTest === true || formData.DrugsandAlcoholOralTest === true
+  //  ? (
+  //   <span style={{ color: "red" }}>*</span>
+  // ) : null
+  }
 </th>
 <th>
   Dosage
-  {formData.DrugsandAlcoholUrineTest === true || formData.DrugsandAlcoholOralTest === true ? (
-    <span style={{ color: "red" }}>*</span>
-  ) : null}
+  {formData.DrugsandAlcoholUrineTest === true || formData.DrugsandAlcoholOralTest === true 
+  // ? (
+  //   <span style={{ color: "red" }}>*</span>
+  // ) : null
+  }
 </th>
 
             </tr>
@@ -1128,7 +1234,7 @@ useEffect(() => {
                   name="medicationDate1"
                   value={formData.medicationDate1}
                   onChange={handleChange}
-                  required={formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== ""}
+                  // required={formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== ""}
                 />
               </td>
               <td>
@@ -1138,7 +1244,8 @@ useEffect(() => {
                   name="medicationType1"
                   value={formData.medicationType1}
                   onChange={handleChange}
-                  required={formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== ""}/>
+                  // required={formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== ""}
+                  />
               </td>
               <td>
                 <input
@@ -1147,7 +1254,7 @@ useEffect(() => {
                   name="medicationDosage1"
                   value={formData.medicationDosage1}
                   onChange={handleChange}
-                  required={formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== ""}
+                  // required={formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== ""}
                 />
               </td>
             </tr>
@@ -1568,7 +1675,7 @@ useEffect(() => {
                       {index !== 0 && (<input
                               type="checkbox"
                               name={`${leftTest.split(" ")[0]}Screen`}
-                              checked={formData[`${leftTest.split(" ")[0]}Screen`] || false}
+                              checked={formData[`${leftTest.split(" ")[0]}Screen`] ==='true'}
                               onChange={handleChange}
                               />)}
                     </td>
@@ -1577,7 +1684,7 @@ useEffect(() => {
                       {index !== 0 && (<input
                               type="checkbox"
                               name={`${leftTest.split(" ")[0]}Confirm`}
-                              checked={formData[`${leftTest.split(" ")[0]}Confirm`] || false}
+                              checked={formData[`${leftTest.split(" ")[0]}Confirm`] ==='true'}
                               onChange={handleChange}
                               />)}
                     </td>
@@ -1589,7 +1696,7 @@ useEffect(() => {
                       {index !== 0 &&index !== 7 && (<input
                               type="checkbox"
                               name={`${rightTest.split(" ")[0]}Screen`}
-                              checked={formData[`${rightTest.split(" ")[0]}Screen`] || false}
+                              checked={formData[`${rightTest.split(" ")[0]}Screen`] ==='true'}
                               onChange={handleChange}
                               />)}
                     </td>
@@ -1598,7 +1705,7 @@ useEffect(() => {
                       {index !== 0 && index !== 7 &&(<input
                               type="checkbox"
                               name={`${rightTest.split(" ")[0]}Confirm`}
-                              checked={formData[`${rightTest.split(" ")[0]}Confirm`] || false}
+                              checked={formData[`${rightTest.split(" ")[0]}Confirm`] ==='true'}
                               onChange={handleChange}
                               />)}
                     </td>
@@ -1610,7 +1717,7 @@ useEffect(() => {
                     >{<input
                       type="checkbox"
                       name={`${c.split(" ")[0]}Screen`}
-                      checked={formData[`${c.split(" ")[0]}Screen`] || false}
+                      checked={formData[`${c.split(" ")[0]}Screen`] ==='true'}
                       onChange={handleChange}
                       />}</td>
                     <td
@@ -1618,7 +1725,7 @@ useEffect(() => {
                     >{<input
                       type="checkbox"
                       name={`${c.split(" ")[0]}Confirm`}
-                      checked={formData[`${c.split(" ")[0]}Confirm`] || false}
+                      checked={formData[`${c.split(" ")[0]}Confirm`]==='true'}
                       onChange={handleChange}
                       />}</td>
                   </tr>
@@ -1687,7 +1794,7 @@ useEffect(() => {
                   </label>
                   <input
                     className="inputstyle"
-                    type="text"
+                    type="image"
                     name="donorCertificationSignature"
                     value=''
                     placeholder=""
@@ -1721,7 +1828,7 @@ useEffect(() => {
                     className="inputstyle"
                     type="date"
                     name="donorCertificationDate"
-                    value={formData.donorCertificationDate}
+                    value={formatDate(formData.donorCertificationDate)}
                     onChange={handleChange}
                     style={{ width: "69%" }}
                     required
@@ -1786,7 +1893,7 @@ useEffect(() => {
                   </label>
                   <input
                     className="inputstyle"
-                    type="text"
+                    type="image"
                     name="collectorCertificationSignature"
                     value=""
                     placeholder=""
@@ -2018,14 +2125,14 @@ useEffect(() => {
               cursor: "pointer",
               color: "green", // Add color to indicate clickable text
             }}
-            onClick={() => handleAddComment("fatalFlaws")} // Handle add comment
+            onClick={() => handleAddComment("fatalFlawsComment")} // Handle add comment
             title={formData.fatalFlawsComment} // Display the comment on hover
           >
             {formData.fatalFlawsComment ? "update comment" : "add comment"}
           </span>
               </div>
               {/* Display comment below, if available */}
-        {formData.fatalFlaws && (
+        {formData.fatalFlawsComment && (
           <div
             style={{
               fontSize: "12px",
@@ -2041,7 +2148,8 @@ useEffect(() => {
           
 
           {/* Submit Button */}
-          {/* <button
+         { formData.isUpdated!==true ? 
+          <button
             type="submit"
             style={{
               width: "100%",
@@ -2054,8 +2162,8 @@ useEffect(() => {
               fontSize: "16px",
             }}
           >
-            Submit
-          </button> */}
+            Update
+          </button> : null}
         </form>
       </div>
     </>

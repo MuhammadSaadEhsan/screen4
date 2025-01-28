@@ -1,11 +1,14 @@
 
 
 import React, { useState, useEffect } from "react";
-import Navbar from "../components/navbar";
 import { Bar, Pie } from "react-chartjs-2";
 import "chart.js/auto";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../components/navbar";
+import Cookies from "js-cookie";
 
 const Analytics = () => {
+  const navigate = useNavigate();
   const [monthlyData, setMonthlyData] = useState([]);
   const [locationData, setLocationData] = useState([]);
   const [reasonData, setReasonData] = useState([]);
@@ -67,7 +70,17 @@ const tests = ["Alcohol","Amphetamines","Benzodiazepines","Buprenorphine","Blood
   }, []);
   const [testCounts, setTestCounts] = useState({}); // Store counts for each test's Screen and Confirm
 
- 
+ useEffect(() => {
+     const token = Cookies.get("Token");
+     if (
+       !token ||
+       (token !== "dskgfsdgfkgsdfkjg35464154845674987dsf@53" &&
+         token !== "sdrfg&78967daghf#wedhjgasj(dlsh6kjsdg")
+     ) {
+       navigate("/");
+       return;
+     }
+   }, [navigate]);
 
   useEffect(() => {
     const fetchScreen4Data = async () => {

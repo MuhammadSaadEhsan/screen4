@@ -20,12 +20,23 @@ function Screen4ChainOfCustodyForm() {
     
   // }); // Track comments
 
+  // const handleAddComment = (field) => {
+  //   const comment = prompt("Enter your comment:");
+  //   if (comment) {
+  //     setFormData((prev) => ({ ...prev, [field]: comment })); // Save the comment for the field
+  //   }
+  //   console.log(formData)
+  // };
   const handleAddComment = (field) => {
     const comment = prompt("Enter your comment:");
     if (comment) {
-      setFormData((prev) => ({ ...prev, [field]: comment })); // Save the comment for the field
+      setFormData((prev) => {
+        const updatedFormData = { ...prev, [field]: comment };
+        return updatedFormData;
+      });
     }
   };
+  
 
   const pad = (data) =>{
     return   <div
@@ -185,6 +196,7 @@ function Screen4ChainOfCustodyForm() {
 
   const [formData, setFormData] = useState({
     donorName: "",
+    donorEmail: "",
     gcalicno:"",
     dob: "",
     companyName: "",
@@ -211,7 +223,7 @@ function Screen4ChainOfCustodyForm() {
     collectorDate: "",
     donorConcent: "",
     donorDeclaration: "",
-    donorDate: "",
+    donorConcentDate: "",
     medicationDate1: "",
     medicationDate2: "",
     medicationDate3: "",
@@ -288,62 +300,39 @@ function Screen4ChainOfCustodyForm() {
     DrugsOnlyTest:"",
   });
 
-  const handleCheckboxChange = (e) => {
-    const { value, checked } = e.target;
-    console.log(value, checked);
-    setFormData((prevData) => {
-      if (checked) {
-        // Add the selected value
-        return {
-          ...prevData,
-          reasonForTest: [...prevData.reasonForTest, value],
-        };
-      } else {
-        // Remove the unselected value
-        return {
-          ...prevData,
-          reasonForTest: prevData.reasonForTest.filter(
-            (item) => item !== value
-          ),
-        };
-      }
-    });
-  };
 
+ 
   // const handleChange = async (e) => {
   //   const { name, value, type, checked } = e.target;
-  //   console.log(e.target)
-  //   // console.log(checked)
+  //   console.log(formData.DrugsandAlcoholUrineTest)
+  //   // console.log(checked )
   //   await setFormData((prevData) => ({
   //     ...prevData,
   //     [name]: type === "checkbox" ? checked : value.toString(),
   //   }));
+
   // };
-  const handleChange = async (e) => {
-    const { name, value, type, checked } = e.target;
-    console.log(formData.donorSignature)
-    // console.log(checked )
-    await setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === "checkbox" ? checked : value.toString(),
-    }));
-
-    // console.log(formData.DrugsandAlcoholOralTest)
-    console.log(formData.AlcoholScreen)
-  };
-
 //   const handleChange = async (e) => {
 //     const { name, value, type, checked } = e.target;
-
-//     await setFormData((prevData) => ({
+//     setFormData((prevData) => ({
 //         ...prevData,
-//         [name]: type === "checkbox" ? checked : 
-//                 type === "number" ? value.toString() ://Number(value) : 
-//                 type === "date" ? value.toString() : value.toString()//new Date(value) : value,
+//         [name]: type === "checkbox" ? checked : value.toString(),
 //     }));
+
+//     console.log(formData)
 // };
 
-
+const handleChange = async (e) => {
+  const { name, value, type, checked } = e.target;
+  setFormData((prevData) => {
+      const updatedData = {
+          ...prevData,
+          [name]: type === "checkbox" ? checked : value.toString(),
+      };
+      console.log(updatedData); // Logs the updated state immediately
+      return updatedData;
+  });
+};
 
 
   const handleSubmit = async (e) => {
@@ -401,6 +390,7 @@ function Screen4ChainOfCustodyForm() {
         // Reset form
         setFormData({
           donorName: "",
+          donorEmail: "",
           gcalicno:"",
           dob: "",
           companyName: "",
@@ -427,7 +417,7 @@ function Screen4ChainOfCustodyForm() {
           collectorDate: "",
           donorConcent: "",
           donorDeclaration: "",
-          donorDate: "",
+          donorConcentDate: "",
           medicationDate1: "",
           medicationDate2: "",
           medicationDate3: "",
@@ -559,6 +549,21 @@ function Screen4ChainOfCustodyForm() {
               value={formData.donorName}
               onChange={handleChange}
               placeholder="Enter Donor's Name"
+              required
+            />
+          </div>
+          <hr />
+          <div className="donor">
+            {/* Donor's Name */}
+            <label>Donor's Email<span style={{color: "red"}}>*</span>
+            </label>
+            <input
+              className="inputstyle"
+              type="email"
+              name="donorEmail"
+              value={formData.donorEmail}
+              onChange={handleChange}
+              placeholder="Enter Donor's Email"
               required
             />
           </div>
@@ -1073,8 +1078,8 @@ function Screen4ChainOfCustodyForm() {
                 <input
                   className="inputstyle"
                   type="date"
-                  name="donorDate"
-                  value={formData.donorDate}
+                  name="donorConcentDate"
+                  value={formData.donorConcentDate}
                   onChange={handleChange}
                   // style={{ width: "39%" }}
                   required
@@ -1163,8 +1168,8 @@ function Screen4ChainOfCustodyForm() {
                   <input
                     className="inputstyle"
                     type="text"
-                    name="test1BracResult2"
-                    value={formData.test1BracResult2}
+                    name="test1BaracResult2"
+                    value={formData.test1BaracResult2}
                     onChange={handleChange}
                     style={{ width: "69%" }}
                     required
@@ -1409,21 +1414,21 @@ function Screen4ChainOfCustodyForm() {
               <th>Dosage{formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== "" ?<span style={{ color: "red" }}>*</span> : null }</th> */}
             <th>
   Date Taken
-  {formData.DrugsandAlcoholUrineTest === true || formData.DrugsandAlcoholOralTest === true ? (
-    <span style={{ color: "red" }}>*</span>
-  ) : null}
+  {formData.DrugsandAlcoholUrineTest === true || formData.DrugsandAlcoholOralTest === true
+  //  ? (  <span style={{ color: "red" }}>*</span>  ) : null
+  }
 </th>
 <th>
   Type/Description
-  {formData.DrugsandAlcoholUrineTest === true || formData.DrugsandAlcoholOralTest === true ? (
-    <span style={{ color: "red" }}>*</span>
-  ) : null}
+  {formData.DrugsandAlcoholUrineTest === true || formData.DrugsandAlcoholOralTest === true
+  //  ? (    <span style={{ color: "red" }}>*</span> ) : null
+   }
 </th>
 <th>
   Dosage
-  {formData.DrugsandAlcoholUrineTest === true || formData.DrugsandAlcoholOralTest === true ? (
-    <span style={{ color: "red" }}>*</span>
-  ) : null}
+  {formData.DrugsandAlcoholUrineTest === true || formData.DrugsandAlcoholOralTest === true
+  // ? (<span style={{ color: "red" }}>*</span> ) : null
+  }
 </th>
 
             </tr>
@@ -1435,7 +1440,7 @@ function Screen4ChainOfCustodyForm() {
                   name="medicationDate1"
                   value={formData.medicationDate1}
                   onChange={handleChange}
-                  required={formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== ""}
+                  // required={formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== ""}
                 />
               </td>
               <td>
@@ -1445,7 +1450,8 @@ function Screen4ChainOfCustodyForm() {
                   name="medicationType1"
                   value={formData.medicationType1}
                   onChange={handleChange}
-                  required={formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== ""}/>
+                  // required={formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== ""}
+                  />
               </td>
               <td>
                 <input
@@ -1454,7 +1460,7 @@ function Screen4ChainOfCustodyForm() {
                   name="medicationDosage1"
                   value={formData.medicationDosage1}
                   onChange={handleChange}
-                  required={formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== ""}
+                  // required={formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== ""}
                 />
               </td>
             </tr>
@@ -2136,11 +2142,11 @@ function Screen4ChainOfCustodyForm() {
         )}
             </div>
           </div>
-          <div class="last-row" style={{display:"flex",width: "100%"}}>
+          {/* <div class="last-row" style={{display:"flex",width: "100%"}}>
             <div class="part1" style={{padding:"10px",width: "40%",border:"1px solid black",height:"130px",marginBottom:"20px",borderRight:"none"}}><h5 style={{ fontWeight: "bold", fontSize: "15px" }}>
                   Received at Laboratory:
                 </h5> <div className="donor" style={{ marginLeft: "5px" }}>
-                  {/* GCAA LIC No */}
+                  
                   <label
                     style={{
                       width: "130px",
@@ -2162,7 +2168,7 @@ function Screen4ChainOfCustodyForm() {
                   />
                 </div>
                 <div className="donor" style={{ marginLeft: "5px" }}>
-                  {/* GCAA LIC No */}
+             
                   <label
                     style={{
                       width: "130px",
@@ -2184,7 +2190,7 @@ function Screen4ChainOfCustodyForm() {
                   />
                 </div>
                 <div className="donor" style={{ marginLeft: "5px" }}>
-                  {/* GCAA LIC No */}
+           
                   <label
                     style={{
                       width: "130px",
@@ -2247,17 +2253,7 @@ function Screen4ChainOfCustodyForm() {
                     onChange={handleChange}
                   />
                 </label>
-                {/* <span
-                onClick={()=>{prompt("enter comments")}}
-                  style={{
-                    // marginLeft: "auto",
-                    width: "104px",
-                    fontSize: "14px",
-                    cursor:"pointer"
-                  }}
-                >
-                  ,add comment
-                </span> */}
+
                 <span
             style={{
               marginLeft: "auto",
@@ -2273,7 +2269,7 @@ function Screen4ChainOfCustodyForm() {
             {formData.specimenBottleComment ? "update comment" : "add comment"}
           </span>
               </div>
-              {/* Display comment below, if available */}
+  
         {formData.specimenBottleComment && (
           <div
             style={{
@@ -2327,29 +2323,7 @@ function Screen4ChainOfCustodyForm() {
                     onChange={handleChange}
                   />
                 </label>
-                {/* <span
-                  style={{
-                    // marginLeft: "auto",
-                    width: "104px",
-                    fontSize: "14px",
-                  }}
-                >
-                  ,add comment
-                </span> */}
-                {/* <span
-            style={{
-              marginLeft: "auto",
-              width: "104px",
-              marginLeft:"0px",
-              fontSize: "14px",
-              cursor: "pointer",
-              color: "green", // Add color to indicate clickable text
-            }}
-            onClick={() => handleAddComment("fatalFlaws")} // Handle add comment
-            title={comments.fatalFlaws} // Display the comment on hover
-          >
-            ,add comment
-          </span> */}
+                
           <span
             style={{
               marginLeft: "auto",
@@ -2365,7 +2339,7 @@ function Screen4ChainOfCustodyForm() {
             {formData.fatalFlawsComment ? "update comment" : "add comment"}
           </span>
               </div>
-              {/* Display comment below, if available */}
+             
         {formData.fatalFlawsComment && (
           <div
             style={{
@@ -2378,9 +2352,9 @@ function Screen4ChainOfCustodyForm() {
             Comment: {formData.fatalFlawsComment}
           </div>
         )}</div>
-          </div>
+          </div> */}
 
-          {/* Submit Button */}
+         
           <button
             type="submit"
             style={{

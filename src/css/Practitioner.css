@@ -179,13 +179,28 @@
 }
 
 
-
+.container {
+    display: flex;
+    justify-content: center; /* Default for desktop */
+    padding: 20px;
+    align-items: center;
+    height: fit-content;
+    background: #80c209;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .container {
+      justify-content: flex-start; /* Override for mobile */
+      overflow: auto; /* Allow scrolling on mobile */
+    }
+  }
+  
 
 .mybold{
     font-size: 17px;
     font-weight: bold;
     /* color: #f3ffdf; */
-    color: #80c20a;
+    color: #7fc109;
 }
 .key{
     font-size: 17px;
