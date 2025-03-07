@@ -23,6 +23,7 @@ import { BsCalendar2EventFill } from 'react-icons/bs'
 import { Avatar, Badge, message, Space } from 'antd'
 import { AiOutlineForm } from 'react-icons/ai';
 import { AiOutlineDatabase } from 'react-icons/ai';
+import { AiOutlineFileText  } from 'react-icons/ai';
 import { AiOutlineDashboard } from 'react-icons/ai';
 
 function Navbar() {
@@ -154,9 +155,10 @@ function Navbar() {
 
                  
                         <h5 onClick={() => navigate("/dashboard")} className='hovar' style={{ margin: '0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4d4b4b' }} ><AiOutlineDashboard style={{ width: '35px', height: '35px' }} />Dashboard</h5>
-                        <h5 onClick={() => navigate("/data")} className='hovar' style={{ margin: '0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4d4b4b' }} ><AiOutlineDatabase style={{ width: '35px', height: '35px' }} />
-                        Data</h5>
+                        <h5 onClick={() => navigate("/jobrequests")} className='hovar' style={{ margin: '0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4d4b4b' }} ><AiOutlineFileText  style={{ width: '35px', height: '35px' }} />Job Requests</h5>
+                        <h5 onClick={() => navigate("/data")} className='hovar' style={{ margin: '0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4d4b4b' }} ><AiOutlineDatabase style={{ width: '35px', height: '35px' }} />Data</h5>
                         <h5 onClick={() => navigate("/screen4testform")} className='hovar' style={{ margin: '0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4d4b4b' }} ><AiOutlineForm style={{ width: '35px', height: '35px' }} />Form Link</h5>
+                        {/* <h5 onClick={() => navigate("/screen4testform2")} className='hovar' style={{ margin: '0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4d4b4b' }} ><AiOutlineForm style={{ width: '35px', height: '35px' }} />Form2 Link</h5> */}
                         <h5 onClick={logout} className='hovar' style={{ margin: '0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4d4b4b' }} > <GiExitDoor style={{ width: '35px', height: '35px' }} />  LOGOUT</h5>
                         {/* <h3 onClick={() => navigate("/dashboard/profile")}><CgProfile style={{ width: '30px', height: '30px' }} />Profile</h3> */}
 {/* 

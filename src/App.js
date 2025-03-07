@@ -11,6 +11,9 @@ import { useNavigate } from 'react-router-dom'
 import Screen4TestForm from './pages/FSForm';
 import Screen4Details from './pages/clientDetails';
 import Analytics from './pages/newdashboard';
+import JobRequestForm from './pages/from2';
+import JobRequests from './pages/jobRequest';
+import JobRequestDetails from './pages/jobRequestUpdate';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -78,6 +81,7 @@ function App() {
           <Route path='/' element={<Index />} />
 
           <Route path='/data' element={<Patient />} />
+          <Route path='/jobrequests' element={<JobRequests />} />
 
 
         </Routes>
@@ -87,7 +91,9 @@ function App() {
 
           <Route path='/dashboard/profile' element={<Profile />} />
           <Route path='/screen4testform' element={<Screen4TestForm />} />
+          <Route path='/screen4testform2' element={<JobRequestForm />} />
           <Route path="/dashboard/:id" element={<Screen4Details />} />
+          <Route path="/jobrequest/:id" element={<JobRequestDetails />} />
           <Route path="/dashboard" element={<Analytics />} />
 
 
