@@ -9,8 +9,36 @@ const JobRequests = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedTab, setSelectedTab] = useState("All");
+  const [selectedTab, setSelectedTab] = useState("Pending");
+  const [acceptedById,setAcceptedById] = useState()
+  const [jobRequesId,setJobRequestId]= useState()
+  const [cocId,setCocId] = useState();
   const navigate = useNavigate();
+  const token = Cookies.get("Token")
+  const collectorId = Cookies.get("id")
+
+
+  const fetchAcceptedById = async (id) => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/getacceptedbyid`, {
+        method: "POST", // ✅ Use POST instead of GET
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }), // ✅ Send ID in the request body
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to fetch acceptedBy ID");
+      }
+  
+      const data = await response.json();
+      console.log("Fetched Collector Form ID:", data._id); // ✅ Ensure correct field
+      return data._id; // ✅ Return the correct field
+    } catch (error) {
+      console.error("Error fetching acceptedBy ID:", error);
+    }
+  };
+  
+  
 
   useEffect(() => {
     const fetchScreen4Data = async () => {
@@ -32,6 +60,7 @@ const JobRequests = () => {
     };
 
     fetchScreen4Data();
+    filterClients();
   }, []);
 
   useEffect(() => {
@@ -39,9 +68,9 @@ const JobRequests = () => {
     if (
       !token ||
       (token !== "dskgfsdgfkgsdfkjg35464154845674987dsf@53" &&
-        token !== "sdrfg&78967daghf#wedhjgasj(dlsh6kjsdg")
+        token !== "collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg")
     ) {
-      navigate("/");
+      // navigate("/");
       return;
     }
   }, [navigate]);
@@ -49,23 +78,46 @@ const JobRequests = () => {
   const filterClients = (tab, query) => {
     let filtered = client;
 
-    // if (tab === "Pending") {
-    //   filtered = client.filter((c) => !c.isUpdated);
-    // } else if (tab === "Completed") {
-    //   filtered = client.filter((c) => c.isUpdated);
-    // }
-
+    if (tab === "Pending") {
+      filtered = client.filter((c) => !c.isAccepted && !c.isCompleted);
+    } else if (tab === "Accepted"){
+      filtered = client.filter((c) => {
+        console.log(collectorId)
+        console.log(c.acceptedBy)
+        if (token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53") {
+          return c.isAccepted && !c.isCompleted;
+        } else if (token === "collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg") {
+          return c.isAccepted && !c.isCompleted && c.acceptedBy.toString() === collectorId.toString();
+        }
+      });
+    } else if (tab === "Completed") {
+      filtered = client.filter((c) =>{
+        if (token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53") {
+          return c.isAccepted && c.isCompleted;
+        } else if (token === "collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg") {
+          return c.isAccepted && c.isCompleted && c.acceptedBy.toString() === collectorId;
+        }
+      })        
+    }
+    
+    
     // if (query) {
       filtered = filtered.filter(
         (c) =>
           c.customer?.toLowerCase().includes(query) ||
           c.jobReferenceNo?.toLowerCase().includes(query) ||
-          c.location?.toLowerCase().includes(query)
+          c.location?.toLowerCase().includes(query) ||
+          c.dateAndTimeOfCollection?.toLowerCase().includes(query)
       );
     // }
 
     setFilteredClients(filtered);
   };
+
+
+  useEffect(() => {
+    filterClients(selectedTab, searchQuery);
+  }, [client, selectedTab, searchQuery]); // ✅ Dependencies
 
   const handleSearchChange = (event) => {
     const query = event.target.value.toLowerCase();
@@ -78,8 +130,34 @@ const JobRequests = () => {
     filterClients(tab, searchQuery);
   };
 
-  const handleClientClick = (id) => {
-    navigate(`/jobrequest/${id}`);
+  const handleClientClick = async (id) => {
+    if(selectedTab==='Pending'){
+      navigate(`/jobrequest/${id}`);
+    }
+    else if (selectedTab === 'Accepted') {
+      try {
+        const collectorFormId = await fetchAcceptedById(id); // ✅ Await the API response
+        if (collectorFormId) {
+          navigate(`/dashboard/${collectorFormId}`); // ✅ Use the fetched ID
+        } else {
+          console.error("Collector Form ID not found");
+        }
+      } catch (error) {
+        console.error("Error navigating:", error);
+      }
+    }
+    else if (selectedTab === 'Completed') {
+      // try {
+      //   const collectorFormId = await fetchAcceptedById(id); // ✅ Await the API response
+      //   if (collectorFormId) {
+      //     navigate(`/jobrequest/completed/${collectorFormId}`); // ✅ Use the fetched ID
+      //   } else {
+      //     console.error("Collector Form ID not found");
+      //   }
+      // } catch (error) {
+      //   console.error("Error navigating:", error);
+      // }
+    }
   };
 
   const handleSendEmail = async (client, event) => {
@@ -133,16 +211,16 @@ const JobRequests = () => {
       marginBottom: "10px",
       marginTop: "10px",
       textAlign: "center",
-      position: "absolute",
+      position: token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ?  "absolute" : null,
       left: "50%",
-      transform: "translateX(-50%)", // Ensures perfect centering
+      transform: token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ?  "translateX(-50%)":null, // Ensures perfect centering
     }}
   >
-    Job Requests Forms
+    Job Requests
   </div>
 
   {/* Right-Aligned Button */}
-  <Link to="/screen4testform2" style={{ textDecoration: "none", marginLeft: "auto" }}>
+ {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ? <Link to="/screen4testform2" style={{ textDecoration: "none", marginLeft: "auto" }}>
     <div
       className="key"
       style={{
@@ -159,13 +237,13 @@ const JobRequests = () => {
     >
       Create a Job Request
     </div>
-  </Link>
+  </Link> : null}
 </div>
 
 
           {/* Tabs */}
-          {/* <div style={{ marginBottom: "25px", marginTop: "5px", display: "flex", gap: "10px" }}>
-            {["All", "Pending", "Completed"].map((tab) => (
+          <div style={{ marginBottom: "25px", marginTop: "5px", display: "flex", gap: "10px" }}>
+            {["Pending", "Accepted", "Completed"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => handleTabChange(tab)}
@@ -182,7 +260,7 @@ const JobRequests = () => {
                 {tab}
               </button>
             ))}
-          </div> */}
+          </div>
 
           {/* Search */}
           <div
@@ -254,7 +332,7 @@ const JobRequests = () => {
                     padding: "20px",
                     marginBottom: "20px",
                     width: "60%",
-                    height: "130px",
+                    height: "102px",
                     borderRadius: "13px",
                     background: "#f3ffdf",
                     border: "1px solid #80c20a",
@@ -299,23 +377,17 @@ const JobRequests = () => {
                           })}
                         </span>
                       </div>
-
-                      {/* <div className="key">Reason for Test: <span className="mybold">{client.reasonforTest}</span></div> */}
-                    </div>
-                    {/* <div>
-                      <div className="key">Bar Code Number: <span className="mybold">{client.barcodeno}</span></div>
-                      <div className="key">Ref Number: <span className="mybold">{client.refno}</span></div>
-                      <div className="key">Date of Test: <span className="mybold">{client.dateoftest}</span></div>
-                      <div className="key">Reason For Test: <span className="mybold">{client.reasonForTest}</span></div>
-                      <div className="key">Flight/Vessel: <span className="mybold">{client.flight}</span></div>
-                    </div> */}
+                  </div>
+                 
                     {selectedTab === "Completed" && (
-                      <button
+                      <div class="" style={{width: "200px"}}>
+                        <button
                         onClick={(event) => handleSendEmail(client, event)}
                         disabled={client.isEmailed}
                         style={{
+                          width: "200px",
                           marginTop: "0px",
-                          padding: "10px 30px",
+                          padding: "8px 30px",
                           borderRadius: "20px",
                           border: client.isEmailed
                             ? "1px solid #80c20a"
@@ -331,7 +403,49 @@ const JobRequests = () => {
                           ? "Email Sent"
                           : "Send Email To Donor"}
                       </button>
+                      <button
+                        onClick={() => navigate(`/jobrequest/${client._id}`)}
+                        style={{
+                          width: "200px",
+                          border:"none",
+                          marginTop: "5px",
+                          padding: "8px 30px",
+                          borderRadius: "20px",
+                          backgroundColor: "#80c20a",
+                          color: "white",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Job Request
+                      </button>
+                      <button
+                        onClick={async () =>{
+                          try {
+                            const collectorFormId = await fetchAcceptedById(client._id); // ✅ Await the API response
+                            if (collectorFormId) {
+                              navigate(`/dashboard/${collectorFormId}`); // ✅ Use the fetched ID
+                            } else {
+                              console.error("Collector Form ID not found");
+                            }
+                          } catch (error) {
+                            console.error("Error navigating:", error);
+                          }}}
+                          style={{
+                          width: "200px",
+                          border:"none",
+                          marginTop: "5px",
+                          padding: "8px 30px",
+                          borderRadius: "20px",
+                          backgroundColor: "#80c20a",
+                          color: "white",
+                          cursor: "pointer",
+                        }}
+                      >
+                        COC Form
+                      </button>
+                      </div>
                     )}
+                    
                   </div>
                 </div>
               ))

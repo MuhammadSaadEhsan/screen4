@@ -75,7 +75,7 @@ const tests = ["Alcohol","Amphetamines","Benzodiazepines","Buprenorphine","Blood
      if (
        !token ||
        (token !== "dskgfsdgfkgsdfkjg35464154845674987dsf@53" &&
-         token !== "sdrfg&78967daghf#wedhjgasj(dlsh6kjsdg")
+         token !== "collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg")
      ) {
        navigate("/");
        return;

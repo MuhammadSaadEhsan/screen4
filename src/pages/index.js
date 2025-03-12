@@ -67,7 +67,7 @@ function Index() {
                             Cookies.set('email', result.email, { expires: 7 }); // Expires in 7 days
                             Cookies.set('id', result._id, { expires: 7 }); // Expires in 7 days
                             Cookies.set('Name', result.name, { expires: 7 }); // Expires in 7 days
-                            Cookies.set('Token', "sdrfg&78967daghf#wedhjgasj(dlsh6kjsdg", { expires: 7 }); // Expires in 7 days
+                            Cookies.set('Token', "collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg", { expires: 7 }); // Expires in 7 days
                             navigate("/dashboard")
                         // } else {
                         //     const info = [{ Id: result._id, customerId: result.customerID }]

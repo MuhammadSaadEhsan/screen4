@@ -5,11 +5,177 @@ import { message } from "antd";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import '../css/Practitioner.css'
+import { useRef } from "react";
 
 function Screen4Details() {
     const [error, setError] = useState(null);
     const { id } = useParams();
     
+  const canvasRef = useRef(null);
+  const contextRef = useRef(null);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [isError, setIsError] = useState(false);
+  // const [formData, setFormData] = useState({ donorSignature: "" });
+  const [isSignaturePadOpen, setIsSignaturePadOpen] = useState(false);
+  const [donorOpen, setIsDonorOpen] = useState(false);
+  const [donorConcentOpen, setIsDonorConcentOpen] = useState(false);
+  const [collectorOpen, setIsCollectorOpen] = useState(false);
+  const [collectorCertificationOpen, setIsCollectorCerificationOpen] = useState(false);
+
+
+  const pad = (data) =>{
+    return   <div
+    style={{
+      position: "fixed",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      zIndex: 1000,
+      backgroundColor: "white",
+      border: "1px solid #ccc",
+      padding: "20px",
+      boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+    }}
+  >
+    <canvas
+      ref={canvasRef}
+      style={{
+        width: "400px",
+        height: "200px",
+        border: "1px solid #ccc",
+        cursor: "crosshair",
+      }}
+      onMouseDown={startDrawing}
+      onMouseMove={draw}
+      onMouseUp={finishDrawing}
+      onMouseLeave={finishDrawing}
+    />
+    <div style={{ marginTop: "10px" }}>
+      <button
+        type="button"
+        onClick={clearCanvas}
+        style={{
+          marginRight: "10px",
+          padding: "5px 10px",
+          backgroundColor: "#f44336",
+          color: "white",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+        }}
+      >
+        Clear
+      </button>
+      <button
+        type="button"
+        onClick={closeSignaturePadWithoutSave}
+        style={{
+          marginRight: "10px",
+          padding: "5px 10px",
+          backgroundColor: "#f44336",
+          color: "white",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+        }}
+      >
+        Close
+      </button>
+      <button
+        type="button"
+        onClick={()=>{closeSignaturePad(data)}}
+        style={{
+          padding: "5px 10px",
+          backgroundColor: "#4caf50",
+          color: "white",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+        }}
+      >
+        Save & Close
+      </button>
+    </div>
+  </div>
+  }
+
+  const openSignaturePad = () => {
+    setIsSignaturePadOpen(true);
+    setTimeout(initializeCanvas, 0); // Initialize canvas after it renders
+  };
+
+  const closeSignaturePad = (mydata) => {
+    setIsSignaturePadOpen(false);
+
+    // Save canvas content as a data URL
+    const canvas = canvasRef.current;
+    const signatureData = canvas.toDataURL();
+    console.log(mydata)
+    setFormData((prevData) => ({ ...prevData, [mydata]: signatureData }));
+    setIsDonorOpen(false)
+    setIsCollectorOpen(false)
+    setIsDonorConcentOpen(false)
+    setIsCollectorCerificationOpen(false)
+  };
+  const closeSignaturePadWithoutSave = () => {
+    setIsSignaturePadOpen(false);
+
+    // Save canvas content as a data URL
+    const canvas = canvasRef.current;
+    // const signatureData = canvas.toDataURL();
+    // setFormData((prevData) => ({ ...prevData, donorSignature: signatureData }));
+  };
+
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    const context = contextRef.current;
+    context.clearRect(0, 0, canvas.width, canvas.height); // Clears the entire canvas
+  };
+
+  const initializeCanvas = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    canvas.width = canvas.offsetWidth * 2;
+    canvas.height = canvas.offsetHeight * 2;
+    canvas.style.width = `${canvas.offsetWidth}px`;
+    canvas.style.height = `${canvas.offsetHeight}px`;
+
+    const context = canvas.getContext("2d");
+    context.scale(2, 2);
+    context.lineCap = "round";
+    context.strokeStyle = "black";
+    context.lineWidth = 2;
+    contextRef.current = context;
+
+    // Clear canvas
+    context.clearRect(0, 0, canvas.width, canvas.height);
+  };
+
+  const startDrawing = ({ nativeEvent }) => {
+    const { offsetX, offsetY } = nativeEvent;
+    contextRef.current.beginPath();
+    contextRef.current.moveTo(offsetX, offsetY);
+    setIsDrawing(true);
+  };
+
+  const draw = ({ nativeEvent }) => {
+    if (!isDrawing) return;
+
+    const { offsetX, offsetY } = nativeEvent;
+    contextRef.current.lineTo(offsetX, offsetY);
+    contextRef.current.stroke();
+  };
+
+  const finishDrawing = () => {
+    contextRef.current.closePath();
+    setIsDrawing(false);
+  };
+
+
+
+
+
   const specificFields = [
     "DrugsandAlcoholUrineTest",
     "DrugsandAlcoholOralTest",
@@ -150,19 +316,19 @@ const handleAddComment = (field) => {
 useEffect(() => {
     const fetchScreen4Data = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/getscreen4data`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/getscreen4data/${id}`);
         if (!response.ok) {
           throw new Error("Failed to fetch client data");
         }
         const data = await response.json();
 
         // Find the object with the matching id
-        const clientData = data.data.find((item) => item._id === id);
-        if (clientData) {
-          setFormData(clientData); // Set the form data with the found object
-        } else {
-          throw new Error("Client not found");
-        }
+        // const clientData = data.data.find((item) => item._id === id);
+        // if (clientData) {
+          setFormData(data.data); // Set the form data with the found object
+        // } else {
+        //   throw new Error("Client not found");
+        // }
       } catch (error) {
         setError(error.message); // Handle error if something goes wrong
         console.log(error.message);
@@ -221,14 +387,28 @@ useEffect(() => {
   //   }));
   // };
 
-  const handleChange = async (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prevData) => ({
-        ...prevData,
-        [name]: type === "checkbox" ? checked : value.toString(),
-    }));
-    console.log(formData.scree)
+//   const handleChange = async (e) => {
+//     const { name, value, type, checked } = e.target;
+//     setFormData((prevData) => ({
+//         ...prevData,
+//         [name]: type === "checkbox" ? checked : value.toString(),
+//     }));
+//     console.log(formData.BloodConfirm)
+// };
+
+const handleChange = async (e) => {
+  const { name, value, type, checked } = e.target;
+  setFormData((prevData) => {
+      const updatedData = {
+          ...prevData,
+          [name]: type === "checkbox" ? checked : value.toString(),
+      };
+      console.log(updatedData.BloodConfirm); // Logs the updated state immediately
+      return updatedData;
+  });
 };
+
+
 
 //   const handleChange = async (e) => {
 //     const { name, value, type, checked } = e.target;
@@ -367,7 +547,7 @@ useEffect(() => {
           <h2
             style={{
               textAlign: "center",
-              color: "#19b0e6",
+              color: "#80c209",
               padding: "10px",
             }}
           >
@@ -718,7 +898,7 @@ useEffect(() => {
                 <label style={{ fontSize: "11px", fontWeight: "bold" }}>
                   Donor's Signature{" "}
                 </label>
-                <input
+                {/* <input
                   className="inputstyle"
                   type="image"
                   name="donorSignature"
@@ -737,7 +917,37 @@ useEffect(() => {
                  }}
                   required
                 />
+              </div> */}
+               <input
+          className="inputstyle"
+          type="text"
+          name="donorSignature"
+          value=""
+          placeholder=""
+          onClick={()=>{openSignaturePad(); setIsDonorOpen(true)}}
+          style={{
+             width: "156px",
+            margin: "0px",
+            cursor: "pointer",
+            backgroundImage: `url(${formData.donorSignature})`,
+            backgroundSize: "contain",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+            height: "30px", // Adjust height to fit the signature image
+          }}
+          readOnly
+        />
+        {isError && isError==='donorSignature' && (
+          <p style={{ color: "red", padding:"5px",fontSize: "12px", marginTop: "5px" }}>
+            Please fill donor signature
+          </p>
+        )}
+        
+
               </div>
+              {isSignaturePadOpen && donorOpen && (
+      pad("donorSignature")
+      )}
               <div className="donor">
                 {/* Date of Birth */}
                 <label
@@ -995,7 +1205,7 @@ useEffect(() => {
                   >
                     Collector Signature:{" "}
                   </label>
-                  <input
+                  {/* <input
                     className="inputstyle"
                     type="image"
                     name="collectorSignature"
@@ -1013,8 +1223,26 @@ useEffect(() => {
                      height: "30px", // Adjust height to fit the signature image
                    }}
                     required
+                  /> */}
+                   <input
+                    className="inputstyle"
+                    type="text"
+                    onClick={()=>{openSignaturePad(); setIsCollectorOpen(true)}}
+                    name="collectorSignature"
+                    value=""
+                    placeholder=""
+                    onChange={handleChange}
+                    style={{ width: "152px", margin: "0px",cursor: "pointer",
+                      backgroundImage: `url(${formData.collectorSignature})`,
+                      backgroundSize: "contain",
+                      backgroundRepeat: "no-repeat",
+                      backgroundPosition: "center",height:"30px"}}
+        
                   />
                 </div>
+                {isSignaturePadOpen && collectorOpen&&(
+      pad("collectorSignature")
+      )}
                 <div className="donor">
                   {/* Date of Birth */}
                   <label
@@ -1616,7 +1844,7 @@ useEffect(() => {
             </div>
           </div>
           <div style={{ overflowX: "auto" }}>
-            <table
+            {/* <table
               style={{
                 borderCollapse: "collapse",
                 width: "100%",
@@ -1731,6 +1959,122 @@ useEffect(() => {
                   </tr>
                 ))}
               </tbody>
+            </table> */}
+             <table
+              style={{
+                borderCollapse: "collapse",
+                width: "100%",
+                border: "1px solid black",
+              }}
+            >
+              <thead>
+                <tr>
+                  <th
+                    colSpan="6"
+                    style={{ border: "1px solid black", padding: "8px" }}
+                  >
+                    Laboratory Tests (Please tick tests required)
+                  </th>
+                  <th
+                    colSpan="1"
+                    style={{ border: "1px solid black", padding: "8px" }}
+                  ></th>
+                  <th
+                    colSpan="1"
+                    style={{ border: "1px solid black", padding: "8px" }}
+                  >
+                    Screen
+                  </th>
+                  <th
+                    colSpan="1"
+                    style={{ border: "1px solid black", padding: "8px" }}
+                  >
+                    Confirm
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["", "screen", "confirm", "", "Methamphetamine"],
+                  ["Alcohol", "", "", "Cocaine", "Morphine"],
+                  ["Amphetamines", "", "", "Ketamine", "Network Rail Std"],
+                  [
+                    "Benzodiazepines",
+                    "",
+                    "",
+                    "Maritime Std",
+                    "Opiates",
+                  ],
+                  ,
+                  ["Buprenorphine", "", "", "MDMA", "SSRI"],
+                  ["Blood", "", "", "Methadone", "TCA"],
+                  ["Other (Please Specify)", "", "", "", "THC"],
+                ].map(([leftTest, a, b, rightTest, c], index) => (
+                  <tr key={index}>
+                    <td style={{ border: "1px solid black", padding: "8px" }}>
+                      {leftTest}
+                    </td>
+                    <td style={{ border: "1px solid black", padding: "8px" }}>
+                      {a}
+                      {index !== 0 && (<input
+                              type="checkbox"
+                              name={`${leftTest.split(" ")[0]}Screen`}
+                              checked={formData[`${leftTest.split(" ")[0]}Screen`] || false}
+                              onChange={handleChange}
+                              />)}
+                    </td>
+                    <td style={{ border: "1px solid black", padding: "8px" }}>
+                      {b}
+                      {index !== 0 && (<input
+                              type="checkbox"
+                              name={`${leftTest.split(" ")[0]}Confirm`}
+                              checked={formData[`${leftTest.split(" ")[0]}Confirm`] || false}
+                              onChange={handleChange}
+                              />)}
+                    </td>
+                    <td style={{ border: "1px solid black", padding: "8px" }}>
+                      {rightTest}
+                    </td>
+                    <td style={{ border: "1px solid black", padding: "8px" }}>
+                      {a}
+                      {index !== 0 &&index !== 7 && (<input
+                              type="checkbox"
+                              name={`${rightTest.split(" ")[0]}Screen`}
+                              checked={formData[`${rightTest.split(" ")[0]}Screen`] || false}
+                              onChange={handleChange}
+                              />)}
+                    </td>
+                    <td style={{ border: "1px solid black", padding: "8px" }}>
+                      {b}
+                      {index !== 0 && index !== 7 &&(<input
+                              type="checkbox"
+                              name={`${rightTest.split(" ")[0]}Confirm`}
+                              checked={formData[`${rightTest.split(" ")[0]}Confirm`] || false}
+                              onChange={handleChange}
+                              />)}
+                    </td>
+                    <td style={{ border: "1px solid black", padding: "8px" }}>
+                      {c}
+                    </td>
+                    <td
+                      style={{ border: "1px solid black", padding: "8px" }}
+                    >{<input
+                      type="checkbox"
+                      name={`${c.split(" ")[0]}Screen`}
+                      checked={formData[`${c.split(" ")[0]}Screen`] || false}
+                      onChange={handleChange}
+                      />}</td>
+                    <td
+                      style={{ border: "1px solid black", padding: "8px" }}
+                    >{<input
+                      type="checkbox"
+                      name={`${c.split(" ")[0]}Confirm`}
+                      checked={formData[`${c.split(" ")[0]}Confirm`] || false}
+                      onChange={handleChange}
+                      />}</td>
+                  </tr>
+                ))}
+              </tbody>
             </table>
           </div>
           <div class="myb seventh-row">
@@ -1792,7 +2136,7 @@ useEffect(() => {
                   >
                     Signature{" "}
                   </label>
-                  <input
+                  {/* <input
                     className="inputstyle"
                     type="image"
                     name="donorCertificationSignature"
@@ -1811,7 +2155,26 @@ useEffect(() => {
                    }}
                     required
                   />
+                </div> */}
+                <input
+                    className="inputstyle"
+                    type="text"
+                    name="donorCertificationSignature"
+                    value=""//{formData.donorCertificationSignature}
+                    placeholder=""
+                    onChange={handleChange}
+                    onClick={()=>{openSignaturePad(); setIsDonorConcentOpen(true)}}
+                    style={{ width: "152px", margin: "0px",cursor: "pointer",
+                      backgroundImage: `url(${formData.donorCertificationSignature})`,
+                      backgroundSize: "contain",
+                      backgroundRepeat: "no-repeat",
+                      backgroundPosition: "center",height:"30px"}}
+              
+                  />
                 </div>
+                {isSignaturePadOpen&& donorConcentOpen && (
+      pad("donorCertificationSignature")
+      )}
                 <div className="donor" style={{ marginLeft: "30px" }}>
                   <label
                     style={{
@@ -1891,7 +2254,7 @@ useEffect(() => {
                   >
                     Signature{" "}
                   </label>
-                  <input
+                  {/* <input
                     className="inputstyle"
                     type="image"
                     name="collectorCertificationSignature"
@@ -1909,8 +2272,26 @@ useEffect(() => {
                      height: "30px", // Adjust height to fit the signature image
                    }}
                     required
+                  /> */}
+                  <input
+                    className="inputstyle"
+                    type="text"
+                    name="collectorCertificationSignature"
+                    value=""//{formData.collectorCertificationSignature}
+                    placeholder=""
+                    onClick={()=>{openSignaturePad(); setIsCollectorCerificationOpen(true)}}
+                    onChange={handleChange}
+                    style={{ width: "152px", margin: "0px",cursor: "pointer",
+                      backgroundImage: `url(${formData.collectorCertificationSignature})`,
+                      backgroundSize: "contain",
+                      backgroundRepeat: "no-repeat",
+                      backgroundPosition: "center",height:"30px" }}
+         
                   />
                 </div>
+                {isSignaturePadOpen && collectorCertificationOpen && (
+      pad("collectorCertificationSignature")
+      )}
                 <div className="donor" style={{ marginLeft: "30px" }}>
                   <label
                     style={{
@@ -2154,7 +2535,7 @@ useEffect(() => {
             style={{
               width: "100%",
               padding: "10px",
-              background: "#19b0e6",
+              background: "#80c209",
               color: "#fff",
               border: "none",
               borderRadius: "5px",

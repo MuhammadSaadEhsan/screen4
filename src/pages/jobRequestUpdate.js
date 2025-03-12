@@ -4,9 +4,13 @@ import Navbar from "../components/navbar";
 import { message } from "antd";
 import { useRef } from "react";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import Cookies from 'js-cookie'
 
 function JobRequestDetails() {
+  const practitionerId = Cookies.get('id')
+  const navigate = useNavigate()
+  const token = Cookies.get("Token")
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -18,6 +22,8 @@ function JobRequestDetails() {
   const [collectorOpen, setIsCollectorOpen] = useState(false);
   const [collectorCertificationOpen, setIsCollectorCerificationOpen] =
     useState(false);
+
+    const [accepted,setAccepted] = useState(false)
     const { id } = useParams();
 
 
@@ -31,6 +37,7 @@ function JobRequestDetails() {
             }
       
             const data = await response.json();
+            setAccepted(data.isAccepted)
       
             if (data.data) {
               setFormData(data.data); // ✅ Set form data directly from API response
@@ -265,17 +272,7 @@ function JobRequestDetails() {
     return today.toLocaleDateString("en-GB", options);
   };
 
-  // const handleChange = async (e) => {
-  //   const { name, value, type, checked } = e.target;
-  //   setFormData((prevData) => {
-  //       const updatedData = {
-  //           ...prevData,
-  //           [name]: type === "checkbox" ? checked : value.toString(),
-  //       };
-  //       console.log(updatedData); // Logs the updated state immediately
-  //       return updatedData;
-  //   });
-  // };
+
 
   const handleChange = async (e) => {
     const { name, value, type, checked } = e.target;
@@ -304,78 +301,6 @@ function JobRequestDetails() {
     });
   };
 
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       const response = await fetch(
-//         // `${process.env.REACT_APP_API_URL}/addscreen4data`,
-//         `${process.env.REACT_APP_API_URL}/addscreenforjobrequestform`,
-//         {
-//           method: "POST",
-//           headers: {
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify(formData),
-//         }
-//       );
-
-//       const result = await response.json();
-
-//       if (response.ok) {
-//         message.success("Form submitted successfully!");
-//       } else {
-//         message.error(result.message || "Failed to submit form.");
-//       }
-
-//       // Reset form
-//       setFormData({
-//         jobReferenceNo: "",
-//         dateAndTimeOfCollection: "",
-//         location: "",
-//         customer: "",
-//         nameOfOnsiteContact: "",
-//         contactOfTelephoneNo: "",
-//         numberOfDonors: "",
-//         TypeOfTest: "",
-//         callOut: "",
-
-//         date: "",
-//         collectionOfficerName: "",
-//         arrivalTime: "",
-//         departureTime: "",
-//         waitingTime: "",
-//         mileage: "",
-//         samplesMailed: "",
-//         breathAlcoholTestsCompleted: "",
-//         drugTestsCompleted: "",
-//         nonZeroBreathAlcoholTests: "",
-//         nonNegativeSamples: "",
-//         notes: "",
-//         facilities: {
-//           privateSecureRoom: false,
-//           wcFacilities: false,
-//           handWashing: false,
-//           securedWindows: false,
-//           emergencyExits: false,
-//           translatorRequired: false,
-//         },
-//         onsiteSignature: "",
-//         officerSignature: "",
-//         author: "",
-//         rev: "",
-//         alcoholTestResult: "",
-//         secondBreathTest: "",
-//         drugKitType: "",
-//         nonNegativeSamples: "",
-//         laboratoryAddress: "",
-//         sampleDeliveryMethod: "",
-//       });
-//     } catch (error) {
-//       console.error("Error: ", error);
-//       message.error("Submission failed due to server error.");
-//     }
-//   };
 
 
 const handleSubmit = async (e) => {
@@ -453,6 +378,37 @@ const handleSubmit = async (e) => {
   };
   
 
+  const handleAccept = async (e) => {
+    e.preventDefault();
+
+    console.log("Sending data:", { practitionerId }); // Debugging
+
+    try {
+        const url = `${process.env.REACT_APP_API_URL}/jobrequestAccept/${id}`;
+
+        const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({acceptedBy: practitionerId }) // ✅ Ensure correct JSON structure
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            message.success("Form Accepted!");
+        } else {
+            message.error(result.message || "Failed to process form.");
+        }
+    } catch (error) {
+        console.error("Error: ", error);
+        message.error("Unable to accept due to server error.");
+    }
+};
+
+  
+  // const handleReject = async () => {
+  //   navigate("/jobrequests")
+  // };
   return (
     <>
       {/* <Navbar /> */}
@@ -469,8 +425,8 @@ const handleSubmit = async (e) => {
           background: "#80c209",
         }}
       >
-        <form
-          onSubmit={handleSubmit}
+        <div
+          // onSubmit={handleSubmit}
           style={{
             // marginTop: "1110px",
             background: "#ffffff",
@@ -675,7 +631,7 @@ const handleSubmit = async (e) => {
             TIMESHEET (Collection Officer to complete, Onsite Contact to sign)
           </h4>
 
-          <form onSubmit={handleSubmit}>
+          {/* <form onSubmit={handleSubmit}> */}
             <table border="1">
               <tbody>
                 <tr>
@@ -899,7 +855,7 @@ const handleSubmit = async (e) => {
                 </tr>
               </tbody>
             </table>
-          </form>
+          {/* </form> */}
 
           <div className="note">
             <strong>** CO to NOTE **:</strong>
@@ -1152,8 +1108,9 @@ const handleSubmit = async (e) => {
             </tbody>
           </table>
 
-          <button
+          {token ==="dskgfsdgfkgsdfkjg35464154845674987dsf@53" ? <button
             type="submit"
+            onClick={handleSubmit}
             style={{
               width: "100%",
               padding: "10px",
@@ -1167,8 +1124,31 @@ const handleSubmit = async (e) => {
             }}
           >
             Update
+          </button> : 
+
+          // {
+            // accepted ?
+            <button
+            type="submit"
+            onClick={handleAccept}
+            style={{
+              width: "100%",
+              padding: "10px",
+              background: "#80c209",
+            //   background: "#80c209",
+              color: "#fff",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              fontSize: "16px",
+            }}
+          >
+            Accept
           </button>
-        </form>
+          //  : null
+        // }
+          }
+        </div>
       </div>
     </>
   );

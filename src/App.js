@@ -14,6 +14,7 @@ import Analytics from './pages/newdashboard';
 import JobRequestForm from './pages/from2';
 import JobRequests from './pages/jobRequest';
 import JobRequestDetails from './pages/jobRequestUpdate';
+import JobRequestCompleted from './pages/jobRequestCompleted';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -49,7 +50,7 @@ function ScrollToTop() {
           if (result === "deactivated") {
             const allCookies = Cookies.get();
             for (const cookieName in allCookies) {
-              Cookies.remove(cookieName);
+              // Cookies.remove(cookieName);
             }
             navigate('/')
           }
@@ -95,8 +96,6 @@ function App() {
           <Route path="/dashboard/:id" element={<Screen4Details />} />
           <Route path="/jobrequest/:id" element={<JobRequestDetails />} />
           <Route path="/dashboard" element={<Analytics />} />
-
-
 
 
         </Routes>
