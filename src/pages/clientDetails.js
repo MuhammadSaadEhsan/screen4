@@ -3,11 +3,12 @@ import React, { useState } from "react";
 import Navbar from "../components/navbar";
 import { message } from "antd";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import '../css/Practitioner.css'
 import { useRef } from "react";
 
 function Screen4Details() {
+  const navigate = useNavigate()
     const [error, setError] = useState(null);
     const { id } = useParams();
     
@@ -508,6 +509,7 @@ const handleChange = async (e) => {
           consent: false,
         });
       }
+      navigate("/jobrequests")
     } catch (error) {
       console.error("Error: ", error);
       message.error("Submission failed due to server error.");

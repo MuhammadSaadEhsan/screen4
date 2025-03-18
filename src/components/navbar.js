@@ -3,6 +3,8 @@ import "../components/component.css";
 import { GiExitDoor } from "react-icons/gi";
 import { FaBars } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
+// import { AiOutlineDashboard } from "react-icons/ai"; // For general dashboard
+import { FaUserTie, FaUsers } from "react-icons/fa"; // For Collectors & Clients
 
 import { IoNotificationsSharp } from "react-icons/io5";
 
@@ -210,7 +212,7 @@ function Navbar() {
                   color: "#4d4b4b",
                 }}
               >
-                <AiOutlineDashboard style={{ width: "35px", height: "35px" }} />
+                <FaUsers style={{ width: "30px", height: "35px", color: "#80c209",marginRight:"10px" }} />
                 Clients
               </h5></>}
               {token!=="clientdgf45sdgf@89756dfgdhg&%df"&&token!=="collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg"&&<><h5
@@ -222,9 +224,10 @@ function Navbar() {
                   alignItems: "center",
                   justifyContent: "center",
                   color: "#4d4b4b",
+                  gap:"5px"
                 }}
               >
-                <AiOutlineDashboard style={{ width: "35px", height: "35px" }} />
+                <FaUserTie style={{ width: "23px", height: "35px", color: "#007bff" }} />
                 Collectors
               </h5></>}
               {/* {token!=="clientdgf45sdgf@89756dfgdhg&%df"&&<> */}
@@ -243,7 +246,7 @@ function Navbar() {
                 Job Requests
               </h5>
               {/* </>} */}
-              {token!=="clientdgf45sdgf@89756dfgdhg&%df"&&<><h5
+              {token==="dskgfsdgfkgsdfkjg35464154845674987dsf@53"&&<><h5
                 onClick={() => navigate("/data")}
                 className="hovar"
                 style={{
@@ -553,6 +556,85 @@ function Navbar() {
                     <h5 onClick={() => { navigate("/eventinfo") }} className='hovar link' style={{ margin: '0', display: 'flex', alignItems: 'center', justifyContent: 'left', color: '#4180b7' }} >   Event Info Form</h5>
 
                     <h5 onClick={() => { navigate("/bucket") }} className='hovar link' style={{ margin: '0', display: 'flex', alignItems: 'center', justifyContent: 'left', color: '#4180b7' }} >   Bucket</h5> */}
+
+
+
+{token!=="clientdgf45sdgf@89756dfgdhg&%df"&&token!=="collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg"&&<><h5
+                onClick={() => navigate("/clients")}
+                className="hovar"
+                style={{
+                  margin: "0",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#4d4b4b",
+                  
+                }}
+              >
+                <FaUsers style={{ width: "30px", height: "35px", color: "#80c209",marginRight:"10px" }} />
+                Clients
+              </h5></>}
+              {token!=="clientdgf45sdgf@89756dfgdhg&%df"&&token!=="collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg"&&<><h5
+                onClick={() => navigate("/collectors")}
+                className="hovar"
+                style={{
+                  margin: "0",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#4d4b4b",
+                  gap:"10px"
+                }}
+              >
+                <FaUserTie style={{ width: "25px", height: "35px", color: "#007bff",marginRight:"20px" }} />
+                Collectors
+              </h5></>}
+              {/* {token!=="clientdgf45sdgf@89756dfgdhg&%df"&&<> */}
+              <h5
+                onClick={() => navigate("/jobrequests")}
+                className="hovar"
+                style={{
+                  margin: "0",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#4d4b4b",
+                }}
+              >
+                <AiOutlineFileText style={{ width: "35px", height: "35px" }} />
+                Job Requests
+              </h5>
+              {/* </>} */}
+              {token==="dskgfsdgfkgsdfkjg35464154845674987dsf@53"&&<><h5
+                onClick={() => navigate("/data")}
+                className="hovar"
+                style={{
+                  margin: "0",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#4d4b4b",
+                }}
+              >
+                <AiOutlineDatabase style={{ width: "35px", height: "35px" }} />
+                Data
+              </h5></>}
+              {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ? (
+                <h5
+                  onClick={() => navigate("/screen4testform")}
+                  className="hovar"
+                  style={{
+                    margin: "0",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "#4d4b4b",
+                  }}
+                >
+                  <AiOutlineForm style={{ width: "35px", height: "35px" }} />
+                  Form Link
+                </h5>
+              ) : null}
 
             <h5
               onClick={logout}

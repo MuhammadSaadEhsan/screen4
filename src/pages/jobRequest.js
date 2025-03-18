@@ -388,7 +388,7 @@ const JobRequests = () => {
                  
                     {selectedTab === "Completed" && (
                       <div class="" style={{width: "200px"}}>
-                        <button
+                       {/* {token==="dskgfsdgfkgsdfkjg35464154845674987dsf@53"&&<> <button
                         onClick={(event) => handleSendEmail(client, event)}
                         disabled={client.isEmailed}
                         style={{
@@ -409,7 +409,7 @@ const JobRequests = () => {
                         {client.isEmailed
                           ? "Email Sent"
                           : "Send Email To Donor"}
-                      </button>
+                      </button></>} */}
                       <button
                         onClick={() => navigate(`/jobrequest/${client._id}`)}
                         style={{
