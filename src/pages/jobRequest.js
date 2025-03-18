@@ -17,6 +17,10 @@ const JobRequests = () => {
   const token = Cookies.get("Token")
   const collectorId = Cookies.get("id")
 
+  useEffect(() => {
+    token==="clientdgf45sdgf@89756dfgdhg&%df" && setSelectedTab("Completed")
+  }, [token])
+
 
   const fetchAcceptedById = async (id) => {
     try {
@@ -92,7 +96,7 @@ const JobRequests = () => {
       });
     } else if (tab === "Completed") {
       filtered = client.filter((c) =>{
-        if (token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53") {
+        if (token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" || token === "clientdgf45sdgf@89756dfgdhg&%df") {
           return c.isAccepted && c.isCompleted;
         } else if (token === "collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg") {
           return c.isAccepted && c.isCompleted && c.acceptedBy.toString() === collectorId;
@@ -219,6 +223,9 @@ const JobRequests = () => {
     Job Requests
   </div>
 
+
+
+
   {/* Right-Aligned Button */}
  {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ? <Link to="/screen4testform2" style={{ textDecoration: "none", marginLeft: "auto" }}>
     <div
@@ -242,7 +249,7 @@ const JobRequests = () => {
 
 
           {/* Tabs */}
-          <div style={{ marginBottom: "25px", marginTop: "5px", display: "flex", gap: "10px" }}>
+         {token!=="clientdgf45sdgf@89756dfgdhg&%df"&&<> <div style={{ marginBottom: "25px", marginTop: "5px", display: "flex", gap: "10px" }}>
             {["Pending", "Accepted", "Completed"].map((tab) => (
               <button
                 key={tab}
@@ -261,7 +268,7 @@ const JobRequests = () => {
               </button>
             ))}
           </div>
-
+          </>}
           {/* Search */}
           <div
             style={{

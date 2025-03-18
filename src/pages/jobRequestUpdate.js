@@ -370,11 +370,13 @@ const handleSubmit = async (e) => {
         laboratoryAddress: "",
         sampleDeliveryMethod: "",
       });
-  
+      navigate("/jobrequests")
     } catch (error) {
       console.error("Error: ", error);
       message.error("Submission failed due to server error.");
     }
+
+    
   };
   
 
@@ -399,6 +401,7 @@ const handleSubmit = async (e) => {
         } else {
             message.error(result.message || "Failed to process form.");
         }
+        navigate("/jobrequests")
     } catch (error) {
         console.error("Error: ", error);
         message.error("Unable to accept due to server error.");

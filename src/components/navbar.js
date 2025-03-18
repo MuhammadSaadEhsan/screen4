@@ -182,7 +182,7 @@ function Navbar() {
           />
         </div>
         {(token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ||
-          token === "collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg") && (
+          token === "collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg" || token==="clientdgf45sdgf@89756dfgdhg&%df") && (
           <>
             <div className="navmanu" style={{ display: "flex", gap: "20px" }}>
               <h5
@@ -199,6 +199,35 @@ function Navbar() {
                 <AiOutlineDashboard style={{ width: "35px", height: "35px" }} />
                 Dashboard
               </h5>
+              {token!=="clientdgf45sdgf@89756dfgdhg&%df"&&token!=="collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg"&&<><h5
+                onClick={() => navigate("/clients")}
+                className="hovar"
+                style={{
+                  margin: "0",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#4d4b4b",
+                }}
+              >
+                <AiOutlineDashboard style={{ width: "35px", height: "35px" }} />
+                Clients
+              </h5></>}
+              {token!=="clientdgf45sdgf@89756dfgdhg&%df"&&token!=="collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg"&&<><h5
+                onClick={() => navigate("/collectors")}
+                className="hovar"
+                style={{
+                  margin: "0",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#4d4b4b",
+                }}
+              >
+                <AiOutlineDashboard style={{ width: "35px", height: "35px" }} />
+                Collectors
+              </h5></>}
+              {/* {token!=="clientdgf45sdgf@89756dfgdhg&%df"&&<> */}
               <h5
                 onClick={() => navigate("/jobrequests")}
                 className="hovar"
@@ -213,7 +242,8 @@ function Navbar() {
                 <AiOutlineFileText style={{ width: "35px", height: "35px" }} />
                 Job Requests
               </h5>
-              <h5
+              {/* </>} */}
+              {token!=="clientdgf45sdgf@89756dfgdhg&%df"&&<><h5
                 onClick={() => navigate("/data")}
                 className="hovar"
                 style={{
@@ -226,7 +256,7 @@ function Navbar() {
               >
                 <AiOutlineDatabase style={{ width: "35px", height: "35px" }} />
                 Data
-              </h5>
+              </h5></>}
               {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ? (
                 <h5
                   onClick={() => navigate("/screen4testform")}
@@ -258,19 +288,7 @@ function Navbar() {
                 {" "}
                 <GiExitDoor style={{ width: "35px", height: "35px" }} /> LOGOUT
               </h5>
-              {/* <h3 onClick={() => navigate("/dashboard/profile")}><CgProfile style={{ width: '30px', height: '30px' }} />Profile</h3> */}
-              {/* 
-
-                        {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" && <>
-                            <Space size="large">
-
-                                <Badge count={count()} overflowCount={10} >
-                                    <IoNotificationsSharp className='hovar' onClick={() => { setmanuuunoti(!manuuunoti) }} style={{ width: '25px', height: '25px', color: "#19b0e6" }} />
-                                </Badge>
-
-                            </Space>
-                        </>}
- */}
+    
             </div>
           </>
         )}
@@ -349,11 +367,12 @@ function Navbar() {
               />{" "}
               Dashboard
             </h3>
-            <h3 onClick={() => setmanukonssa("1")}>
+            
+            {/* <h3 onClick={() => setmanukonssa("1")}>
               {" "}
               <FaBowlFood style={{ width: "30px", height: "30px" }} /> Food
               Sensitivtiy{" "}
-            </h3>
+            </h3> */}
             {manukonssa === "1" && (
               <>
                 {" "}
@@ -524,10 +543,10 @@ function Navbar() {
                         </ul>
                         </>}
                     </>} */}
-            <h3 onClick={() => navigate("/dashboard/profile")}>
+            {/* <h3 onClick={() => navigate("/dashboard/profile")}>
               <CgProfile style={{ width: "30px", height: "30px" }} />
               Profile
-            </h3>
+            </h3> */}
 
             {/* <h5 onClick={() => { navigate("/kitack") }} className='hovar link' style={{ margin: '0', display: 'flex', alignItems: 'center', justifyContent: 'left', color: '#4180b7' }} >  Kit Received</h5>
                     <h5 onClick={() => { navigate("/shipping") }} className='hovar link' style={{ margin: '0', display: 'flex', alignItems: 'center', justifyContent: 'left', color: '#4180b7' }} >   Shipping Form</h5>

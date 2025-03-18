@@ -14,7 +14,10 @@ import Analytics from './pages/newdashboard';
 import JobRequestForm from './pages/from2';
 import JobRequests from './pages/jobRequest';
 import JobRequestDetails from './pages/jobRequestUpdate';
-import JobRequestCompleted from './pages/jobRequestCompleted';
+import AddClientForm from './pages/addClientForm';
+import AllClients from './pages/allClients';
+import AllCollectors from './pages/AllCollectors'
+import AddCollectorForm from './pages/addCollectorForm';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -96,6 +99,13 @@ function App() {
           <Route path="/dashboard/:id" element={<Screen4Details />} />
           <Route path="/jobrequest/:id" element={<JobRequestDetails />} />
           <Route path="/dashboard" element={<Analytics />} />
+          <Route path="/clients" element={<AllClients />} />
+          <Route path="/collectors" element={<AllCollectors />} />
+          <Route path="/addclient" element={<AddClientForm />} />
+          <Route path="/addcollector" element={<AddCollectorForm />} />
+          <Route path="/addclient/:id" element={<AddClientForm />} />
+          <Route path="/addcollector/:id" element={<AddCollectorForm />} />
+
 
 
         </Routes>

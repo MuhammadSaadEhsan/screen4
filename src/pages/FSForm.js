@@ -3,8 +3,10 @@ import React, { useState } from "react";
 import Navbar from "../components/navbar";
 import { message } from "antd";
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Screen4ChainOfCustodyForm() {
+  const navigate = useNavigate()
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -493,6 +495,7 @@ const handleChange = async (e) => {
           BreathAlcoholOnlyTest:"",
           DrugsOnlyTest:"",
         });
+        navigate("/jobrequests")
       } catch (error) {
         console.error("Error: ", error);
         message.error("Submission failed due to server error.");
