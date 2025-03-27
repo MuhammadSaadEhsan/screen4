@@ -490,18 +490,6 @@ const handleSubmit = async (e) => {
             style={{ display: "flex", justifyContent: "space-between" }}
           > */}
           <div className="donor">
-            <label style={{ width: "180px" }}>Location </label>
-            <input
-              className="inputstyle"
-              type="text"
-              name="location"
-              value={formData.location}
-              placeholder="Enter Location"
-              onChange={handleChange}
-            />
-          </div>
-          <hr></hr>
-          <div className="donor">
             <label>Customer</label>
             <input
               className="inputstyle"
@@ -513,6 +501,19 @@ const handleSubmit = async (e) => {
             />
           </div>
           <hr></hr>
+          <div className="donor">
+            <label style={{ width: "180px" }}>Location </label>
+            <input
+              className="inputstyle"
+              type="text"
+              name="location"
+              value={formData.location}
+              placeholder="Enter Location"
+              onChange={handleChange}
+            />
+          </div>
+          <hr></hr>
+          
           <div className="donor">
             <label>Name of Onsite Contact</label>
             <input

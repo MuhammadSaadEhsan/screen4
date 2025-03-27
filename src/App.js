@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import Screen4TestForm from './pages/FSForm';
 import Screen4Details from './pages/clientDetails';
 import Analytics from './pages/newdashboard';
-import JobRequestForm from './pages/from2';
+import JobRequestForm from './pages/jobRequestForm';
 import JobRequests from './pages/jobRequest';
 import JobRequestDetails from './pages/jobRequestUpdate';
 import AddClientForm from './pages/addClientForm';

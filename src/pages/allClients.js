@@ -224,10 +224,23 @@ const AllClients = () => {
                         Email :{" "}
                         <span className="mybold">{client.emails}</span>
                       </div>
-                      <div className="key">
+                      {/* <div className="key">
                         Address :{" "}
                         <span className="mybold">{client.hqAddress}</span>
-                      </div>
+                      </div> */}
+                      {/* <div className="key">
+  Address:
+  <span className="mybold">
+    {client.hqAddress.map((addr, idx) => (
+      <div key={idx}>
+        {addr.address}
+        {addr.contactName && ` | Contact: ${addr.contactName}`}
+        {addr.contactEmail && ` | Email: ${addr.contactEmail}`}
+      </div>
+    ))}
+  </span>
+</div> */}
+
              
                   </div>
                  
