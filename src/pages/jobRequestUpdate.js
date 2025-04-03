@@ -17,6 +17,7 @@ function JobRequestDetails() {
   const [isError, setIsError] = useState(false);
   // const [formData, setFormData] = useState({ donorSignature: "" });
   const [isSignaturePadOpen, setIsSignaturePadOpen] = useState(false);
+  const [clientDetails,setClientDetails] = useState()
   const [donorOpen, setIsDonorOpen] = useState(false);
   const [donorConcentOpen, setIsDonorConcentOpen] = useState(false);
   const [collectorOpen, setIsCollectorOpen] = useState(false);
@@ -25,7 +26,30 @@ function JobRequestDetails() {
 
     const [accepted,setAccepted] = useState(false)
     const { id } = useParams();
-
+    useEffect(() => {
+      const fetchScreen4Data = async () => {
+        try {
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/getjobrequest/${id}`);
+    
+          if (!response.ok) {
+            throw new Error("Failed to fetch job request data");
+          }
+    
+          const data = await response.json();
+          setAccepted(data.isAccepted)
+    
+          if (data.data) {
+            setFormData(data.data); // ✅ Set form data directly from API response
+          } else {
+            throw new Error("Job request not found");
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
+    
+      fetchScreen4Data();
+    }, [id]);
 
     useEffect(() => {
         const fetchScreen4Data = async () => {
@@ -265,7 +289,59 @@ function JobRequestDetails() {
     laboratoryAddress: "",
     sampleDeliveryMethod: "",
   });
+  // useEffect(async () => {
+  //   const selectedValue = formData.customer; // Assuming this is the selected value from the dropdown
+    
+  //     const emailMatch = selectedValue.match(/\(([^)]+)\)/); // extract email from "Ali (ali@gmail.com)"
+  //     const selectedEmail = emailMatch ? emailMatch[1] : null;
+    
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       customer: selectedValue,
+  //     }));
+    
+  //     if (!selectedEmail) return;
+    
+  //     try {
+  //       const res = await fetch(
+  //         `${process.env.REACT_APP_API_URL}/getcustomerbyemail?email=${selectedEmail}`
+  //       );
+  //       const data = await res.json();
+  //       setClientDetails(data)
+  //     } catch (err) {
+  //       console.error("Failed to fetch customer details:", err);
+  //     }
+  // },[formData])
 
+  useEffect(() => {
+    const fetchCustomerDetails = async () => {
+      const selectedValue = formData.customer;
+  
+      const emailMatch = selectedValue.match(/\(([^)]+)\)/); // extract email
+      const selectedEmail = emailMatch ? emailMatch[1] : null;
+  
+      setFormData((prev) => ({
+        ...prev,
+        customer: selectedValue,
+      }));
+  
+      if (!selectedEmail) return;
+  
+      try {
+        const res = await fetch(
+          `${process.env.REACT_APP_API_URL}/getcustomerbyemail?email=${selectedEmail}`
+        );
+        const data = await res.json();
+        setClientDetails(data);
+      } catch (err) {
+        console.error("Failed to fetch customer details:", err);
+      }
+    };
+  
+    fetchCustomerDetails(); // call the async function inside
+  
+  }, [formData]);
+  
   const getFormattedDate = () => {
     const today = new Date();
     const options = { day: "numeric", month: "long", year: "numeric" };
@@ -538,16 +614,40 @@ const handleSubmit = async (e) => {
             />
           </div>
           <hr></hr>
-          <div className="donor">
-            <label>Number of donors</label>
-            <input
+         
+         
+          {/* <div className="donor">
+            <label>Call-out Type</label>
+            <select
               className="inputstyle"
-              type="number"
-              name="numberOfDonors"
-              value={formData.numberOfDonors}
+              name="callOutType"
+              value={formData.callOutType}
               onChange={handleChange}
-              // required
-            />
+            >
+              <option value="" disabled>
+                Select call-out type
+              </option>
+              <option value="Unplanned">Unplanned</option>
+              <option value="Pre-Planned">Pre-Planned</option>
+            </select>
+          </div>
+          <hr></hr> */}
+          <div className="donor">
+            <label>Reason for Test</label>
+            <select
+              className="inputstyle"
+              name="reasonForTest"
+              value={formData.reasonForTest}
+              onChange={handleChange}
+            >
+              <option value="" disabled>
+                Select reason
+              </option>
+              <option value="For Cause">For Cause</option>
+              <option value="Random">Random</option>
+              <option value="Pre-Employment">Pre-Employment</option>
+              <option value="Follow Up">Follow Up</option>
+            </select>
           </div>
           <hr></hr>
           <div className="donor">
@@ -573,37 +673,15 @@ const handleSubmit = async (e) => {
           </div>
           <hr></hr>
           <div className="donor">
-            <label>Call-out Type</label>
-            <select
+            <label>Number of donors</label>
+            <input
               className="inputstyle"
-              name="callOutType"
-              value={formData.callOutType}
+              type="number"
+              name="numberOfDonors"
+              value={formData.numberOfDonors}
               onChange={handleChange}
-            >
-              <option value="" disabled>
-                Select call-out type
-              </option>
-              <option value="Unplanned">Unplanned</option>
-              <option value="Pre-Planned">Pre-Planned</option>
-            </select>
-          </div>
-          <hr></hr>
-          <div className="donor">
-            <label>Reason for Test</label>
-            <select
-              className="inputstyle"
-              name="reasonForTest"
-              value={formData.reasonForTest}
-              onChange={handleChange}
-            >
-              <option value="" disabled>
-                Select reason
-              </option>
-              <option value="For Cause">For Cause</option>
-              <option value="Random">Random</option>
-              <option value="Pre-Employment">Pre-Employment</option>
-              <option value="Follow Up">Follow Up</option>
-            </select>
+              // required
+            />
           </div>
           <hr></hr>
           <h4>The Onsite contact must:</h4>
@@ -614,28 +692,402 @@ const handleSubmit = async (e) => {
             </li>
             <li>Sign the box below.</li>
           </ul>
-          <h4>
-            In the event of difficulty, Collection Officer is to contact Screen4
-            on:
-          </h4>
-          <ul>
-            <li>
-              Office hours Mon-Fri 0830hrs – 1700hrs
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --------------------
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +44 (0) 1226 654654
-            </li>
-            <li>
-              Out of hours (On call Screen4 Duty Manager)
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ---------------
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +44 (0) 7900 221123
-            </li>
-          </ul>
+
+
+          
+
+          <h4>CUSTOMER SPECIFIC INFORMATION – Workplace</h4>
+
+          {/* <table border="1">
+            <tbody>
+              
+              <tr>
+                <td colSpan="2">
+                  <strong>CUSTOMER</strong>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>ALCOHOL – Customer Cut Off Level</strong>
+                </td>
+                <td>35ug / 100ml</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Alcohol Test Result (Numeric Only)</strong>
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    name="alcoholTestResult"
+                    value={formData.alcoholTestResult}
+                    onChange={handleChange}
+                    placeholder="Enter result"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Second Breath Test Required?</strong>
+                </td>
+                <td>
+                  <label>
+                    <input
+                      type="radio"
+                      name="secondBreathTest"
+                      value="Yes"
+                      onChange={handleChange}
+                    />{" "}
+                    Yes
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="secondBreathTest"
+                      value="No"
+                      onChange={handleChange}
+                    />{" "}
+                    No
+                  </label>
+                </td>
+              </tr>
+
+              
+              <tr>
+                <td>
+                  <strong>DRUGS</strong>
+                </td>
+                <td>
+                  <select
+                    name="drugKitType"
+                    value={formData.drugKitType}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select Kit Type</option>
+                    <option value="Urine">
+                      Urine (POCT 10 Panel cup / BtL)
+                    </option>
+                    <option value="Oral Fluid">
+                      Oral Fluid (POCT 9NR / Oral-Eze BtL)
+                    </option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Non-Negative Samples Sent to Lab?</strong>
+                </td>
+                <td>
+                  <label>
+                    <input
+                      type="radio"
+                      name="nonNegativeSamples"
+                      value="Yes"
+                      onChange={handleChange}
+                    />{" "}
+                    Yes
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="nonNegativeSamples"
+                      value="No"
+                      onChange={handleChange}
+                    />{" "}
+                    No
+                  </label>
+                </td>
+              </tr>
+
+            
+              <tr>
+                <td colSpan="2">
+                  <strong>ADDITIONAL INFORMATION</strong>
+                </td>
+              </tr>
+              <tr>
+                <td colSpan="2">
+                  <ul>
+                    <li>
+                      <strong>Refusal:</strong> Make client aware, fully
+                      complete, and sign the 'Refusal' form.
+                    </li>
+                    <li>
+                      <strong>Shy Bladder:</strong> Follow the SOP, complete and
+                      sign the 'Shy Bladder' Form.
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+
+             
+              <tr>
+                <td>
+                  <strong>LABORATORY ADDRESS</strong>
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    name="laboratoryAddress"
+                    value={formData.laboratoryAddress}
+                    onChange={handleChange}
+                    placeholder="Enter lab address"
+                  />
+                </td>
+              </tr>
+
+            
+              <tr>
+                <td>
+                  <strong>SAMPLES BACK TO LAB</strong>
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    name="sampleDeliveryMethod"
+                    value={formData.sampleDeliveryMethod}
+                    onChange={handleChange}
+                    placeholder="Enter method & details of delivery"
+                  />
+                </td>
+              </tr>
+
+           
+              <tr>
+                <td colSpan="2">
+                  <strong>SUPERVISION/CONTROL</strong>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>The Client’s Onsite Contact Should:</strong>
+                </td>
+                <td>
+                  <ul>
+                    <li>Always remain with the Collection Officer.</li>
+                    <li>OR, be nearby and available to assist if required.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>The Collection Officer is responsible for:</strong>
+                </td>
+                <td>
+                  <ul>
+                    <li>
+                      Ensuring all Screen4 processes are followed correctly.
+                    </li>
+                    <li>Ensuring no intervention from the donor.</li>
+                    <li>Ensuring donor is not left alone at any time.</li>
+                    <li>
+                      Ensuring donor does not eat, drink, smoke, or consume
+                      substances during the testing period.
+                    </li>
+                    <li>
+                      Promptly communicating results to Screen4 Operations.
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table> */}
+
+<table border="1">
+            <tbody>
+              {/* CUSTOMER SECTION */}
+              <tr>
+                <td colSpan="1">
+                  <strong>CUSTOMER</strong>
+                </td>
+                <td>{formData.customer}</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>ALCOHOL – Customer Cut Off Level</strong>
+                </td>
+                <td>{clientDetails?.cutOffLevels}</td>
+              </tr>
+              {/* <tr>
+                <td>
+                  <strong>Alcohol Test Result (Numeric Only)</strong>
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    name="alcoholTestResult"
+                    value={formData.alcoholTestResult}
+                    onChange={handleChange}
+                    placeholder="Enter result"
+                  />
+                </td>
+              </tr> */}
+                     <tr>
+  <td><strong>Second Breath Test Required?</strong></td>
+  <td>
+    {/* <label>
+      <input
+        type="radio"
+        name="secondBreathTestRequired"
+        value="Yes"
+        checked={client.secondBreathTestRequired === "Yes"}
+        onChange={(e) => setClient({ ...client, secondBreathTestRequired: e.target.value })}
+      /> Yes
+    </label>
+    <label style={{ marginLeft: "15px" }}>
+      <input
+        type="radio"
+        name="secondBreathTestRequired"
+        value="No"
+        checked={client.secondBreathTestRequired === "No"}
+        onChange={(e) => setClient({ ...client, secondBreathTestRequired: e.target.value })}
+      /> No
+    </label> */}
+    {clientDetails?.secondBreathTestRequired}
+  </td>
+</tr>
+
+<tr>
+  <td><strong>Drugs (Kit Type)</strong></td>
+  <td>
+    {/* <select
+      value={client.drugKitType}
+      onChange={(e) => setClient({ ...client, drugKitType: e.target.value })}
+    >
+      <option value="" disabled>Select Kit Type</option>
+      <option value="Urine">Urine (POCT 10 Panel cup / BtL)</option>
+      <option value="Oral Fluid">Oral Fluid (POCT 9NR / Oral-Eze BtL)</option>
+    </select> */}
+    {clientDetails?.drugKitType}
+  </td>
+</tr>
+
+<tr>
+  <td><strong>Non-Negative Samples to Lab?</strong></td>
+  <td>
+    {/* <label>
+      <input
+        type="radio"
+        name="nonNegativeSamplesToLab"
+        value="Yes"
+        checked={client.nonNegativeSamplesToLab === "Yes"}
+        onChange={(e) => setClient({ ...client, nonNegativeSamplesToLab: e.target.value })}
+      /> Yes
+    </label>
+    <label style={{ marginLeft: "15px" }}>
+      <input
+        type="radio"
+        name="nonNegativeSamplesToLab"
+        value="No"
+        checked={client.nonNegativeSamplesToLab === "No"}
+        onChange={(e) => setClient({ ...client, nonNegativeSamplesToLab: e.target.value })}
+      /> No
+    </label> */}
+    {clientDetails?.nonNegativeSamplesToLab}
+  </td>
+</tr>
+
+              {/* ADDITIONAL INFORMATION (STATIC TEXT) */}
+              <tr>
+                <td colSpan="2">
+                  <strong>ADDITIONAL INFORMATION</strong>
+                </td>
+              </tr>
+              <tr>
+                <td colSpan="2">
+                  <ul>
+                    <li>
+                      <strong>Refusal:</strong> Make client aware, fully
+                      complete, and sign the 'Refusal' form.
+                    </li>
+                    <li>
+                      <strong>Shy Bladder:</strong> Follow the SOP, complete and
+                      sign the 'Shy Bladder' Form.
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+
+              {/* LABORATORY SECTION */}
+              <tr>
+                <td>
+                  <strong>LABORATORY ADDRESS</strong>
+                </td>
+                <td>
+                  {/* <input
+                    type="text"
+                    name="laboratoryAddress"
+                    value={formData.laboratoryAddress}
+                    onChange={handleChange}
+                    placeholder="Enter lab address"
+                  /> */}{clientDetails?.laboratoryAddress}
+                </td>
+              </tr>
+
+              {/* SAMPLES DELIVERY */}
+              <tr>
+                <td>
+                  <strong>SAMPLES BACK TO LAB</strong>
+                </td>
+                <td>
+                  {/* <input
+                    type="text"
+                    name="sampleDeliveryMethod"
+                    value={formData.sampleDeliveryMethod}
+                    onChange={handleChange}
+                    placeholder="Enter method & details of delivery"
+                  /> */}
+                  {clientDetails?.sampleDeliveryMethod}
+                </td>
+              </tr>
+
+              {/* SUPERVISION/CONTROL SECTION (STATIC TEXT) */}
+              <tr>
+                <td colSpan="2">
+                  <strong>SUPERVISION/CONTROL</strong>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>The Client’s Onsite Contact Should:</strong>
+                </td>
+                <td>
+                  <ul>
+                    <li>Always remain with the Collection Officer.</li>
+                    <li>OR, be nearby and available to assist if required.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>The Collection Officer is responsible for:</strong>
+                </td>
+                <td>
+                  <ul>
+                    <li>
+                      Ensuring all Screen4 processes are followed correctly.
+                    </li>
+                    <li>Ensuring no intervention from the donor.</li>
+                    <li>Ensuring donor is not left alone at any time.</li>
+                    <li>
+                      Ensuring donor does not eat, drink, smoke, or consume
+                      substances during the testing period.
+                    </li>
+                    <li>
+                      Promptly communicating results to Screen4 Operations.
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
 
           <h4>
             TIMESHEET (Collection Officer to complete, Onsite Contact to sign)
           </h4>
 
-          {/* <form onSubmit={handleSubmit}> */}
+         
             <table border="1">
               <tbody>
                 <tr>
@@ -840,27 +1292,46 @@ const handleSubmit = async (e) => {
                 <tr>
                   <td>Onsite Contact Signature</td>
                   <td>
-                    <input
-                      type="text"
-                      name="onsiteSignature"
-                      value={formData.onsiteSignature}
-                      onChange={handleChange}
-                    />
+                  
+                     <input
+                    className="inputstyle"
+                    type="text"
+                    name="onsiteSignature"
+                    value=""//{formData.onsiteSignature}
+                    placeholder=""
+                    // onClick={() => openSignaturePad2("onsiteSignature")}
+                    onChange={handleChange}
+                    style={{ width: "152px", margin: "0px",cursor: "pointer",
+                      backgroundImage: `url(${formData.onsiteSignature})`,
+                      backgroundSize: "contain",
+                      backgroundRepeat: "no-repeat",
+                      backgroundPosition: "center",height:"30px" }}
+         
+                  />
                   </td>
                   <td>Collection Officer Signature</td>
                   <td>
-                    <input
-                      type="text"
-                      name="officerSignature"
-                      value={formData.officerSignature}
-                      onChange={handleChange}
-                    />
+                  
+                     <input
+                    className="inputstyle"
+                    type="text"
+                    name="officerSignature"
+                    value=""
+                    placeholder=""
+                    // onClick={() => openSignaturePad2("officerSignature")}
+                    onChange={handleChange}
+                    style={{ width: "152px", margin: "0px",cursor: "pointer",
+                      backgroundImage: `url(${formData.officerSignature})`,
+                      backgroundSize: "contain",
+                      backgroundRepeat: "no-repeat",
+                      backgroundPosition: "center",height:"30px" }}
+         
+                  />
                   </td>
                 </tr>
               </tbody>
             </table>
-          {/* </form> */}
-
+       
           <div className="note">
             <strong>** CO to NOTE **:</strong>
             <ul>
@@ -874,243 +1345,7 @@ const handleSubmit = async (e) => {
             </p>
           </div>
 
-          <h4>CUSTOMER SPECIFIC INFORMATION – Workplace</h4>
 
-          <table border="1">
-            <tbody>
-              {/* CUSTOMER SECTION */}
-              <tr>
-                <td colSpan="2">
-                  <strong>CUSTOMER</strong>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>ALCOHOL – Customer Cut Off Level</strong>
-                </td>
-                <td>35ug / 100ml</td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>Alcohol Test Result (Numeric Only)</strong>
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    name="alcoholTestResult"
-                    value={formData.alcoholTestResult}
-                    onChange={handleChange}
-                    placeholder="Enter result"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>Second Breath Test Required?</strong>
-                </td>
-                <td>
-                  <label>
-                    <input
-                      type="radio"
-                      name="secondBreathTest"
-                      value="Yes"
-                      onChange={handleChange}
-                    />{" "}
-                    Yes
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name="secondBreathTest"
-                      value="No"
-                      onChange={handleChange}
-                    />{" "}
-                    No
-                  </label>
-                </td>
-              </tr>
-
-              {/* DRUGS SECTION */}
-              <tr>
-                <td>
-                  <strong>DRUGS</strong>
-                </td>
-                <td>
-                  <select
-                    name="drugKitType"
-                    value={formData.drugKitType}
-                    onChange={handleChange}
-                  >
-                    <option value="">Select Kit Type</option>
-                    <option value="Urine">
-                      Urine (POCT 10 Panel cup / BtL)
-                    </option>
-                    <option value="Oral Fluid">
-                      Oral Fluid (POCT 9NR / Oral-Eze BtL)
-                    </option>
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>Non-Negative Samples Sent to Lab?</strong>
-                </td>
-                <td>
-                  <label>
-                    <input
-                      type="radio"
-                      name="nonNegativeSamples"
-                      value="Yes"
-                      onChange={handleChange}
-                    />{" "}
-                    Yes
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name="nonNegativeSamples"
-                      value="No"
-                      onChange={handleChange}
-                    />{" "}
-                    No
-                  </label>
-                </td>
-              </tr>
-
-              {/* ADDITIONAL INFORMATION (STATIC TEXT) */}
-              <tr>
-                <td colSpan="2">
-                  <strong>ADDITIONAL INFORMATION</strong>
-                </td>
-              </tr>
-              <tr>
-                <td colSpan="2">
-                  <ul>
-                    <li>
-                      <strong>Refusal:</strong> Make client aware, fully
-                      complete, and sign the 'Refusal' form.
-                    </li>
-                    <li>
-                      <strong>Shy Bladder:</strong> Follow the SOP, complete and
-                      sign the 'Shy Bladder' Form.
-                    </li>
-                  </ul>
-                </td>
-              </tr>
-
-              {/* LABORATORY SECTION */}
-              <tr>
-                <td>
-                  <strong>LABORATORY ADDRESS</strong>
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    name="laboratoryAddress"
-                    value={formData.laboratoryAddress}
-                    onChange={handleChange}
-                    placeholder="Enter lab address"
-                  />
-                </td>
-              </tr>
-
-              {/* SAMPLES DELIVERY */}
-              <tr>
-                <td>
-                  <strong>SAMPLES BACK TO LAB</strong>
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    name="sampleDeliveryMethod"
-                    value={formData.sampleDeliveryMethod}
-                    onChange={handleChange}
-                    placeholder="Enter method & details of delivery"
-                  />
-                </td>
-              </tr>
-
-              {/* SUPERVISION/CONTROL SECTION (STATIC TEXT) */}
-              <tr>
-                <td colSpan="2">
-                  <strong>SUPERVISION/CONTROL</strong>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>The Client’s Onsite Contact Should:</strong>
-                </td>
-                <td>
-                  <ul>
-                    <li>Always remain with the Collection Officer.</li>
-                    <li>OR, be nearby and available to assist if required.</li>
-                  </ul>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>The Collection Officer is responsible for:</strong>
-                </td>
-                <td>
-                  <ul>
-                    <li>
-                      Ensuring all Screen4 processes are followed correctly.
-                    </li>
-                    <li>Ensuring no intervention from the donor.</li>
-                    <li>Ensuring donor is not left alone at any time.</li>
-                    <li>
-                      Ensuring donor does not eat, drink, smoke, or consume
-                      substances during the testing period.
-                    </li>
-                    <li>
-                      Promptly communicating results to Screen4 Operations.
-                    </li>
-                  </ul>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <table border="1">
-            <tbody>
-              <tr>
-                <td>
-                  <strong>Document:</strong>
-                </td>
-                <td>Collection Officer Job Request Sheet</td>
-                <td>
-                  <strong>Rev:</strong>
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    name="rev"
-                    value={formData.rev}
-                    onChange={handleChange}
-                    placeholder="Enter revision"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>Author:</strong>
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    name="author"
-                    value={formData.author}
-                    onChange={handleChange}
-                    placeholder="Enter author name"
-                  />
-                </td>
-                <td>
-                  <strong>Date:</strong>
-                </td>
-                <td>{getFormattedDate()}</td>
-              </tr>
-            </tbody>
-          </table>
 
           {token ==="dskgfsdgfkgsdfkjg35464154845674987dsf@53" ? <button
             type="submit"

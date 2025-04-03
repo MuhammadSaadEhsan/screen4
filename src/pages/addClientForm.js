@@ -52,7 +52,7 @@
 //     "Follow up Testing",
 //     "With Cause Testing",
 //   ];
-  
+
 //   const testingTechnologyOptions = {
 //     "Random Testing": [
 //       "Random - Breath Alcohol",
@@ -76,7 +76,7 @@
 //       "With Cause - Breath Alcohol and Drug - Hair",
 //     ],
 //   };
-  
+
 
 //   const addNewSite = () => {
 //   setClient((prev) => ({
@@ -103,8 +103,8 @@
 //   // console.log(index, field, value); 
 // };
 
-  
-  
+
+
 //   useEffect(() => {
 //     const fetchClients = async () => {
 //       try {
@@ -226,25 +226,25 @@
 //   const handleSubmit = async (values) => {
 //     try {
 //       let jobPackUrl = "";
-  
+
 //       // 🔽 Check for uploaded file
 //       const fileList = values.jobPack?.fileList;
 //       if (fileList && fileList.length > 0) {
 //         const file = fileList[0].originFileObj;
-  
+
 //         const storageRef = ref(imageDb, `jobpacks/${uuidv4()}_${file.name}`);
 //         await uploadBytes(storageRef, file);
 //         jobPackUrl = await getDownloadURL(storageRef);
 //       }
-  
+
 //       // 🔽 Prepare updated client data
 //       const clientData = {
 //         ...values,
 //         jobPack: jobPackUrl, // 📦 Store only URL now
 //       };
-  
+
 //       let response;
-  
+
 //       if (client?._id) {
 //         // 🔁 PUT for update
 //         response = await fetch(
@@ -267,9 +267,9 @@
 //           body: JSON.stringify(clientData),
 //         });
 //       }
-  
+
 //       const data = await response.json();
-  
+
 //       if (response.ok) {
 //         console.log("Success:", data.message);
 //         setClient(data.client || {});
@@ -284,7 +284,7 @@
 //       alert("Request failed. Please try again.");
 //     }
 //   };
-  
+
 
 
 //   const [form] = Form.useForm(); // Hook for controlled form management
@@ -660,7 +660,14 @@ export default function AddClientForm() {
     testingTechnology: [],
     cutOffLevels: "",
     costings: "",
-    jobPack: ""
+    jobPack: "",
+
+    // NEW FIELDS
+    secondBreathTestRequired: "No",        // "Yes" or "No"
+    drugKitType: "",                        // e.g. "Urine" or "Oral Fluid"
+    nonNegativeSamplesToLab: "No",         // "Yes" or "No"
+    laboratoryAddress: "",                 // Text
+    sampleDeliveryMethod: "",
   });
 
   const testMethodOptions = [
@@ -692,46 +699,46 @@ export default function AddClientForm() {
     ],
   };
   useEffect(() => {
-        const fetchClients = async () => {
-          try {
-            const response = await fetch(
-              `${process.env.REACT_APP_API_URL}/getclients/${id}`
-            );
-            if (!response.ok) {
-              throw new Error("Failed to fetch client data");
-            }
-            const data = await response.json();
-    
-            console.log("Fetched client data:", data); // Check API response structure
-    
-            if (!data || typeof data !== "object") {
-              console.error("Unexpected response format:", data);
-              return;
-            }
-    
-            // setClient((prev) => ({
-            //   ...prev,
-            //   ...data, // Merge fetched data with the existing client structure
-            // }));
-            const { password, ...filteredData } = data;
-    
-            setClient((prev) => ({
-              ...prev,
-              ...filteredData, // Merge fetched data without password
-              password: "", // Ensure password remains blank
-            }));
-          } catch (err) {
-            // setError(err.message);
-          } finally {
-            console.log("final");
-            console.log(client);
-            // setLoading(false);
-          }
-        };
-    
-        if (id) fetchClients();
-      }, [id]);
-    
+    const fetchClients = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/getclients/${id}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch client data");
+        }
+        const data = await response.json();
+
+        console.log("Fetched client data:", data); // Check API response structure
+
+        if (!data || typeof data !== "object") {
+          console.error("Unexpected response format:", data);
+          return;
+        }
+
+        // setClient((prev) => ({
+        //   ...prev,
+        //   ...data, // Merge fetched data with the existing client structure
+        // }));
+        const { password, ...filteredData } = data;
+
+        setClient((prev) => ({
+          ...prev,
+          ...filteredData, // Merge fetched data without password
+          password: "", // Ensure password remains blank
+        }));
+      } catch (err) {
+        // setError(err.message);
+      } finally {
+        console.log("final");
+        console.log(client);
+        // setLoading(false);
+      }
+    };
+
+    if (id) fetchClients();
+  }, [id]);
+
   const addNewSite = () => {
     setClient((prev) => ({
       ...prev,
@@ -890,6 +897,94 @@ export default function AddClientForm() {
               onChange={(e) => setClient({ ...client, costings: e.target.value })}
             />
           </Form.Item>
+          <Form.Item label="Client Details">
+  <table style={{ width: "100%" }}>
+    <tbody>
+          <tr>
+  <td><strong>Second Breath Test Required?</strong></td>
+  <td>
+    <label>
+      <input
+        type="radio"
+        name="secondBreathTestRequired"
+        value="Yes"
+        checked={client.secondBreathTestRequired === "Yes"}
+        onChange={(e) => setClient({ ...client, secondBreathTestRequired: e.target.value })}
+      /> Yes
+    </label>
+    <label style={{ marginLeft: "15px" }}>
+      <input
+        type="radio"
+        name="secondBreathTestRequired"
+        value="No"
+        checked={client.secondBreathTestRequired === "No"}
+        onChange={(e) => setClient({ ...client, secondBreathTestRequired: e.target.value })}
+      /> No
+    </label>
+  </td>
+</tr>
+
+<tr>
+  <td><strong>Drugs (Kit Type)</strong></td>
+  <td>
+    <select
+      value={client.drugKitType}
+      onChange={(e) => setClient({ ...client, drugKitType: e.target.value })}
+    >
+      <option value="" disabled>Select Kit Type</option>
+      <option value="Urine">Urine (POCT 10 Panel cup / BtL)</option>
+      <option value="Oral Fluid">Oral Fluid (POCT 9NR / Oral-Eze BtL)</option>
+    </select>
+  </td>
+</tr>
+
+<tr>
+  <td><strong>Non-Negative Samples to Lab?</strong></td>
+  <td>
+    <label>
+      <input
+        type="radio"
+        name="nonNegativeSamplesToLab"
+        value="Yes"
+        checked={client.nonNegativeSamplesToLab === "Yes"}
+        onChange={(e) => setClient({ ...client, nonNegativeSamplesToLab: e.target.value })}
+      /> Yes
+    </label>
+    <label style={{ marginLeft: "15px" }}>
+      <input
+        type="radio"
+        name="nonNegativeSamplesToLab"
+        value="No"
+        checked={client.nonNegativeSamplesToLab === "No"}
+        onChange={(e) => setClient({ ...client, nonNegativeSamplesToLab: e.target.value })}
+      /> No
+    </label>
+  </td>
+</tr>
+
+<tr>
+  <td><strong>Laboratory Address</strong></td>
+  <td>
+    <Input
+      value={client.laboratoryAddress}
+      onChange={(e) => setClient({ ...client, laboratoryAddress: e.target.value })}
+    />
+  </td>
+</tr>
+
+<tr>
+  <td><strong>Samples Back to Lab</strong></td>
+  <td>
+    <Input
+      value={client.sampleDeliveryMethod}
+      onChange={(e) => setClient({ ...client, sampleDeliveryMethod: e.target.value })}
+    />
+  </td>
+</tr>
+</tbody>
+  </table>
+</Form.Item>
+
 
           <Form.Item label="Upload Job Pack Document" name="jobPack" valuePropName="file">
             <Upload beforeUpload={() => false} accept=".pdf,.doc,.docx" maxCount={1}>
@@ -904,23 +999,23 @@ export default function AddClientForm() {
             </div>
           )} */}
           <div style={{ marginTop: "15px", display: "flex", gap: "15px", alignItems: "center" }}>
-    <a
-      href={client.jobPack}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{
-        padding: "8px 16px",
-        backgroundColor: "#80c209",
-        color: "#fff",
-        textDecoration: "none",
-        borderRadius: "6px",
-        fontWeight: "bold",
-        marginBottom:"20px"
-      }}
-    >
-      🔍 View Job Pack
-    </a>
-    {/* <a
+            <a
+              href={client.jobPack}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                padding: "8px 16px",
+                backgroundColor: "#80c209",
+                color: "#fff",
+                textDecoration: "none",
+                borderRadius: "6px",
+                fontWeight: "bold",
+                marginBottom: "20px"
+              }}
+            >
+              🔍 View Job Pack
+            </a>
+            {/* <a
       href={client.jobPack}
       target="_blank"
       rel="noopener noreferrer"
@@ -936,7 +1031,7 @@ export default function AddClientForm() {
     >
       📥 Download
     </a> */}
-  </div>
+          </div>
 
           <Form.Item>
             <button type="submit" style={submitStyle}>

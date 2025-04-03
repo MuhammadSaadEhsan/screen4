@@ -30,13 +30,13 @@ const AllClients = () => {
           throw new Error("Failed to fetch client data");
         }
         const data = await response.json();
-        
+
         if (!Array.isArray(data)) {
           console.error("Unexpected response format:", data);
           setClients([]);
           return;
         }
-        
+
         setClients(data);
         setFilteredClients(data);
       } catch (err) {
@@ -58,7 +58,7 @@ const AllClients = () => {
       setFilteredClients(clients);
       return;
     }
-    
+
     const filtered = clients.filter((c) =>
       c.name.toLowerCase().includes(query.toLowerCase()) ||
       c.contact.includes(query) ||
@@ -70,10 +70,10 @@ const AllClients = () => {
 
   const handleClientClick = async (id) => {
     // if(selectedTab==='Pending'){
-      navigate(`/addclient/${id}`);
+    navigate(`/addclient/${id}`);
     // }
 
-}
+  }
 
   return (
     <div>
@@ -90,43 +90,43 @@ const AllClients = () => {
             paddingBottom: "100px",
           }}
         >
-<div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", position: "relative" }}>
-  {/* Centered Text */}
-  <div
-    className="key"
-    style={{
-      fontSize: "24px",
-      marginBottom: "10px",
-      marginTop: "10px",
-      textAlign: "center",
-      position: token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ?  "absolute" : null,
-      left: "50%",
-      transform: token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ?  "translateX(-50%)":null, // Ensures perfect centering
-    }}
-  >
-    All Clients
-  </div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", position: "relative" }}>
+            {/* Centered Text */}
+            <div
+              className="key"
+              style={{
+                fontSize: "24px",
+                marginBottom: "10px",
+                marginTop: "10px",
+                textAlign: "center",
+                position: token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ? "absolute" : null,
+                left: "50%",
+                transform: token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ? "translateX(-50%)" : null, // Ensures perfect centering
+              }}
+            >
+              All Clients ({clients.length})
+            </div>
 
-  {/* Right-Aligned Button */}
- {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ? <Link to="/addclient" style={{ textDecoration: "none", marginLeft: "auto" }}>
-    <div
-      className="key"
-      style={{
-        fontSize: "14px",
-        marginBottom: "10px",
-        marginTop: "10px",
-        background: "#80c209",
-        color: "white",
-        padding: "10px 18px",
-        borderRadius: "10px",
-        fontWeight: "bold",
-        textDecoration: "none",
-      }}
-    >
-      Add a Client
-    </div>
-  </Link> : null}
-</div>
+            {/* Right-Aligned Button */}
+            {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ? <Link to="/addclient" style={{ textDecoration: "none", marginLeft: "auto" }}>
+              <div
+                className="key"
+                style={{
+                  fontSize: "14px",
+                  marginBottom: "10px",
+                  marginTop: "10px",
+                  background: "#80c209",
+                  color: "white",
+                  padding: "10px 18px",
+                  borderRadius: "10px",
+                  fontWeight: "bold",
+                  textDecoration: "none",
+                }}
+              >
+                Add a Client
+              </div>
+            </Link> : null}
+          </div>
 
 
           {/* Search */}
@@ -191,12 +191,12 @@ const AllClients = () => {
               >
                 {error}
               </div>
-            ) :  filteredClients.length > 0 ? (
+            ) : filteredClients.length > 0 ? (
               filteredClients.map((client, index) => (
-                  <div
+                <div
                   key={index}
                   style={{
-                      padding: "20px",
+                    padding: "20px",
                     marginBottom: "20px",
                     width: "60%",
                     height: "72px",
@@ -204,8 +204,8 @@ const AllClients = () => {
                     background: "#f3ffdf",
                     border: "1px solid #80c20a",
                     cursor: "pointer",
-                }}
-                onClick={() => handleClientClick(client._id)}
+                  }}
+                  onClick={() => handleClientClick(client._id)}
                 >
                   <div
                     style={{
@@ -215,7 +215,7 @@ const AllClients = () => {
                     }}
                   >
                     <div>
-                 
+
                       <div className="key">
                         Customer :{" "}
                         <span className="mybold">{client.name}</span>
@@ -241,11 +241,11 @@ const AllClients = () => {
   </span>
 </div> */}
 
-             
-                  </div>
-                 
-                  
-                    
+
+                    </div>
+
+
+
                   </div>
                 </div>
               ))

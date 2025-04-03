@@ -7,6 +7,57 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function JobRequestForm() {
+  const [clientDetails,setClientDetails] = useState()
+  const [currentSignatureField, setCurrentSignatureField] = useState("");
+  const openSignaturePad2 = (fieldName) => {
+    setCurrentSignatureField(fieldName);
+    setIsSignaturePadOpen(true);
+    setTimeout(initializeCanvas, 0);
+  };
+  
+  const [formData, setFormData] = useState({
+    jobReferenceNo: "",
+    dateAndTimeOfCollection: "",
+    location: "",
+    customer: "",
+    nameOfOnsiteContact: "",
+    contactOfTelephoneNo: "",
+    numberOfDonors: "",
+    TypeOfTest: "",
+    callOutType: "",
+    reasonForTest: "",
+
+    date: "",
+    collectionOfficerName: "",
+    arrivalTime: "",
+    departureTime: "",
+    waitingTime: "",
+    mileage: "",
+    samplesMailed: "",
+    breathAlcoholTestsCompleted: "",
+    drugTestsCompleted: "",
+    nonZeroBreathAlcoholTests: "",
+    nonNegativeSamples: "",
+    notes: "",
+    facilities: {
+      privateSecureRoom: false,
+      wcFacilities: false,
+      handWashing: false,
+      securedWindows: false,
+      emergencyExits: false,
+      translatorRequired: false,
+    },
+    onsiteSignature: "",
+    officerSignature: "",
+    author: "",
+    rev: "",
+    alcoholTestResult: "",
+    secondBreathTest: "",
+    drugKitType: "",
+    nonNegativeSamples: "",
+    laboratoryAddress: "",
+    sampleDeliveryMethod: "",
+  });
   const navigate = useNavigate()
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
@@ -21,37 +72,124 @@ function JobRequestForm() {
     useState(false);
 
 
-    const [customers, setCustomers] = useState([]);
+  const [customers, setCustomers] = useState([]);
+  const [locations, setLocations] = useState([]);
 
-    useEffect(() => {
-      const fetchCustomers = async () => {
-        try {
-          const response = await axios.get(`${process.env.REACT_APP_API_URL}/getcustomers`);
-          const data = await response.data;
-    
-          // Use a Set to track unique "name|email" combinations
-          const uniqueMap = new Map();
-    
-          data.forEach((item) => {
-            const key = `${item.name}|${item.emails}`;
-            if (!uniqueMap.has(key)) {
-              uniqueMap.set(key, {
-                name: item.name,
-                email: item.emails,
+  // useEffect(() => {
+  //   const fetchCustomers = async () => {
+  //     try {
+  //       const response = await axios.get(`${process.env.REACT_APP_API_URL}/getcustomers`);
+  //       const data = await response.data;
+
+  //       // Use a Set to track unique "name|email" combinations
+  //       const uniqueMap = new Map();
+
+  //       data.forEach((item) => {
+  //         const key = `${item.name}|${item.emails}`;
+  //         if (!uniqueMap.has(key)) {
+  //           uniqueMap.set(key, {
+  //             name: item.name,
+  //             email: item.emails,
+  //           });
+  //         }
+  //       });
+
+  //       setCustomers(Array.from(uniqueMap.values()));
+  //       const locationSet = new Map();
+
+  //     data.forEach((customer) => {
+  //       if (Array.isArray(customer.hqAddress)) {
+  //         customer.hqAddress.forEach((addr) => {
+  //           const key = `${addr.address}|${addr.contactEmail}`; // Avoid duplicates
+  //           if (!locationSet.has(key)) {
+  //             locationSet.set(key, {
+  //               address: addr.address,
+  //               ...addr,
+  //             });
+  //           }
+  //         });
+  //       }
+  //     });
+
+  //     setLocations(Array.from(locationSet.values())); // Final locations list
+  //     } catch (error) {
+  //       console.error("Failed to fetch customers", error);
+  //     }
+  //   };
+
+  //   fetchCustomers();
+  // }, []);
+
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getcustomers`);
+        const data = await response.data;
+
+        const uniqueMap = new Map();
+        data.forEach((item) => {
+          const key = `${item.name}|${item.emails}`;
+          if (!uniqueMap.has(key)) {
+            uniqueMap.set(key, {
+              name: item.name,
+              email: item.emails,
+              hqAddress: item.hqAddress
+            });
+          }
+        });
+
+        const uniqueCustomers = Array.from(uniqueMap.values());
+        setCustomers(uniqueCustomers);
+        setLocations(getAllAddresses(data));
+      } catch (error) {
+        console.error("Failed to fetch customers", error);
+      }
+    };
+
+    const getAllAddresses = (data) => {
+      const locationSet = new Map();
+      data.forEach((customer) => {
+        if (Array.isArray(customer.hqAddress)) {
+          customer.hqAddress.forEach((addr) => {
+            const key = `${addr.address}|${addr.contactEmail}`;
+            if (!locationSet.has(key)) {
+              locationSet.set(key, {
+                address: addr.address,
+                contactName: addr.contactName,
+                contactEmail: addr.contactEmail,
               });
             }
           });
-    
-          setCustomers(Array.from(uniqueMap.values()));
-        } catch (error) {
-          console.error("Failed to fetch customers", error);
         }
-      };
-    
-      fetchCustomers();
-    }, []);
-    
+      });
+      return Array.from(locationSet.values());
+    };
 
+    fetchCustomers();
+  }, []);
+  const extractEmailFromCustomer = (str) => {
+    const match = str.match(/\((.*?)\)/);
+    return match ? match[1] : null;
+  };
+
+  // 🧠 Filter locations for selected customer
+  useEffect(() => {
+    if (!formData.customer) return;
+
+    const selectedEmail = extractEmailFromCustomer(formData.customer);
+    const customerObj = customers.find((c) => c.email === selectedEmail);
+
+    if (customerObj && Array.isArray(customerObj.hqAddress)) {
+      setLocations(customerObj.hqAddress);
+    } else {
+      setLocations([]);
+    }
+  }, [formData.customer, customers]);
+
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prev) => ({ ...prev, [name]: value }));
+  // };
   const handleAddComment = (field) => {
     const comment = prompt("Enter your comment:");
     if (comment) {
@@ -65,32 +203,32 @@ function JobRequestForm() {
     // 1. Fetch all existing job references
     const response = await fetch(`${process.env.REACT_APP_API_URL}/getreferenceno`);
     const existingRefs = await response.json();
-  
+
     const existingSet = new Set(existingRefs.map(ref => ref.jobReferenceNo));
-  
+
     // 2. Generate until we get a unique one
     let uniqueRef = "";
     do {
       const number = Math.floor(10000 + Math.random() * 900); // e.g. 3-digit for S4/123
       uniqueRef = `S4/${number}`;
     } while (existingSet.has(uniqueRef));
-  
+
     return uniqueRef;
   };
-  
-  
+
+
   useEffect(() => {
     const setJobRef = async () => {
       const ref = await generateUniqueJobRef();
       setFormData(prev => ({ ...prev, jobReferenceNo: ref }));
     };
-  
+
     if (!formData.jobReferenceNo) {
       setJobRef();
     }
   }, []);
-  
-    
+
+
   const pad = (data) => {
     return (
       <div
@@ -250,49 +388,6 @@ function JobRequestForm() {
     setIsDrawing(false);
   };
 
-  const [formData, setFormData] = useState({
-    jobReferenceNo: "",
-    dateAndTimeOfCollection: "",
-    location: "",
-    customer: "",
-    nameOfOnsiteContact: "",
-    contactOfTelephoneNo: "",
-    numberOfDonors: "",
-    TypeOfTest: "",
-    callOutType: "",
-    reasonForTest: "",
-
-    date: "",
-    collectionOfficerName: "",
-    arrivalTime: "",
-    departureTime: "",
-    waitingTime: "",
-    mileage: "",
-    samplesMailed: "",
-    breathAlcoholTestsCompleted: "",
-    drugTestsCompleted: "",
-    nonZeroBreathAlcoholTests: "",
-    nonNegativeSamples: "",
-    notes: "",
-    facilities: {
-      privateSecureRoom: false,
-      wcFacilities: false,
-      handWashing: false,
-      securedWindows: false,
-      emergencyExits: false,
-      translatorRequired: false,
-    },
-    onsiteSignature: "",
-    officerSignature: "",
-    author: "",
-    rev: "",
-    alcoholTestResult: "",
-    secondBreathTest: "",
-    drugKitType: "",
-    nonNegativeSamples: "",
-    laboratoryAddress: "",
-    sampleDeliveryMethod: "",
-  });
 
   const getFormattedDate = () => {
     const today = new Date();
@@ -438,6 +533,37 @@ function JobRequestForm() {
       message.error("Submission failed due to server error.");
     }
   };
+  const handleCustomerChange = async (e) => {
+    const selectedValue = e.target.value;
+  
+    const emailMatch = selectedValue.match(/\(([^)]+)\)/); // extract email from "Ali (ali@gmail.com)"
+    const selectedEmail = emailMatch ? emailMatch[1] : null;
+  
+    setFormData((prev) => ({
+      ...prev,
+      customer: selectedValue,
+    }));
+  
+    if (!selectedEmail) return;
+  
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/getcustomerbyemail?email=${selectedEmail}`
+      );
+      const data = await res.json();
+      setClientDetails(data)
+  
+      if (data && Array.isArray(data.hqAddress)) {
+        setLocations(data.hqAddress);
+      } else {
+        setLocations([]); // fallback
+      }
+    } catch (err) {
+      console.error("Failed to fetch customer details:", err);
+      setLocations([]);
+    }
+  };
+  
   // };
 
   return (
@@ -493,7 +619,7 @@ function JobRequestForm() {
               onChange={handleChange}
               placeholder="S4/"
               readOnly
-              //   required
+            //   required
             />
           </div>
           <hr />
@@ -510,7 +636,7 @@ function JobRequestForm() {
               value={formData.dateAndTimeOfCollection}
               onChange={handleChange}
               placeholder="Enter Donor's Email"
-              //   required
+            //   required
             />
           </div>
           <hr></hr>
@@ -518,7 +644,7 @@ function JobRequestForm() {
             className="2nd-row"
             style={{ display: "flex", justifyContent: "space-between" }}
           > */}
-          
+
           {/* <div className="donor">
             <label>Customer</label>
             <input
@@ -530,37 +656,75 @@ function JobRequestForm() {
               // required
             />
           </div> */}
-<div className="donor">
-  <label>Customer</label>
-  <select
-    className="inputstyle"
-    name="customer"
-    value={formData.customer}
-    onChange={handleChange}
-    required
-  >
-    <option value="" disabled>Select a customer</option>
-    {customers.map((cust, index) => (
-      <option key={index} value={`${cust.name} (${cust.email})`}>
-        {cust.name} ({cust.email})
-      </option>
-    ))}
-  </select>
-</div>
+          <div className="donor">
+            <label>Customer</label>
+            {/* <select
+              className="inputstyle"
+              name="customer"
+              value={formData.customer}
+              onChange={handleChange}
+              required
+            > */}
+            <select
+  className="inputstyle"
+  name="customer"
+  value={formData.customer}
+  onChange={handleCustomerChange} // 👈 custom function
+  required
+>
+
+              <option value="" disabled>Select a customer</option>
+              {customers.map((cust, index) => (
+                <option key={index} value={`${cust.name} (${cust.email})`}>
+                  {cust.name} ({cust.email})
+                </option>
+              ))}
+            </select>
+          </div>
 
 
 
 
           <hr></hr><div className="donor">
             <label style={{ width: "180px" }}>Location </label>
-            <input
+            {/* <input
               className="inputstyle"
               type="text"
               name="location"
               value={formData.location}
               placeholder="Enter Location"
               onChange={handleChange}
-            />
+            /> */}
+            {/* <select
+              className="inputstyle"
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              required
+            >
+              <option value="" disabled>Select a customer</option>
+              {locations.map((cust, index) => (
+                <option key={index} value={`${cust.name} (${cust.email})`}>
+                  {cust.name} ({cust.email})
+                </option>
+              ))}
+            </select> */}
+        <select
+          className="inputstyle"
+          name="location"
+          value={formData.location}
+          onChange={handleChange}
+          required
+        >
+          <option value="" disabled>
+            Select a location
+          </option>
+          {locations.map((loc, idx) => (
+            <option key={idx} value={loc.address}>
+              {loc.address} {loc.contactEmail && `(${loc.contactEmail})`}
+            </option>
+          ))}
+        </select>
           </div>
           <hr></hr>
           <div className="donor">
@@ -571,7 +735,7 @@ function JobRequestForm() {
               name="nameOfOnsiteContact"
               value={formData.nameOfOnsiteContact}
               onChange={handleChange}
-              // required
+            // required
             />
           </div>
           <hr></hr>
@@ -583,7 +747,7 @@ function JobRequestForm() {
               name="contactOfTelephoneNo"
               value={formData.contactOfTelephoneNo}
               onChange={handleChange}
-              // required
+            // required
             />
           </div>
           <hr></hr>
@@ -635,11 +799,11 @@ function JobRequestForm() {
               name="numberOfDonors"
               value={formData.numberOfDonors}
               onChange={handleChange}
-              // required
+            // required
             />
           </div>
           <hr></hr>
-         
+
           {/* <div className="donor">
             <label>Call-out Type</label>
             <select
@@ -656,7 +820,7 @@ function JobRequestForm() {
             </select>
           </div>
           <hr></hr> */}
-         
+
           <h4>The Onsite contact must:</h4>
           <ul>
             <li>
@@ -665,7 +829,7 @@ function JobRequestForm() {
             </li>
             <li>Sign the box below.</li>
           </ul>
-          
+
 
 
           <h4>CUSTOMER SPECIFIC INFORMATION</h4>
@@ -674,17 +838,18 @@ function JobRequestForm() {
             <tbody>
               {/* CUSTOMER SECTION */}
               <tr>
-                <td colSpan="2">
+                <td colSpan="1">
                   <strong>CUSTOMER</strong>
                 </td>
+                <td>{formData.customer}</td>
               </tr>
               <tr>
                 <td>
                   <strong>ALCOHOL – Customer Cut Off Level</strong>
                 </td>
-                <td>35ug / 100ml</td>
+                <td>{clientDetails?.cutOffLevels}</td>
               </tr>
-              <tr>
+              {/* <tr>
                 <td>
                   <strong>Alcohol Test Result (Numeric Only)</strong>
                 </td>
@@ -697,79 +862,71 @@ function JobRequestForm() {
                     placeholder="Enter result"
                   />
                 </td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>Second Breath Test Required?</strong>
-                </td>
-                <td>
-                  <label>
-                    <input
-                      type="radio"
-                      name="secondBreathTest"
-                      value="Yes"
-                      onChange={handleChange}
-                    />{" "}
-                    Yes
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name="secondBreathTest"
-                      value="No"
-                      onChange={handleChange}
-                    />{" "}
-                    No
-                  </label>
-                </td>
-              </tr>
+              </tr> */}
+                     <tr>
+  <td><strong>Second Breath Test Required?</strong></td>
+  <td>
+    {/* <label>
+      <input
+        type="radio"
+        name="secondBreathTestRequired"
+        value="Yes"
+        checked={client.secondBreathTestRequired === "Yes"}
+        onChange={(e) => setClient({ ...client, secondBreathTestRequired: e.target.value })}
+      /> Yes
+    </label>
+    <label style={{ marginLeft: "15px" }}>
+      <input
+        type="radio"
+        name="secondBreathTestRequired"
+        value="No"
+        checked={client.secondBreathTestRequired === "No"}
+        onChange={(e) => setClient({ ...client, secondBreathTestRequired: e.target.value })}
+      /> No
+    </label> */}
+    {clientDetails?.secondBreathTestRequired}
+  </td>
+</tr>
 
-              {/* DRUGS SECTION */}
-              <tr>
-                <td>
-                  <strong>DRUGS</strong>
-                </td>
-                <td>
-                  <select
-                    name="drugKitType"
-                    value={formData.drugKitType}
-                    onChange={handleChange}
-                  >
-                    <option value="">Select Kit Type</option>
-                    <option value="Urine">
-                      Urine (POCT 10 Panel cup / BtL)
-                    </option>
-                    <option value="Oral Fluid">
-                      Oral Fluid (POCT 9NR / Oral-Eze BtL)
-                    </option>
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>Non-Negative Samples Sent to Lab?</strong>
-                </td>
-                <td>
-                  <label>
-                    <input
-                      type="radio"
-                      name="nonNegativeSamples"
-                      value="Yes"
-                      onChange={handleChange}
-                    />{" "}
-                    Yes
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name="nonNegativeSamples"
-                      value="No"
-                      onChange={handleChange}
-                    />{" "}
-                    No
-                  </label>
-                </td>
-              </tr>
+<tr>
+  <td><strong>Drugs (Kit Type)</strong></td>
+  <td>
+    {/* <select
+      value={client.drugKitType}
+      onChange={(e) => setClient({ ...client, drugKitType: e.target.value })}
+    >
+      <option value="" disabled>Select Kit Type</option>
+      <option value="Urine">Urine (POCT 10 Panel cup / BtL)</option>
+      <option value="Oral Fluid">Oral Fluid (POCT 9NR / Oral-Eze BtL)</option>
+    </select> */}
+    {clientDetails?.drugKitType}
+  </td>
+</tr>
+
+<tr>
+  <td><strong>Non-Negative Samples to Lab?</strong></td>
+  <td>
+    {/* <label>
+      <input
+        type="radio"
+        name="nonNegativeSamplesToLab"
+        value="Yes"
+        checked={client.nonNegativeSamplesToLab === "Yes"}
+        onChange={(e) => setClient({ ...client, nonNegativeSamplesToLab: e.target.value })}
+      /> Yes
+    </label>
+    <label style={{ marginLeft: "15px" }}>
+      <input
+        type="radio"
+        name="nonNegativeSamplesToLab"
+        value="No"
+        checked={client.nonNegativeSamplesToLab === "No"}
+        onChange={(e) => setClient({ ...client, nonNegativeSamplesToLab: e.target.value })}
+      /> No
+    </label> */}
+    {clientDetails?.nonNegativeSamplesToLab}
+  </td>
+</tr>
 
               {/* ADDITIONAL INFORMATION (STATIC TEXT) */}
               <tr>
@@ -798,13 +955,13 @@ function JobRequestForm() {
                   <strong>LABORATORY ADDRESS</strong>
                 </td>
                 <td>
-                  <input
+                  {/* <input
                     type="text"
                     name="laboratoryAddress"
                     value={formData.laboratoryAddress}
                     onChange={handleChange}
                     placeholder="Enter lab address"
-                  />
+                  /> */}{clientDetails?.laboratoryAddress}
                 </td>
               </tr>
 
@@ -814,13 +971,14 @@ function JobRequestForm() {
                   <strong>SAMPLES BACK TO LAB</strong>
                 </td>
                 <td>
-                  <input
+                  {/* <input
                     type="text"
                     name="sampleDeliveryMethod"
                     value={formData.sampleDeliveryMethod}
                     onChange={handleChange}
                     placeholder="Enter method & details of delivery"
-                  />
+                  /> */}
+                  {clientDetails?.sampleDeliveryMethod}
                 </td>
               </tr>
 
@@ -865,7 +1023,7 @@ function JobRequestForm() {
             </tbody>
           </table>
 
-         
+
 
           <h4>
             TIMESHEET (Collection Officer to complete, Onsite Contact to sign)
@@ -1076,21 +1234,64 @@ function JobRequestForm() {
                 <tr>
                   <td>Onsite Contact Signature</td>
                   <td>
-                    <input
+                    <div class="">
+                    {/* <input
                       type="text"
                       name="onsiteSignature"
                       value={formData.onsiteSignature}
                       onChange={handleChange}
-                    />
+                    /> */}
+                     <input
+                    className="inputstyle"
+                    type="text"
+                    name="onsiteSignature"
+                    value=""//{formData.onsiteSignature}
+                    placeholder=""
+                    onClick={() => openSignaturePad2("onsiteSignature")}
+                    onChange={handleChange}
+                    style={{ width: "152px", margin: "0px",cursor: "pointer",
+                      backgroundImage: `url(${formData.onsiteSignature})`,
+                      backgroundSize: "contain",
+                      backgroundRepeat: "no-repeat",
+                      backgroundPosition: "center",height:"30px" }}
+         
+                  />
+                </div>
+                {/* {isSignaturePadOpen && isSignaturePadOpen && pad(currentSignatureField) && (
+      pad("onsiteSignature")
+      )} */}
+      {isSignaturePadOpen && pad(currentSignatureField)}
+
                   </td>
                   <td>Collection Officer Signature</td>
                   <td>
-                    <input
+                    <div class="">
+                    {/* <input
                       type="text"
                       name="officerSignature"
                       value={formData.officerSignature}
                       onChange={handleChange}
-                    />
+                    /> */}
+                    <input
+                    className="inputstyle"
+                    type="text"
+                    name="officerSignature"
+                    value=""
+                    placeholder=""
+                    onClick={() => openSignaturePad2("officerSignature")}
+                    onChange={handleChange}
+                    style={{ width: "152px", margin: "0px",cursor: "pointer",
+                      backgroundImage: `url(${formData.officerSignature})`,
+                      backgroundSize: "contain",
+                      backgroundRepeat: "no-repeat",
+                      backgroundPosition: "center",height:"30px" }}
+         
+                  />
+                </div>
+                {/* {isSignaturePadOpen && isSignaturePadOpen && pad(currentSignatureField) && (
+      pad("officerSignature")
+      )} */}{isSignaturePadOpen && pad(currentSignatureField)}
+
                   </td>
                 </tr>
               </tbody>
