@@ -1,0 +1,325 @@
+.Practitionermainbody {
+    /* width: 72%; */
+    width: 100%;
+    /* background-color: rgb(250, 161, 60); */
+    height: fit-content;
+    min-height: 500px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, .2);
+    padding: 10px 2%;
+}
+
+.header {
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+    width: 100%;
+    color: #19b0e6;
+    /* background-color: aqua; */
+}
+
+.header form {
+    display: flex;
+    align-items: center;
+    /* height: 50px; */
+    justify-content: center;
+    /* background-color: yellow; */
+    /* justify-content: space-between; */
+}
+
+.header form AutoComplete {
+
+    width: 80%;
+    height: 10px;
+    padding: 10px 20px;
+    border: 1px solid #dbdbdb;
+    border-radius: 5px 0 0 5px;
+    color: #565d68;
+    transition: all .2s linear;
+    outline: none;
+}
+
+.header form AutoComplete:focus {
+    outline: none;
+    border-color: #19b0e6;
+    box-shadow: 0 0 0 0.2rem #19b0e644;
+}
+
+.header form button {
+
+    background-color: #19b0e6;
+    color: #fff;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    height: 31px;
+}
+
+.header form button:hover {
+
+    cursor: pointer;
+}
+
+.addbutton {
+    /* background-color: #19b0e6; */
+    display: flex;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    justify-content: flex-end;
+
+}
+
+.addbutton button:hover {
+    cursor: pointer;
+}
+
+.addbutton button {
+
+    background-color: #19b0e6;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    height: 31px;
+    display: flex;
+    padding: 0px 20px;
+    align-items: center;
+
+}
+
+.tablep {
+    /* background-color: yellow; */
+    width: 100%;
+    border: 1px solid #19b0e6;
+    text-align: center;
+    border-collapse: collapse;
+    position: relative;
+    /* opacity: 1; */
+    /* border-radius: 10px; */
+}
+
+.tablep td {
+    padding: 10px;
+    border: 1px solid #19b0e6;
+
+    color: #19b0e6;
+
+
+}
+
+.tablep th {
+    padding: 10px;
+    border: 1px solid #19b0e6;
+
+
+
+
+}
+
+
+.tablephead {
+    padding: 10px;
+    /* background-color: #7fa2c4; */
+    background-color: #19afe6;
+    color: white;
+    border: 1px solid #19b0e6;
+    position: sticky;
+    top: 0;
+
+}
+
+
+.addPractitioner {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: baseline;
+    align-items: flex-start;
+
+}
+
+.popupbg2 {
+    background-color: rgb(63 60 60 / 23%);
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 25;
+}
+
+.completeddiv{
+  width: 200px;
+}
+
+@media screen and (max-width:700px) {
+
+
+    .Practitionermainbody {
+        width: 96%;
+        /* overflow-x: scroll; */
+        font-size: 75%;
+        /* background-color: rgb(250, 161, 60); */
+        height: 500px;
+        overflow-x: scroll;
+        font-size: smaller;
+    }
+
+    .header {
+
+        flex-direction: column;
+    }
+
+    .bownpopupbutton {
+        /* background-color: #19b0e6; */
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 30px;
+        /* flex-direction: column; */
+    }
+
+}
+
+
+.container {
+    display: flex;
+    justify-content: center; /* Default for desktop */
+    padding: 20px;
+    align-items: center;
+    height: fit-content;
+    background: #80c209;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .container {
+      justify-content: flex-start; /* Override for mobile */
+      overflow: auto; /* Allow scrolling on mobile */
+    }
+  }
+  
+
+.mybold{
+    font-size: 17px;
+    font-weight: bold;
+    /* color: #f3ffdf; */
+    color: #7fc109;
+}
+.mybold2{
+    font-size: 15px;
+    font-weight: bold;
+    /* color: #f3ffdf; */
+    color: #7fc109;
+}
+.key{
+    font-size: 17px;
+    font-weight: 900;
+    color: rgb(75, 75, 75);
+}
+
+.pad {
+    padding: 20px;
+  }
+  .custom-button {
+    width: 200px;
+    border: none;
+    margin-top: 5px;
+    padding: 8px 30px;
+    border-radius: 20px;
+    background-color: #80c20a;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .jobreq{
+    /* left-top: 20px; */
+  }
+  .jobhead{
+    height: 80px;
+  }
+@media screen and (max-width: 1200px) {
+  .completeddiv{
+    width: 150px;
+  }
+    .pad {
+        padding: 20px;
+        padding-bottom: 40px;
+      }
+      .custom-button{
+        width:150px;
+      }
+  }
+
+@media screen and (max-width: 1015px) {
+  .completeddiv{
+    width: 110px;
+  }
+    .pad {
+        padding: 20px;
+        padding-bottom: 60px;
+      }
+      .custom-button{
+        width:100px;
+      }
+      .mybold{
+        font-size: 15px;
+      }
+      .mybold2{
+        font-size: 13px;
+      }
+      .key{
+        font-size: 15px;
+      }
+      .tablep{
+        font-size: 13px;
+      }
+  }
+@media screen and (max-width: 650px) {
+  
+.completeddiv{
+  width: 80px;
+}
+    .pad {
+        padding: 20px;
+        padding-bottom: 80px;
+      }
+      .custom-button{
+        width:70px;
+        padding: 8px 15px;
+        font-size: 10px;
+      }
+      .mybold{
+        font-size: 13px;
+      }
+      .mybold2{
+        font-size: 11px;
+      }
+      .key{
+        font-size: 13px;
+      }
+      .tablep{
+        font-size: 11px;
+      }
+      .jobreq{
+        /* margin-right: 40px!important; */
+        padding-top: 50px;
+      }
+      .createjob{
+        /* margin-right: 40px!important; */
+        margin-bottom: 80px!important;
+      }
+      .jobhead{
+        height: 120px;
+      }
+
+  }
+  @media screen and (max-width: 410px) {
+    .pad {
+      padding: 20px;
+      padding-bottom: 120px;
+    }
+    .custom-button{
+      width:70px;
+      padding: 8px 15px;
+      font-size: 10px;
+    }
+  }
