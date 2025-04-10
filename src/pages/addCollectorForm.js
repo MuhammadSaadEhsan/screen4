@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 
 const AddCollectorForm = () => {
       const { id } = useParams();
+        const [isloading, setIsLoading] = useState(false);
     const navigate = useNavigate()
       const [loading, setLoading] = useState(true);
       const [error, setError] = useState(null)
@@ -63,6 +64,7 @@ useEffect(() => {
     //   message.error('Please fill all fields')
     //   return
     // }
+    setIsLoading(true)
     try {
         let response;
   
@@ -104,6 +106,8 @@ useEffect(() => {
       console.error("Error submitting form:", error); // ✅ Log error
       message.error('An error occurred while adding collector');
     }
+
+    setIsLoading(false)
   };
   const [form] = Form.useForm(); 
   useEffect(() => {
@@ -142,7 +146,8 @@ useEffect(() => {
 
         <Form.Item>
           {/* <Button type="primary" htmlType="submit">Add Collector</Button> */}
-          <button
+          {!isloading ? <button
+          className='createjob2'
               type="submit"
               style={{
                 width: "100%",
@@ -156,7 +161,7 @@ useEffect(() => {
               }}
             >
               {formData?._id ? "Update Collector" : "Add Collector"}
-            </button>
+            </button> : <div style={{width:"100%",display: "flex",justifyContent:"center"}}><img src="/empty.gif" style={{width:"130px",}}/></div>}
         </Form.Item>
       </Form>
     </Card></div>

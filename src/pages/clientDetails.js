@@ -329,15 +329,29 @@ function Screen4Details() {
 
 
         // setFormData(data.data); // Set the form data with the found object
+        // setFormData((prevData) => ({
+        //   ...prevData,
+        //   companyName: data.data.companyName,
+        //   flight: data.data.flight,
+        //   location: data.data.location,
+        //   refno: data.data.refno,
+        //   dateoftest: new Date(data.data.dateoftest),
+        //   reasonForTest: data.data.reasonForTest,
+        // }))
         setFormData((prevData) => ({
           ...prevData,
+          ...data.data, // base: set all fields from API
           companyName: data.data.companyName,
           flight: data.data.flight,
           location: data.data.location,
           refno: data.data.refno,
-          dateoftest: new Date(data.data.dateoftest),
+          dateoftest: data.data.dateoftest
+            ? new Date(data.data.dateoftest).toISOString().slice(0, 16)
+            : '',
           reasonForTest: data.data.reasonForTest,
-        }))
+        }));
+        
+
 
       } catch (error) {
         setError(error.message); // Handle error if something goes wrong
@@ -1467,7 +1481,7 @@ function Screen4Details() {
             </div>
           </div>
           <table className="table-one">
-            <tr>
+            {/* <tr>
               <hr style={{ marginTop: "25px" }} />
               <table className="table-one" style={{ marginTop: "0px" }}>
                 <tr>
@@ -1506,10 +1520,7 @@ function Screen4Details() {
                   </td>
                 </tr>
                 <tr>
-                  {/* <th>Date Taken{formData.DrugsandAlcoholUrineTest === "true" || formData.DrugsandAlcoholOralTest !== "true" ?<span style={{ color: "red" }}>*</span> : null }</th>
-              <th>Type/Description{formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== "" ?<span style={{ color: "red" }}>*</span> : null }</th>
-              <th>Dosage{formData.DrugsandAlcoholUrineTest !== "" || formData.DrugsandAlcoholOralTest !== "" ?<span style={{ color: "red" }}>*</span> : null }</th> */}
-                  <th>
+                <th>
                     Date Taken
                     {formData.DrugsandAlcoholUrineTest === true || formData.DrugsandAlcoholOralTest === true
                       // ? (
@@ -1656,8 +1667,29 @@ function Screen4Details() {
                   </td>
                 </tr>
               </table>
-            </tr>
+            </tr> */}
 
+<thead>
+  <h4>Test Details</h4>
+  <tr>
+    <th>Test Method</th>
+    <th>Technology</th>
+    <th>Cut Off Level</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td style={{ border: "1px solid black", padding: "8px" }}>
+      {formData.testMethods?.join(', ') || 'N/A'}
+    </td>
+    <td style={{ border: "1px solid black", padding: "8px" }}>
+      {formData.testingTechnology?.join(', ') || 'N/A'}
+    </td>
+    <td style={{ border: "1px solid black", padding: "8px" }}>
+      {formData.cutOffLevels || 'N/A'}
+    </td>
+  </tr>
+</tbody>
 
           </table>
           <div class="row5">
@@ -2626,6 +2658,7 @@ function Screen4Details() {
           {/* Submit Button */}
           {formData.isUpdated !== true ?
             <button
+            className="createjob2"
               type="submit"
               style={{
                 width: "100%",

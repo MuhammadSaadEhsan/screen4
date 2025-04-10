@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/navbar";
 import Cookies from "js-cookie";
-import { message } from "antd";
+import { message, Popconfirm } from "antd";
 
 
 const AllClients = () => {
@@ -123,7 +123,7 @@ const AllClients = () => {
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", position: "relative" }}>
             {/* Centered Text */}
             <div
-              className="key"
+              className="key allclient"
               style={{
                 fontSize: "24px",
                 marginBottom: "10px",
@@ -140,7 +140,7 @@ const AllClients = () => {
             {/* Right-Aligned Button */}
             {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ? <Link to="/addclient" style={{ textDecoration: "none", marginLeft: "auto" }}>
               <div
-                className="key"
+                className="key clientbtn createjob2"
                 style={{
                   fontSize: "14px",
                   marginBottom: "10px",
@@ -274,24 +274,63 @@ const AllClients = () => {
 
                     </div>
 
-                   {isDeleting && client._id === deletedId ?<h3 style={{color:"#7cc209"}}>Deleting...</h3> : <button style={{
-                      width: '20%', fontSize: "14px",
-                      marginBottom: "10px",
-                      marginTop: "10px",
-                      border: "none",
-                      background: "#80c209",
-                      color: "white",
-                      padding: "10px 18px",
-                      borderRadius: "10px",
-                      fontWeight: "bold",
-                      textDecoration: "none",
-                      cursor: "pointer",
-                      transition: "background-color 0.3s ease",
-                    }} 
-                    onClick={async (e) => {deleteClient(client._id); e.stopPropagation();}}
+                   {isDeleting && client._id === deletedId ?<h3 style={{color:"#7cc209"}}>Deleting...</h3> : 
+                  //  <button className="clientbtn createjob2" style={{
+                  //     width: '20%', fontSize: "14px",
+                  //     marginBottom: "10px",
+                  //     marginTop: "10px",
+                  //     border: "none",
+                  //     background: "#80c209",
+                  //     color: "white",
+                  //     padding: "10px 18px",
+                  //     borderRadius: "10px",
+                  //     fontWeight: "bold",
+                  //     textDecoration: "none",
+                  //     cursor: "pointer",
+                  //     transition: "background-color 0.3s ease",
+                  //   }} 
+                  //   onClick={async (e) => {deleteClient(client._id); e.stopPropagation();}}
+                  //   >
+                  //     Delete
+                  //   </button>
+                  (
+                    <Popconfirm
+                      title="Are you sure you want to delete this client?"
+                      description="This action cannot be undone."
+                      onConfirm={(e) => {
+                        deleteClient(client._id);
+                        e?.stopPropagation(); // optional, just in case
+                      }}
+                      onCancel={(e) => {
+                        e?.stopPropagation(); // stop propagation on cancel
+                      }}
+                      okText="Yes"
+                      cancelText="No"
                     >
-                      Delete
-                    </button>}
+                      <button
+                        className="clientbtn createjob2"
+                        style={{
+                          width: '20%',
+                          fontSize: "14px",
+                          marginBottom: "10px",
+                          marginTop: "10px",
+                          border: "none",
+                          background: "#80c209",
+                          color: "white",
+                          padding: "10px 18px",
+                          borderRadius: "10px",
+                          fontWeight: "bold",
+                          textDecoration: "none",
+                          cursor: "pointer"
+                        }}
+                        onClick={(e) => e.stopPropagation()} // prevent parent click
+                      >
+                        Delete
+                      </button>
+                    </Popconfirm>
+                  )
+                  }
+                    
 
                   </div>
                 </div>

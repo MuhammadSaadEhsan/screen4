@@ -27,13 +27,18 @@ function JobRequestDetails() {
 
     const [accepted,setAccepted] = useState(false)
     const { id } = useParams();
+    // const formatDateTimeLocal = (isoString) => {
+    //   if (!isoString) return '';
+    //   const date = new Date(isoString);
+    //   const offset = date.getTimezoneOffset();
+    //   const localDate = new Date(date.getTime() - offset * 60 * 1000);
+    //   return localDate.toISOString().slice(0, 16); // "YYYY-MM-DDTHH:MM"
+    // };
     const formatDateTimeLocal = (isoString) => {
       if (!isoString) return '';
-      const date = new Date(isoString);
-      const offset = date.getTimezoneOffset();
-      const localDate = new Date(date.getTime() - offset * 60 * 1000);
-      return localDate.toISOString().slice(0, 16); // "YYYY-MM-DDTHH:MM"
+      return new Date(isoString).toISOString().slice(0, 16); // this is enough!
     };
+    
     const formatDateOnly = (isoString) => {
       if (!isoString) return '';
       return new Date(isoString).toISOString().split('T')[0]; // "YYYY-MM-DD"
@@ -307,6 +312,7 @@ function JobRequestDetails() {
     nonNegativeSamples: "",
     laboratoryAddress: "",
     sampleDeliveryMethod: "",
+    flightVessel: "",
   });
   // useEffect(async () => {
   //   const selectedValue = formData.customer; // Assuming this is the selected value from the dropdown
@@ -710,6 +716,25 @@ const handleSubmit = async (e) => {
               onChange={handleChange}
               // required
             />
+          </div>
+          <hr></hr>
+          <div className="donor">
+            <label>Flight/Vessel</label>
+            <input
+              className="inputstyle"
+              type="text"
+              name="flightVessel"
+              value={formData.flightVessel}
+              onChange={handleChange}
+
+            />
+            {/* <input
+              className="inputstyle"
+              type="text"
+              name="nameOfOnsiteContact"
+              value={formData.nameOfOnsiteContact}
+              onChange={handleChange}
+            /> */}
           </div>
           <hr></hr>
           <h4>The Onsite contact must:</h4>
@@ -1400,6 +1425,7 @@ const handleSubmit = async (e) => {
 
           {token ==="dskgfsdgfkgsdfkjg35464154845674987dsf@53" || formData?.isAccepted ? <button
             type="submit"
+            className="createjob2"
             onClick={handleSubmit}
             style={{
               width: "100%",
@@ -1419,6 +1445,7 @@ const handleSubmit = async (e) => {
           // {
             // accepted ?
             <button
+            className="createjob2"
             type="submit"
             onClick={handleAccept}
             style={{

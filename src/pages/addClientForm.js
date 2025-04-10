@@ -1078,7 +1078,7 @@ export default function AddClientForm() {
 
 
           <Form.Item>
-            {!isloading ? <button type="submit" style={submitStyle}>
+            {!isloading ? <button className="createjob2" type="submit" style={submitStyle}>
               {client?._id ? "Update" : "Add"}
             </button> :<div style={{width:"100%",display: "flex",justifyContent:"center"}}><img src="/empty.gif" style={{width:"130px",}}/></div>}
           </Form.Item>

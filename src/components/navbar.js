@@ -195,6 +195,8 @@ function Navbar() {
                   alignItems: "center",
                   justifyContent: "center",
                   color: "#4d4b4b",
+                  fontWeight:"bold",
+                  gap:"5px"
                 }}
               >
                 <AiOutlineDashboard style={{ width: "35px", height: "35px" }} />
@@ -207,11 +209,12 @@ function Navbar() {
                   margin: "0",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
+                  // justifyContent: "center",
                   color: "#4d4b4b",
+                  gap:"5px"
                 }}
               >
-                 <HiOutlineUsers style={{ width: "35px", height: "35px", color: "black" }} />
+                 <HiOutlineUsers style={{ width: "35px", height: "35px", color: "4d4b4b" }} />
                 Clients
               </h5></>}
               {token!=="clientdgf45sdgf@89756dfgdhg&%df"&&token!=="collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg"&&<>
@@ -223,12 +226,12 @@ function Navbar() {
                   margin: "0",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
+                  // justifyContent: "center",
                   color: "#4d4b4b",
                   gap:"5px"
                 }}
               >
-                <HiOutlineBriefcase style={{ width: "35px", height: "35px", color: "black" }} />
+                <HiOutlineBriefcase style={{ width: "35px", height: "35px", color: "#4d4b4b" }} />
                 Collectors
               </h5>
                 </div>
@@ -241,7 +244,7 @@ function Navbar() {
                   margin: "0",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
+                  // justifyContent: "center",
                   color: "#4d4b4b",
                 }}
               >
@@ -256,14 +259,14 @@ function Navbar() {
                   margin: "0",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
+                  // justifyContent: "center",
                   color: "#4d4b4b",
                 }}
               >
                 <AiOutlineDatabase style={{ width: "35px", height: "35px" }} />
                 Data
               </h5></>}
-              {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ? (
+              {/* {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ? (
                 <h5
                   onClick={() => navigate("/screen4testform")}
                   className="hovar"
@@ -278,7 +281,7 @@ function Navbar() {
                   <AiOutlineForm style={{ width: "35px", height: "35px" }} />
                   Form Link
                 </h5>
-              ) : null}
+              ) : null} */}
               {/* <h5 onClick={() => navigate("/screen4testform2")} className='hovar' style={{ margin: '0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4d4b4b' }} ><AiOutlineForm style={{ width: '35px', height: '35px' }} />Form2 Link</h5> */}
               <h5
                 onClick={logout}
@@ -329,7 +332,7 @@ function Navbar() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      color: "#7050A0",
+                      color: "#8bc34a",
                     }}
                   >
                     {" "}
@@ -348,7 +351,7 @@ function Navbar() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      color: "#7050A0",
+                      color: "#8bc34a",
                     }}
                   >
                     {" "}
@@ -367,12 +370,32 @@ function Navbar() {
             {" "}
           </div>
           <div className="mobmanu">
-            <h3 onClick={() => navigate("/dashboard")}>
+            {/* <h3 onClick={() => navigate("/dashboard")} >
               <MdOutlineSpaceDashboard
-                style={{ width: "30px", height: "30px" }}
+                style={{ width: "30px", height: "30px",color:"#4d4b4b" }}
               />{" "}
               Dashboard
-            </h3>
+            </h3> */}
+            <h5
+                onClick={() => navigate("/dashboard")}
+                className="hovar"
+                style={{
+                  margin: "0",
+                  display: "flex",
+                  alignItems: "center",
+                  // justifyContent: "center",
+                  color: "#4d4b4b",
+                  gap:"6px"
+                }}
+              >
+                {/* <FaUsers style={{ width: "30px", height: "35px", color: "#80c209",marginRight:"10px" }} /> */}
+                {/* <FaUsers style={{ width: "35px", height: "35px", color: "black" }} /> */}
+                <MdOutlineSpaceDashboard
+                style={{ width: "30px", height: "30px",color:"#4d4b4b" }}
+              />{" "}
+
+Dashboard
+              </h5>
             
             {/* <h3 onClick={() => setmanukonssa("1")}>
               {" "}
@@ -569,9 +592,9 @@ function Navbar() {
                   margin: "0",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
+                  // justifyContent: "center",
                   color: "#4d4b4b",
-                  
+                  gap:"5px"
                 }}
               >
                 {/* <FaUsers style={{ width: "30px", height: "35px", color: "#80c209",marginRight:"10px" }} /> */}
@@ -587,9 +610,9 @@ function Navbar() {
                   margin: "0",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
+                  // justifyContent: "center",
                   color: "#4d4b4b",
-                  gap:"10px"
+                  gap:"5px"
                 }}
               >
                 <HiOutlineBriefcase style={{ width: "35px", height: "35px", color: "black" }} />
@@ -603,8 +626,9 @@ function Navbar() {
                   margin: "0",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
+                  // justifyContent: "center",
                   color: "#4d4b4b",
+                  gap:"3px"
                 }}
               >
                 <AiOutlineFileText style={{ width: "35px", height: "35px" }} />
@@ -618,14 +642,15 @@ function Navbar() {
                   margin: "0",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
+                  // justifyContent: "center",
                   color: "#4d4b4b",
+                  gap:"2px"
                 }}
               >
                 <AiOutlineDatabase style={{ width: "35px", height: "35px" }} />
                 Data
               </h5></>}
-              {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ? (
+              {/* {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ? (
                 <h5
                   onClick={() => navigate("/screen4testform")}
                   className="hovar"
@@ -640,7 +665,7 @@ function Navbar() {
                   <AiOutlineForm style={{ width: "35px", height: "35px" }} />
                   Form Link
                 </h5>
-              ) : null}
+              ) : null} */}
 
             <h5
               onClick={logout}
@@ -650,11 +675,11 @@ function Navbar() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "flex-start",
-                color: "#4180b7",
+                color: "#4d4b4b",
               }}
             >
               {" "}
-              <GiExitDoor style={{ width: "50px", height: "50px" }} /> log Out
+              <GiExitDoor style={{ width: "40px", height: "50px",color:"#4d4b4b" }} /> LOGOUT
             </h5>
           </div>
         </>

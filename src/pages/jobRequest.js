@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/navbar";
 import Cookies from "js-cookie";
-import { message } from "antd";
+import { message, Popconfirm } from "antd";
 
 const JobRequests = () => {
   const [client, setClient] = useState([]);
@@ -286,7 +286,7 @@ const JobRequests = () => {
   {/* Right-Aligned Button */}
  {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ? <Link to="/screen4testform2" style={{ textDecoration: "none", marginLeft: "auto" }}>
     <div
-      className="key createjob"
+      className="key createjob createjob2"
       style={{
         fontSize: "14px",
         marginBottom: "10px",
@@ -418,11 +418,11 @@ const JobRequests = () => {
                       </div>
                       <div className="key">
                         Customer :{" "}
-                        <span className="mybold">{client.customer}</span>
+                        <span className="mybold2">{client.customer}</span>
                       </div>
                       <div className="key">
                         Location :{" "}
-                        <span className="mybold">{client.location}</span>
+                        <span className="mybold2">{client.location}</span>
                       </div>
                       {/* <div className="key">Date And Time Of Collection : <span className="mybold">{client.dateAndTimeOfCollection}</span></div> */}
                       <div className="key">
@@ -476,7 +476,7 @@ const JobRequests = () => {
                         //   color: "white",
                         //   cursor: "pointer",
                         // }}
-                        className="custom-button"
+                        className="custom-button createjob2"
                       >
                         Update Timesheet
                       </button>
@@ -485,42 +485,53 @@ const JobRequests = () => {
                   {selectedTab === "Pending" && token==="dskgfsdgfkgsdfkjg35464154845674987dsf@53" && (
                     isDeleting && client._id === deletedId ?<h3 style={{color:"#7cc209"}}>Deleting...</h3> : 
                       <div class="" >
-                      <button
+                      
+                      {/* <button
                         onClick={async (e) => {deleteJobRequest(client._id); e.stopPropagation();}}
                         className="custom-button"
                       >
                         Delete
-                      </button>
+                      </button> */}
+                      
+  <Popconfirm
+    title="Are you sure you want to delete this job request?"
+    description="This action cannot be undone."
+    onConfirm={(e) => {
+      deleteJobRequest(client._id);
+      e?.stopPropagation(); // optional, just in case
+    }}
+    onCancel={(e) => {
+      e?.stopPropagation(); // stop propagation on cancel
+    }}
+    okText="Yes"
+    cancelText="No"
+  >
+    <button
+       className="custom-button createjob2"
+      onClick={(e) => e.stopPropagation()} // prevent parent click
+    >
+      Delete
+    </button>
+  </Popconfirm>
+
                       </div>
                     )}
                  
                     {selectedTab === "Completed" && (
                       <div class="completeddiv">
-                       {/* {token==="dskgfsdgfkgsdfkjg35464154845674987dsf@53"&&<> <button
+                       {token==="dskgfsdgfkgsdfkjg35464154845674987dsf@53"&&<> <button
+                       className="custom-button createjob2"
                         onClick={(event) => handleSendEmail(client, event)}
                         disabled={client.isEmailed}
-                        style={{
-                          width: "200px",
-                          marginTop: "0px",
-                          padding: "8px 30px",
-                          borderRadius: "20px",
-                          border: client.isEmailed
-                            ? "1px solid #80c20a"
-                            : "none",
-                          backgroundColor: client.isEmailed
-                            ? "#f3ffdf"
-                            : "#80c20a",
-                          color: client.isEmailed ? "#80c20a" : "white",
-                          cursor: client.isEmailed ? "not-allowed" : "pointer",
-                        }}
+                       
                       >
                         {client.isEmailed
                           ? "Email Sent"
                           : "Send Email To Donor"}
-                      </button></>} */}
+                      </button></>}
                       <button
                         onClick={() => navigate(`/jobrequest/${client._id}`)}
-                       className="custom-button"
+                       className="custom-button createjob2"
                       >
                         Job Request
                       </button>
@@ -536,7 +547,7 @@ const JobRequests = () => {
                           } catch (error) {
                             console.error("Error navigating:", error);
                           }}}
-                          className="custom-button"
+                          className="custom-button createjob2"
                       >
                         COC Form
                       </button>
