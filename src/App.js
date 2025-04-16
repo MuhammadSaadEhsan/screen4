@@ -4,7 +4,6 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import Index from './pages';
 import Desboard from './pages/desboard';
-import Practitioner from './pages/Practitioner';
 import Patient from './pages/Patients';
 import Profile from './pages/Profile';
 import { useNavigate } from 'react-router-dom'

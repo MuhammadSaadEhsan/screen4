@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card, Input, Button, Form, message } from 'antd';
 import { useNavigate,useParams} from 'react-router-dom';
 import { useEffect } from 'react';
+import Cookies from "js-cookie";
 
 const AddCollectorForm = () => {
       const { id } = useParams();
@@ -59,6 +60,20 @@ useEffect(() => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+  useEffect(() => {
+    const token = Cookies.get("Token");
+    if (
+      !token ||
+      (token !== "dskgfsdgfkgsdfkjg35464154845674987dsf@53" 
+       &&
+        token !== "collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg"
+       &&
+        token !== "clientdgf45sdgf@89756dfgdhg&%df")
+    ) {
+      navigate("/");
+      return;
+    }
+  }, [navigate]);
   const handleSubmit = async (values) => {
     // if(formData.name==="" || formData.email==="" || formData.password===""){
     //   message.error('Please fill all fields')
@@ -110,9 +125,17 @@ useEffect(() => {
     setIsLoading(false)
   };
   const [form] = Form.useForm(); 
-  useEffect(() => {
-    form.setFieldsValue(formData); // This updates all fields when client data is fetched
-  }, [formData]);
+
+    useEffect(() => {
+      form.setFieldsValue({
+        name: formData.name || undefined,
+        email: formData.email || undefined,
+        password: formData.password || undefined,
+      });
+    }, [formData]);
+    
+    // form.setFieldsValue(formData); // This updates all fields when client data is fetched
+
 
 
     useEffect(() => {
@@ -132,16 +155,26 @@ useEffect(() => {
   >
     <Card title="Add Collector" style={{ width: "600px", margin: 'auto', marginTop: 50 }}>
       <Form layout="vertical" form={form}  onFinish={handleSubmit}>
-        <Form.Item label="Name" name="name" rules={[{required: true, type: 'text',message: 'Please enter a name'  }]}> 
-          <Input name="name" value={formData.name} onChange={handleChange} />
-        </Form.Item>
+        {/* <Form.Item label="Name" name="name" rules={[{required: true, type: 'text',message: 'Please enter a name'  }]}> 
+        <Input />
+        </Form.Item> */}
+        <Form.Item
+  label="Name"
+  name="name"
+  rules={[
+    { required: true, message: 'Please enter a name' },
+    { min: 2, message: 'Name must be at least 2 characters' }
+  ]}
+>
+  <Input />
+</Form.Item>
         
         <Form.Item label="Email" name="email" rules={[{ required: true, type: 'email', message: 'Please enter a valid email' }]}> 
-          <Input name="email" value={formData.email} onChange={handleChange} />
+        <Input />
         </Form.Item>
         
         <Form.Item label="Password" name="password" rules={[{ required: true, message: 'Please enter a password' }]}> 
-          <Input.Password name="password" value={formData.password} onChange={handleChange} />
+        <Input />
         </Form.Item>
 
         <Form.Item>

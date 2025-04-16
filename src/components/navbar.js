@@ -252,7 +252,7 @@ function Navbar() {
                 Job Requests
               </h5>
               {/* </>} */}
-              {token==="dskgfsdgfkgsdfkjg35464154845674987dsf@53"&&<><h5
+              {/* {token==="dskgfsdgfkgsdfkjg35464154845674987dsf@53"&&<><h5
                 onClick={() => navigate("/data")}
                 className="hovar"
                 style={{
@@ -265,7 +265,7 @@ function Navbar() {
               >
                 <AiOutlineDatabase style={{ width: "35px", height: "35px" }} />
                 Data
-              </h5></>}
+              </h5></>} */}
               {/* {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ? (
                 <h5
                   onClick={() => navigate("/screen4testform")}
@@ -635,7 +635,7 @@ Dashboard
                 Job Requests
               </h5>
               {/* </>} */}
-              {token==="dskgfsdgfkgsdfkjg35464154845674987dsf@53"&&<><h5
+              {/* {token==="dskgfsdgfkgsdfkjg35464154845674987dsf@53"&&<><h5
                 onClick={() => navigate("/data")}
                 className="hovar"
                 style={{
@@ -649,7 +649,7 @@ Dashboard
               >
                 <AiOutlineDatabase style={{ width: "35px", height: "35px" }} />
                 Data
-              </h5></>}
+              </h5></>} */}
               {/* {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ? (
                 <h5
                   onClick={() => navigate("/screen4testform")}

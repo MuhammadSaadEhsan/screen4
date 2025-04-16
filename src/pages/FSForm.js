@@ -4,6 +4,8 @@ import Navbar from "../components/navbar";
 import { message } from "antd";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import { useEffect } from "react";
 
 function Screen4ChainOfCustodyForm() {
   const navigate = useNavigate()
@@ -39,7 +41,20 @@ function Screen4ChainOfCustodyForm() {
     }
   };
   
-
+  useEffect(() => {
+    const token = Cookies.get("Token");
+    if (
+      !token ||
+      (token !== "dskgfsdgfkgsdfkjg35464154845674987dsf@53" 
+       &&
+        token !== "collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg"
+       &&
+        token !== "clientdgf45sdgf@89756dfgdhg&%df")
+    ) {
+      navigate("/");
+      return;
+    }
+  }, [navigate]);
   const pad = (data) =>{
     return   <div
     style={{

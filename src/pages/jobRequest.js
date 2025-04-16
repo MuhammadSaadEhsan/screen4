@@ -20,11 +20,26 @@ const JobRequests = () => {
   const token = Cookies.get("Token")
   const clientId = Cookies.get("id")
   const collectorId = Cookies.get("id")
+  const [sendingEmail, setSendingEmail] = useState(false);
+    const [emailId,setEmailId] = useState(null);
 
   useEffect(() => {
     token==="clientdgf45sdgf@89756dfgdhg&%df" && setSelectedTab("Completed")
   }, [token])
-
+ useEffect(() => {
+     const token = Cookies.get("Token");
+     if (
+       !token ||
+       (token !== "dskgfsdgfkgsdfkjg35464154845674987dsf@53" 
+        &&
+         token !== "collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg"
+        &&
+         token !== "clientdgf45sdgf@89756dfgdhg&%df")
+     ) {
+       navigate("/");
+       return;
+     }
+   }, [navigate]);
   const deleteJobRequest = async (collectorId) => {
     setIsDeleting(true);
     setDeletedId(collectorId);
@@ -222,6 +237,8 @@ const JobRequests = () => {
   };
 
   const handleSendEmail = async (client, event) => {
+    setSendingEmail(true)
+    setEmailId(client._id)
     event.stopPropagation(); // Stop propagation to prevent card click
 
     if (client.isEmailed) return;
@@ -246,6 +263,7 @@ const JobRequests = () => {
     } catch (err) {
       console.error(err.message);
     }
+    setSendingEmail(false)
   };
 
   return (
@@ -431,6 +449,7 @@ const JobRequests = () => {
                           {new Date(
                             client.dateAndTimeOfCollection
                           ).toLocaleString("en-US", {
+                            timeZone: "UTC",
                             year: "numeric",
                             month: "long",
                             day: "numeric",
@@ -519,16 +538,27 @@ const JobRequests = () => {
                  
                     {selectedTab === "Completed" && (
                       <div class="completeddiv">
-                       {token==="dskgfsdgfkgsdfkjg35464154845674987dsf@53"&&<> <button
+                       {token==="dskgfsdgfkgsdfkjg35464154845674987dsf@53"&&<> 
+                       {sendingEmail && client._id === emailId ? <h3 style={{color:"#7cc209"}}>Sending...</h3> :  <button
                        className="custom-button createjob2"
                         onClick={(event) => handleSendEmail(client, event)}
                         disabled={client.isEmailed}
+                        style={{
+                          // marginTop: "0px",
+                          // padding: "10px 30px",
+                          // borderRadius: "20px",
+                          border: client.isEmailed ? "1px solid #80c20a" : "none",
+                          backgroundColor: client.isEmailed ? "#f3ffdf" : "#80c20a",
+                          color: client.isEmailed ? "#80c20a" : "white",
+                          cursor: client.isEmailed ? "not-allowed" : "pointer",
+                        }}
                        
                       >
                         {client.isEmailed
                           ? "Email Sent"
                           : "Send Email To Donor"}
-                      </button></>}
+                      </button> }
+                      </>}
                       <button
                         onClick={() => navigate(`/jobrequest/${client._id}`)}
                        className="custom-button createjob2"

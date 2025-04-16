@@ -15,7 +15,20 @@ const AllClients = () => {
     setSearchQuery(query);
     filterClients(selectedTab, query);
   };
-
+ useEffect(() => {
+     const token = Cookies.get("Token");
+     if (
+       !token ||
+       (token !== "dskgfsdgfkgsdfkjg35464154845674987dsf@53" 
+        &&
+         token !== "collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg"
+        &&
+         token !== "clientdgf45sdgf@89756dfgdhg&%df")
+     ) {
+       navigate("/");
+       return;
+     }
+   }, [navigate]);
   const [clients, setClients] = useState([]);
   const [filteredClients, setFilteredClients] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");

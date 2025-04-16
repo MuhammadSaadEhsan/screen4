@@ -5,6 +5,7 @@ import { message } from "antd";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 function JobRequestForm() {
   const [isloading, setIsLoading] = useState(false);
@@ -78,6 +79,21 @@ function JobRequestForm() {
   const [customers, setCustomers] = useState([]);
   const [customerEmail, setCustomerEmail] = useState([]);
   const [locations, setLocations] = useState([]);
+
+  useEffect(() => {
+    const token = Cookies.get("Token");
+    if (
+      !token ||
+      (token !== "dskgfsdgfkgsdfkjg35464154845674987dsf@53" 
+       &&
+        token !== "collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg"
+       &&
+        token !== "clientdgf45sdgf@89756dfgdhg&%df")
+    ) {
+      navigate("/");
+      return;
+    }
+  }, [navigate]);
 
   // useEffect(() => {
   //   const fetchCustomers = async () => {

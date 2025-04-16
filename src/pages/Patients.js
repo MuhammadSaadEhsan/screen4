@@ -12,6 +12,22 @@ const Patients = () => {
   const [selectedTab, setSelectedTab] = useState("All");
   const navigate = useNavigate();
 
+
+  useEffect(() => {
+    const token = Cookies.get("Token");
+    if (
+      !token ||
+      (token !== "dskgfsdgfkgsdfkjg35464154845674987dsf@53" 
+       &&
+        token !== "collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg"
+       &&
+        token !== "clientdgf45sdgf@89756dfgdhg&%df")
+    ) {
+      navigate("/");
+      return;
+    }
+  }, [navigate]);
+  
   useEffect(() => {
     const fetchScreen4Data = async () => {
       try {
