@@ -208,13 +208,13 @@ const JobRequests = () => {
 
   const handleClientClick = async (id) => {
     if(selectedTab==='Pending'){
-      navigate(`/jobrequest/${id}`);
+      window.open(`/jobrequest/${id}`,'_blank');
     }
     else if (selectedTab === 'Accepted') {
       try {
         const collectorFormId = await fetchAcceptedById(id); // ✅ Await the API response
         if (collectorFormId) {
-          navigate(`/dashboard/${collectorFormId}`); // ✅ Use the fetched ID
+          window.open(`/dashboard/${collectorFormId}`,'_blank'); // ✅ Use the fetched ID
         } else {
           console.error("Collector Form ID not found");
         }
@@ -484,7 +484,7 @@ const JobRequests = () => {
                       // style={{width: "200px"}}
                       >
                       <button
-                        onClick={(e) =>{ navigate(`/jobrequest/${client._id}`); e.stopPropagation()}}
+                        onClick={(e) =>{ window.open(`/jobrequest/${client._id}`,'_blank'); e.stopPropagation()}}
                         // style={{
                         //   width: "200px",
                         //   border:"none",
@@ -560,7 +560,9 @@ const JobRequests = () => {
                       </button> }
                       </>}
                       <button
-                        onClick={() => navigate(`/jobrequest/${client._id}`)}
+                        // onClick={() => navigate(`/jobrequest/${client._id}`)}
+                        onClick={() => window.open(`/jobrequest/${client._id}`, '_blank')}
+
                        className="custom-button createjob2"
                       >
                         Job Request
@@ -570,7 +572,7 @@ const JobRequests = () => {
                           try {
                             const collectorFormId = await fetchAcceptedById(client._id); // ✅ Await the API response
                             if (collectorFormId) {
-                              navigate(`/dashboard/${collectorFormId}`); // ✅ Use the fetched ID
+                              window.open(`/dashboard/${collectorFormId}`,'_blank'); // ✅ Use the fetched ID
                             } else {
                               console.error("Collector Form ID not found");
                             }

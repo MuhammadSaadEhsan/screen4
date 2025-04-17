@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Input, Button, Form, message } from 'antd';
+import { Card, Input, Button, Form, message,Tooltip } from 'antd';
 import { useNavigate,useParams} from 'react-router-dom';
 import { useEffect } from 'react';
 import Cookies from "js-cookie";
@@ -143,17 +143,50 @@ useEffect(() => {
     }, [formData]); // This will log the updated client state after React applies the update
   
   return (
-    <div
-    style={{
-      padding: "20px",
-      display: "grid",
-      placeItems: "center",
+  //   <div
+  //   style={{
+  //     padding: "20px",
+  //     display: "grid",
+  //     placeItems: "center",
 
-      height: "100vh",
-      background: "#80c209",
-    }}
-  >
-    <Card title="Add Collector" style={{ width: "600px", margin: 'auto', marginTop: 50 }}>
+  //     height: "100vh",
+  //     background: "#80c209",
+  //   }}
+  // >
+  //   <Card title="Add Collector" style={{ width: "600px", margin: 'auto', marginTop: 50 }}>
+  <div
+  style={{
+    padding: "20px",
+    display: "grid",
+    placeItems: "center",
+    height: "100vh",
+    background: "#80c209",
+  }}
+>
+  <Card style={{ width: "600px", margin: 'auto', marginTop: 50 }}>
+    {/* Custom Header: Back button above title */}
+    <div style={{ marginBottom: "20px" }}>
+      <Tooltip title="Back">
+        <div
+          onClick={() => navigate('/collectors')}
+          style={{
+            cursor: 'pointer',
+            padding: '5px',
+            borderRadius: '4px',
+            display: 'inline-block',
+            transition: 'background-color 0.3s ease',
+          }}
+        >
+          <img
+          className='backbtnimg'
+            src="/backbtn.png"
+            alt="Back"
+            style={{marginBottom: '10px' }}
+          />
+        </div>
+      </Tooltip>
+      <h2 style={{ fontWeight: "bold", fontSize: "18px", margin: 0 }}>Add Collector</h2>
+    </div>
       <Form layout="vertical" form={form}  onFinish={handleSubmit}>
         {/* <Form.Item label="Name" name="name" rules={[{required: true, type: 'text',message: 'Please enter a name'  }]}> 
         <Input />

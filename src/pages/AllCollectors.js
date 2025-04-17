@@ -239,7 +239,7 @@ const AllClients = () => {
                     padding: "20px",
                     marginBottom: "20px",
                     width: "60%",
-                    height: "52px",
+                    // height: "52px",
                     borderRadius: "13px",
                     background: "#f3ffdf",
                     border: "1px solid #80c20a",

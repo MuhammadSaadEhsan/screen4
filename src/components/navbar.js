@@ -55,121 +55,10 @@ function Navbar() {
   const [manuuunoti, setmanuuunoti] = useState(false);
   const [notification, setnotification] = useState([]);
 
-  // const openNotification = async () => {
-  //   try {
-  //     if (token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53") {
-  //       var myHeaders = new Headers();
-  //       myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-  //       var requestOptions = {
-  //         method: "GET",
-  //         headers: myHeaders,
-  //         redirect: "follow",
-  //       };
-
-  //       const response = await fetch(
-  //         `${process.env.REACT_APP_API_URL}/getallnotification`,
-  //         requestOptions
-  //       );
-
-  //       const result = await response.json();
-
-  //       await setnotification(result);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching notifications:", error);
-  //     // Handle error (e.g., show error notification)
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   openNotification();
-  // }, []);
-
-  const count = () => {
-    return notification.filter((item) => item.status === false).length;
-  };
+ 
   return (
     <>
-      {" "}
-      {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" && (
-        <>
-          {/* {manuuunoti === true && (
-            <>
-              <div
-                className="notificationbg"
-                onClick={() => setmanuuunoti(false)}
-              >
-                {" "}
-              </div>
-              <div className="notifications">
-                {notification.map((value, index) => {
-                  return (
-                    <>
-                      <div
-                        className={`subnoti ${
-                          value.status === false ? "bglight" : ""
-                        }`}
-                      >
-                        <h4 style={{ margin: 0 }}>{value.title}</h4>
-                        <p style={{ margin: 0 }}>{value.contant}</p>
-
-                        {value.status === false && (
-                          <>
-                            <button
-                              onClick={() => {
-                                const hide = message.loading(
-                                  "Action in progress",
-                                  0
-                                );
-                                var myHeaders = new Headers();
-                                myHeaders.append(
-                                  "Content-Type",
-                                  "application/x-www-form-urlencoded"
-                                );
-
-                                var urlencoded = new URLSearchParams();
-                                urlencoded.append("_id", value._id);
-
-                                var requestOptions = {
-                                  method: "POST",
-                                  headers: myHeaders,
-                                  body: urlencoded,
-                                  redirect: "follow",
-                                };
-
-                                fetch(
-                                  `${process.env.REACT_APP_API_URL}/editnotification`,
-                                  requestOptions
-                                )
-                                  .then((response) => response.json())
-                                  .then((result) => {
-                                    setnotification(result);
-                                    // setmanuuunoti(false)
-                                  });
-
-                                setTimeout(() => {
-                                  hide(); // Call hide to stop the loading message
-                                  message.success(
-                                    "Action completed successfully"
-                                  );
-                                }, 2000);
-                              }}
-                              className="button"
-                            >
-                              Mark as Read
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    </>
-                  );
-                })}
-              </div>
-            </>
-          )} */}
-        </>
-      )}
       <div className="navbar">
         <div className="navlogo">
           <img
@@ -251,38 +140,8 @@ function Navbar() {
                 <AiOutlineFileText style={{ width: "35px", height: "35px" }} />
                 Job Requests
               </h5>
-              {/* </>} */}
-              {/* {token==="dskgfsdgfkgsdfkjg35464154845674987dsf@53"&&<><h5
-                onClick={() => navigate("/data")}
-                className="hovar"
-                style={{
-                  margin: "0",
-                  display: "flex",
-                  alignItems: "center",
-                  // justifyContent: "center",
-                  color: "#4d4b4b",
-                }}
-              >
-                <AiOutlineDatabase style={{ width: "35px", height: "35px" }} />
-                Data
-              </h5></>} */}
-              {/* {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ? (
-                <h5
-                  onClick={() => navigate("/screen4testform")}
-                  className="hovar"
-                  style={{
-                    margin: "0",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "#4d4b4b",
-                  }}
-                >
-                  <AiOutlineForm style={{ width: "35px", height: "35px" }} />
-                  Form Link
-                </h5>
-              ) : null} */}
-              {/* <h5 onClick={() => navigate("/screen4testform2")} className='hovar' style={{ margin: '0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4d4b4b' }} ><AiOutlineForm style={{ width: '35px', height: '35px' }} />Form2 Link</h5> */}
+           
+         
               <h5
                 onClick={logout}
                 className="hovar"
@@ -302,24 +161,10 @@ function Navbar() {
           </>
         )}
         <div className="navmanumob">
-          {token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" && (
-            <>
-              {/* <Space size="large">
-                <Badge count={count()} overflowCount={10}>
-                  <IoNotificationsSharp
-                    className="hovar"
-                    onClick={() => {
-                      setmanuuunoti(!manuuunoti);
-                    }}
-                    style={{ width: "30px", height: "30px", color: "#4180B7" }}
-                  />
-                </Badge>
-              </Space> */}
-            </>
-          )}
+         
 
           {(token === "dskgfsdgfkgsdfkjg35464154845674987dsf@53" ||
-            token === "collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg") && (
+            token === "collectorsdrfg&78967daghf#wedhjgasjdlsh6kjsdg" || token === 'clientdgf45sdgf@89756dfgdhg&%df') && (
             <>
               {manuuu === false && (
                 <>

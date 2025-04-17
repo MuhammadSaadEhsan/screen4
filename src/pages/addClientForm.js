@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Select, Input, Button, Form, Upload, message } from "antd";
+import { Card, Select, Input, Button, Form, Upload, message, Tooltip } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { imageDb } from "../firebase";
@@ -171,7 +171,52 @@ export default function AddClientForm() {
 
   return (
     <div style={{ padding: 20, display: "grid", placeItems: "center", background: "#80c209" }}>
-      <Card title="Add Client" style={{ width: 1300 }}>
+      {/* <Card title="Add Client" style={{ width: 1300 }}>
+        <Tooltip title="Back">
+              <div
+                onClick={() => navigate('/jobrequests')}
+                style={{
+                  cursor: 'pointer',
+                  display: 'inline-block',
+                  padding: '5px',
+                  borderRadius: '4px',
+                  transition: 'background-color 0.3s ease',
+                }}
+                className="back-btn"
+              >
+                <img
+                  src="/backbtn.png"
+                  alt="Back"
+                  style={{ width: '20px' }}
+                />
+              </div>
+            </Tooltip> */}
+            <Card style={{ width: 1300 }}>
+  {/* Custom Header */}
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+    <Tooltip title="Back">
+      <div
+        onClick={() => navigate('/clients')}
+        style={{
+          cursor: 'pointer',
+          padding: '5px',
+          borderRadius: '4px',
+          transition: 'background-color 0.3s ease',
+        }}
+        className="back-btn"
+      >
+        <img
+        className="backbtnimg"
+          src="/backbtn.png"
+          alt="Back"
+          style={{ width: '20px', marginBottom: '10px' }}
+        />
+      </div>
+    </Tooltip>
+
+    <h2 style={{ fontWeight: 'bold', fontSize: '20px' }}>Add Client</h2>
+  </div>
+
         <Form form={form} layout="vertical" onFinish={handleSubmit}>
           <Form.Item label="Client Name">
             <Input value={client.name} onChange={(e) => setClient({ ...client, name: e.target.value })} />

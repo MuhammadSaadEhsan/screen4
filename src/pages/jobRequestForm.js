@@ -6,6 +6,7 @@ import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { Tooltip } from 'antd';
 
 function JobRequestForm() {
   const [isloading, setIsLoading] = useState(false);
@@ -618,6 +619,27 @@ function JobRequestForm() {
             width: "900px",
           }}
         >
+          {/* <div className="" ><img style={{width:'20px',marginTop:"25px"}} src="/backbtn.png" alt="" /></div> */}
+          <Tooltip title="Back">
+      <div
+        onClick={() => navigate('/jobrequests')}
+        style={{
+          cursor: 'pointer',
+          display: 'inline-block',
+          padding: '5px',
+          borderRadius: '4px',
+          transition: 'background-color 0.3s ease',
+        }}
+        className="back-btn"
+      >
+        <img
+        className="backbtnimg"
+          src="/backbtn.png"
+          alt="Back"
+          style={{ width: '20px', marginTop: '25px' }}
+        />
+      </div>
+    </Tooltip>
           <h2
             style={{
               textAlign: "center",

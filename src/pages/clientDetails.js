@@ -12,6 +12,7 @@ function Screen4Details() {
   const [error, setError] = useState(null);
   const { id } = useParams();
 
+  const [isloading, setIsLoading] = useState(false);
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -491,6 +492,7 @@ function Screen4Details() {
 
 
   const handleSubmit = async (e) => {
+    setIsLoading(true)
     e.preventDefault();
     console.log("Form Data Submitted: ", formData);
 
@@ -531,11 +533,13 @@ function Screen4Details() {
           consent: false,
         });
       }
-      navigate("/jobrequests")
+      // navigate("/jobrequests")
+      window.close()
     } catch (error) {
       console.error("Error: ", error);
       message.error("Submission failed due to server error.");
     }
+    setIsLoading(false)
   };
 
   // Example of populating form data for update
@@ -2657,7 +2661,7 @@ function Screen4Details() {
 
           {/* Submit Button */}
           {formData.isUpdated !== true ?
-            <button
+            (!isloading ? <button
             className="createjob2"
               type="submit"
               style={{
@@ -2672,7 +2676,7 @@ function Screen4Details() {
               }}
             >
               Update
-            </button> : null}
+            </button> : <img src="/backbtn.png" alt="" />) : null}
         </form>
       </div>
     </>

@@ -16,6 +16,7 @@ function JobRequestDetails() {
   const contextRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [isError, setIsError] = useState(false);
+    const [isloading, setIsLoading] = useState(false);
   // const [formData, setFormData] = useState({ donorSignature: "" });
   const [isSignaturePadOpen, setIsSignaturePadOpen] = useState(false);
   const [clientDetails,setClientDetails] = useState()
@@ -420,6 +421,7 @@ function JobRequestDetails() {
 
 
 const handleSubmit = async (e) => {
+  setIsLoading(true);
     e.preventDefault();
     try {
       const url = formData._id 
@@ -486,11 +488,13 @@ const handleSubmit = async (e) => {
         laboratoryAddress: "",
         sampleDeliveryMethod: "",
       });
-      navigate("/jobrequests")
+      // navigate("/jobrequests")
+      window.close();
     } catch (error) {
       console.error("Error: ", error);
       message.error("Submission failed due to server error.");
     }
+    setIsLoading(false);
 
     
   };
@@ -517,17 +521,15 @@ const handleSubmit = async (e) => {
         } else {
             message.error(result.message || "Failed to process form.");
         }
-        navigate("/jobrequests")
+        // navigate("/jobrequests")
+        window.close();
     } catch (error) {
         console.error("Error: ", error);
         message.error("Unable to accept due to server error.");
     }
 };
 
-  
-  // const handleReject = async () => {
-  //   navigate("/jobrequests")
-  // };
+ 
   return (
     <>
       {/* <Navbar /> */}
@@ -1438,7 +1440,7 @@ const handleSubmit = async (e) => {
 
 
 
-          {token ==="dskgfsdgfkgsdfkjg35464154845674987dsf@53" || formData?.isAccepted ? <button
+         { !isloading ? (token ==="dskgfsdgfkgsdfkjg35464154845674987dsf@53" || formData?.isAccepted ? <button
             type="submit"
             className="createjob2"
             onClick={handleSubmit}
@@ -1479,7 +1481,7 @@ const handleSubmit = async (e) => {
           </button>
           //  : null
         // }
-          }
+          ) : <div style={{width:"100%",display: "flex",justifyContent:"center"}}><img src="/empty.gif" style={{width:"130px",}}/></div>}
         </div>
       </div>
     </>

@@ -351,3 +351,12 @@
     transform: scale(1.03); /* subtle zoom effect */
     cursor: pointer;
   }
+  .backbtnimg {
+    width: 20px;
+    transition: transform 0.3s ease;
+  }
+  
+  .backbtnimg:hover {
+    transform: scale(1.2); /* Smoothly enlarges the icon */
+  }
+  
